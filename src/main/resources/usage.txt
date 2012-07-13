@@ -1,0 +1,11 @@
+Usage: java -jar ruian2pgsql-*-jar-with-dependencies.jar --db-connection-url <value>
+    --create-tables --input-dir <value> --log-file <value>
+
+Where:
+--create-tables     creates database tables for the data (if tables with the same
+                    name already exists, it is first dropped)
+--db-connection-url is JDBC connection URL, for example:
+                    jdbc:postgresql://localhost/ruian?user=ruian&password=p4ssw0rd
+--input-dir         is directory that contains downloaded .xml.gz files
+--log-file          is optional specification of log file (if not specified,
+                    log will be output to console)
