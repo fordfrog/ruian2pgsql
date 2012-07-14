@@ -143,12 +143,12 @@ public class SpravniObvodConvertor extends AbstractSaveConvertor<SpravniObvod> {
                                 Integer.parseInt(reader.getElementText()));
                         break;
                     default:
-                        Utils.printWarningIgnoringElement(logFile, reader);
+                        Utils.processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                Utils.printWarningIgnoringElement(logFile, reader);
+                Utils.processUnsupported(reader, logFile);
         }
     }
 }

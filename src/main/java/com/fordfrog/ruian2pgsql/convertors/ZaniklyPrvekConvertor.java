@@ -78,12 +78,12 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
                         item.setTypPrvkuKod(reader.getElementText());
                         break;
                     default:
-                        Utils.printWarningIgnoringElement(logFile, reader);
+                        Utils.processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                Utils.printWarningIgnoringElement(logFile, reader);
+                Utils.processUnsupported(reader, logFile);
         }
     }
 

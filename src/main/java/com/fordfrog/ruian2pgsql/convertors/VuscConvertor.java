@@ -142,12 +142,12 @@ public class VuscConvertor extends AbstractSaveConvertor<Vusc> {
                                 reader, NAMESPACE, logFile));
                         break;
                     default:
-                        Utils.printWarningIgnoringElement(logFile, reader);
+                        Utils.processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                Utils.printWarningIgnoringElement(logFile, reader);
+                Utils.processUnsupported(reader, logFile);
         }
     }
 }

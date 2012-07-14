@@ -119,12 +119,12 @@ public class UliceConvertor extends AbstractSaveConvertor<Ulice> {
                                 Utils.parseTimestamp(reader.getElementText()));
                         break;
                     default:
-                        Utils.printWarningIgnoringElement(logFile, reader);
+                        Utils.processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                Utils.printWarningIgnoringElement(logFile, reader);
+                Utils.processUnsupported(reader, logFile);
         }
     }
 }

@@ -134,12 +134,12 @@ public class StatConvertor extends AbstractSaveConvertor<Stat> {
                                 Utils.parseTimestamp(reader.getElementText()));
                         break;
                     default:
-                        Utils.printWarningIgnoringElement(logFile, reader);
+                        Utils.processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                Utils.printWarningIgnoringElement(logFile, reader);
+                Utils.processUnsupported(reader, logFile);
         }
     }
 }

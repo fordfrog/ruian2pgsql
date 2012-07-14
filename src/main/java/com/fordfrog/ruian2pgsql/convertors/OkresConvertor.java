@@ -146,12 +146,12 @@ public class OkresConvertor extends AbstractSaveConvertor<Okres> {
                                 Utils.getVuscKod(reader, NAMESPACE, logFile));
                         break;
                     default:
-                        Utils.printWarningIgnoringElement(logFile, reader);
+                        Utils.processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                Utils.printWarningIgnoringElement(logFile, reader);
+                Utils.processUnsupported(reader, logFile);
         }
     }
 }

@@ -129,12 +129,12 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
                         item.setTypZaznamu(reader.getElementText());
                         break;
                     default:
-                        Utils.printWarningIgnoringElement(logFile, reader);
+                        Utils.processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                Utils.printWarningIgnoringElement(logFile, reader);
+                Utils.processUnsupported(reader, logFile);
         }
     }
 
@@ -193,11 +193,11 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
                                 Utils.parseTimestamp(reader.getElementText()));
                         break;
                     default:
-                        Utils.printWarningIgnoringElement(logFile, reader);
+                        Utils.processUnsupported(reader, logFile);
                 }
                 break;
             default:
-                Utils.printWarningIgnoringElement(logFile, reader);
+                Utils.processUnsupported(reader, logFile);
         }
     }
 
@@ -255,11 +255,11 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
                                 Utils.parseTimestamp(reader.getElementText()));
                         break;
                     default:
-                        Utils.printWarningIgnoringElement(logFile, reader);
+                        Utils.processUnsupported(reader, logFile);
                 }
                 break;
             default:
-                Utils.printWarningIgnoringElement(logFile, reader);
+                Utils.processUnsupported(reader, logFile);
         }
     }
 }

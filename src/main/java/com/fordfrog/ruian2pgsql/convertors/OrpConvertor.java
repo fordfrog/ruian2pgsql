@@ -143,12 +143,12 @@ public class OrpConvertor extends AbstractSaveConvertor<Orp> {
                                 Utils.getVuscKod(reader, NAMESPACE, logFile));
                         break;
                     default:
-                        Utils.printWarningIgnoringElement(logFile, reader);
+                        Utils.processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                Utils.printWarningIgnoringElement(logFile, reader);
+                Utils.processUnsupported(reader, logFile);
         }
     }
 }

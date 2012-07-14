@@ -175,12 +175,12 @@ public class MomcConvertor extends AbstractSaveConvertor<Momc> {
                         item.setZnakText(reader.getElementText());
                         break;
                     default:
-                        Utils.printWarningIgnoringElement(logFile, reader);
+                        Utils.processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                Utils.printWarningIgnoringElement(logFile, reader);
+                Utils.processUnsupported(reader, logFile);
         }
     }
 }

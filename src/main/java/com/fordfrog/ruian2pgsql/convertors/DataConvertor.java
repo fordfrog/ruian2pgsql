@@ -137,7 +137,7 @@ public class DataConvertor extends AbstractConvertor {
                                 "Zsj", "Zsj", new ZsjConvertor());
                         break;
                     default:
-                        Utils.printWarningIgnoringElement(logFile, reader);
+                        Utils.processUnsupported(reader, logFile);
                 }
 
                 if (convertor != null) {
@@ -146,7 +146,7 @@ public class DataConvertor extends AbstractConvertor {
 
                 break;
             default:
-                Utils.printWarningIgnoringElement(logFile, reader);
+                Utils.processUnsupported(reader, logFile);
         }
     }
 }

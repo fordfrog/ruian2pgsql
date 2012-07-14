@@ -144,12 +144,12 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
                                 Utils.getUliceKod(reader, NAMESPACE, logFile));
                         break;
                     default:
-                        Utils.printWarningIgnoringElement(logFile, reader);
+                        Utils.processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                Utils.printWarningIgnoringElement(logFile, reader);
+                Utils.processUnsupported(reader, logFile);
         }
     }
 }

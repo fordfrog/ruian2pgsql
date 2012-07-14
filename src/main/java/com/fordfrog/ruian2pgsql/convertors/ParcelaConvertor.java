@@ -180,12 +180,12 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
                                 Integer.parseInt(reader.getElementText()));
                         break;
                     default:
-                        Utils.printWarningIgnoringElement(logFile, reader);
+                        Utils.processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                Utils.printWarningIgnoringElement(logFile, reader);
+                Utils.processUnsupported(reader, logFile);
         }
     }
 

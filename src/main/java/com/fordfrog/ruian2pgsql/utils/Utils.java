@@ -84,19 +84,59 @@ public class Utils {
     }
 
     /**
-     * Prints warning about element being ignored into writer.
+     * Processes unsupported element and its subelements.
      *
-     * @param logFile log file writer
      * @param reader  XML stream reader
+     * @param logFile log file writer
+     *
+     * @throws XMLStreamException Thrown if problem occurred while reading XML
+     *                            stream.
      */
-    public static void printWarningIgnoringElement(final Writer logFile,
-            final XMLStreamReader reader) {
-        try {
-            logFile.write("Warning: Ingoring element "
-                    + reader.getNamespaceURI() + ' ' + reader.getLocalName()
-                    + '\n');
-        } catch (final IOException ex) {
-            throw new RuntimeException("Failed to write to log file", ex);
+    public static void processUnsupported(final XMLStreamReader reader,
+            final Writer logFile) throws XMLStreamException {
+        processUnsupported(reader, 0, logFile);
+    }
+
+    /**
+     * Processes unsupported element and its subelements.
+     *
+     * @param reader  XML stream reader
+     * @param indent  indentation count
+     * @param logFile log file writer
+     *
+     * @throws XMLStreamException Thrown if problem occurred while reading XML
+     *                            stream.
+     */
+    private static void processUnsupported(final XMLStreamReader reader,
+            final int indent, final Writer logFile) throws XMLStreamException {
+        final String namespace = reader.getNamespaceURI();
+        final String localName = reader.getLocalName();
+        final StringBuilder sbString = new StringBuilder(namespace.length()
+                + localName.length() + 50);
+
+        for (int i = 0; i < indent; i++) {
+            sbString.append("  ");
+        }
+
+        sbString.append("Warning: Ignoring unsupported element ");
+        sbString.append(namespace);
+        sbString.append(' ');
+        sbString.append(localName);
+
+        printToLog(logFile, sbString.toString());
+
+        while (reader.hasNext()) {
+            final int event = reader.next();
+
+            switch (event) {
+                case XMLStreamReader.START_ELEMENT:
+                    processUnsupported(reader, indent + 1, logFile);
+                    break;
+                case XMLStreamReader.END_ELEMENT:
+                    if (isEndElement(namespace, localName, reader)) {
+                        return;
+                    }
+            }
         }
     }
 
@@ -202,7 +242,7 @@ public class Utils {
                         point = processAdresniBod(reader, logFile);
                         break;
                     default:
-                        Utils.printWarningIgnoringElement(logFile, reader);
+                        processUnsupported(reader, logFile);
                 }
                 break;
             case Namespaces.GML:
@@ -226,12 +266,12 @@ public class Utils {
                         point = processPoint(reader, logFile);
                         break;
                     default:
-                        printWarningIgnoringElement(logFile, reader);
+                        processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                printWarningIgnoringElement(logFile, reader);
+                processUnsupported(reader, logFile);
         }
 
         return point;
@@ -292,12 +332,12 @@ public class Utils {
                         list.addAll(processPointMembers(reader, logFile));
                         break;
                     default:
-                        printWarningIgnoringElement(logFile, reader);
+                        processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                printWarningIgnoringElement(logFile, reader);
+                processUnsupported(reader, logFile);
         }
 
         return list;
@@ -361,12 +401,12 @@ public class Utils {
                         pointsCount++;
                         break;
                     default:
-                        printWarningIgnoringElement(logFile, reader);
+                        processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                printWarningIgnoringElement(logFile, reader);
+                processUnsupported(reader, logFile);
         }
 
         return list;
@@ -428,12 +468,12 @@ public class Utils {
                         point = processPoint(reader, logFile);
                         break;
                     default:
-                        printWarningIgnoringElement(logFile, reader);
+                        processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                printWarningIgnoringElement(logFile, reader);
+                processUnsupported(reader, logFile);
         }
 
         return point;
@@ -493,12 +533,12 @@ public class Utils {
                         point = parsePoint(reader.getElementText());
                         break;
                     default:
-                        printWarningIgnoringElement(logFile, reader);
+                        processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                printWarningIgnoringElement(logFile, reader);
+                processUnsupported(reader, logFile);
         }
 
         return point;
@@ -902,7 +942,7 @@ public class Utils {
                 && localName.equals(reader.getLocalName())) {
             return Long.valueOf(reader.getElementText());
         } else {
-            printWarningIgnoringElement(logFile, reader);
+            processUnsupported(reader, logFile);
         }
 
         return null;
@@ -963,10 +1003,10 @@ public class Utils {
                 itemDefinicniBod.setDefinicniBod(processDefinicniBod(
                         reader, namespace, localName, logFile));
             } else {
-                printWarningIgnoringElement(logFile, reader);
+                processUnsupported(reader, logFile);
             }
         } else {
-            printWarningIgnoringElement(logFile, reader);
+            processUnsupported(reader, logFile);
         }
     }
 
@@ -1037,12 +1077,12 @@ public class Utils {
                         item.setMluvCharPad7(reader.getElementText());
                         break;
                     default:
-                        Utils.printWarningIgnoringElement(logFile, reader);
+                        processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                printWarningIgnoringElement(logFile, reader);
+                processUnsupported(reader, logFile);
         }
     }
 }

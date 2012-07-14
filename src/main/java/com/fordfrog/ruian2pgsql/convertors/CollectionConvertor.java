@@ -96,7 +96,7 @@ public class CollectionConvertor extends AbstractConvertor {
                 && itemName.equals(reader.getLocalName())) {
             convertor.convert(reader, con, logFile);
         } else {
-            Utils.printWarningIgnoringElement(logFile, reader);
+            Utils.processUnsupported(reader, logFile);
         }
     }
 }

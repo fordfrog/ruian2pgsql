@@ -62,12 +62,12 @@ public class ExchangeFormatConvertor extends AbstractConvertor {
                         new HlavickaConvertor().convert(reader, con, logFile);
                         break;
                     default:
-                        Utils.printWarningIgnoringElement(logFile, reader);
+                        Utils.processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                Utils.printWarningIgnoringElement(logFile, reader);
+                Utils.processUnsupported(reader, logFile);
         }
     }
 }

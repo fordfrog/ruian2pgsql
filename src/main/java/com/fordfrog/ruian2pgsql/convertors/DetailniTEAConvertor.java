@@ -162,12 +162,12 @@ public class DetailniTEAConvertor extends AbstractSaveConvertor<DetailniTEA> {
                                 Integer.parseInt(reader.getElementText()));
                         break;
                     default:
-                        Utils.printWarningIgnoringElement(logFile, reader);
+                        Utils.processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                Utils.printWarningIgnoringElement(logFile, reader);
+                Utils.processUnsupported(reader, logFile);
         }
     }
 }
