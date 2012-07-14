@@ -82,7 +82,7 @@ public class DetailniTEAConvertor extends AbstractSaveConvertor<DetailniTEA> {
         final PreparedStatementEx pstmEx = new PreparedStatementEx(pstm);
         pstmEx.setInt(1, item.getKod());
         pstm.setInt(2, stavebniObjektId);
-        pstm.setInt(3, item.getAdresniMistoKod());
+        pstmEx.setInt(3, item.getAdresniMistoKod());
         pstmEx.setBoolean(4, item.getNespravny());
         pstmEx.setInt(5, item.getPocetBytu());
         pstmEx.setInt(6, item.getPocetPodlazi());
