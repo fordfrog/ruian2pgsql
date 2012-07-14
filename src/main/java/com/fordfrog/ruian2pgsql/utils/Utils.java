@@ -116,6 +116,19 @@ public class Utils {
     }
 
     /**
+     * Flushes log buffer.
+     *
+     * @param logFile log file writer
+     */
+    public static void flushLog(final Writer logFile) {
+        try {
+            logFile.flush();
+        } catch (final IOException ex) {
+            throw new RuntimeException("Failed to flush log", ex);
+        }
+    }
+
+    /**
      * Checks whether XML stream reader namespace and local name match the one
      * specified in the call.
      *

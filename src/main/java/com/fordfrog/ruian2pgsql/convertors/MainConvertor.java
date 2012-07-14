@@ -197,6 +197,7 @@ public class MainConvertor {
             final long startTimestamp = System.currentTimeMillis();
 
             Utils.printToLog(logFile, "Processing file " + file);
+            Utils.flushLog(logFile);
 
             try (final InputStream inputStream = Files.newInputStream(file)) {
                 if (fileName.endsWith(".gz")) {
@@ -211,6 +212,7 @@ public class MainConvertor {
 
             Utils.printToLog(logFile, "File processed in "
                     + (System.currentTimeMillis() - startTimestamp) + " ms");
+            Utils.flushLog(logFile);
         } else {
             Utils.printToLog(logFile,
                     "Unsupported file extension, ignoring file " + file);
