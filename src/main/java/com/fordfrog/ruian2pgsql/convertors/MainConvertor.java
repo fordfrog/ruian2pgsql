@@ -70,7 +70,6 @@ public class MainConvertor {
      * @param createTables    whether data tables should be (re)created
      * @param logFilePath     log file path
      *
-     * @throws IOException        Thrown if I/O problem occurred
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      * @throws SQLException       Thrown if problem occurred while communicating
@@ -78,8 +77,7 @@ public class MainConvertor {
      */
     public static void convert(final Path inputDirPath,
             final String dbConnectionUrl, final boolean createTables,
-            final Path logFilePath)
-            throws IOException, XMLStreamException, SQLException {
+            final Path logFilePath) throws XMLStreamException, SQLException {
         final long startTimestamp = System.currentTimeMillis();
 
         try (final Connection con =
@@ -100,6 +98,8 @@ public class MainConvertor {
 
             Utils.printToLog(logFile, "Total duration: "
                     + (System.currentTimeMillis() - startTimestamp) + " ms");
+        } catch (final IOException ex) {
+            throw new RuntimeException("Failed to create log file", ex);
         }
     }
 
@@ -107,11 +107,8 @@ public class MainConvertor {
      * Initializes database tables.
      *
      * @param con database connection
-     *
-     * @throws IOException Thrown if problem occurred while reading SQL schema
-     *                     file.
      */
-    private static void initDatabase(final Connection con) throws IOException {
+    private static void initDatabase(final Connection con) {
         final StringBuilder sbSQL = new StringBuilder(10240);
 
         try (final BufferedReader reader = new BufferedReader(
@@ -135,6 +132,9 @@ public class MainConvertor {
             }
         } catch (final SQLException ex) {
             throw new RuntimeException("Statement failed: " + sbSQL.toString());
+        } catch (final IOException ex) {
+            throw new RuntimeException(
+                    "Failed to read database schema resource", ex);
         }
     }
 
@@ -144,12 +144,8 @@ public class MainConvertor {
      * @param inputDirPath input directory
      *
      * @return sorted list of input files
-     *
-     * @throws IOException Thrown if problem occurred while reading files from
-     *                     input directory.
      */
-    private static List<Path> getInputFiles(final Path inputDirPath)
-            throws IOException {
+    private static List<Path> getInputFiles(final Path inputDirPath) {
         final List<Path> result = new ArrayList<>(10);
 
         try (final DirectoryStream<Path> files =
@@ -163,6 +159,9 @@ public class MainConvertor {
                     result.add(file);
                 }
             }
+        } catch (final IOException ex) {
+            throw new RuntimeException(
+                    "Failed to read content of input directory", ex);
         }
 
         Collections.sort(result, new Comparator<Path>() {
@@ -183,7 +182,6 @@ public class MainConvertor {
      * @param file    file path
      * @param logFile log file writer
      *
-     * @throws IOException                  Thrown if I/O problem occurred.
      * @throws UnsupportedEncodingException Thrown if UTF-8 encoding is not
      *                                      supported.
      * @throws XMLStreamException           Thrown if problem occurred while
@@ -192,8 +190,7 @@ public class MainConvertor {
      *                                      communicating with database.
      */
     private static void processFile(final Connection con, final Path file,
-            final Writer logFile) throws IOException,
-            UnsupportedEncodingException, XMLStreamException, SQLException {
+            final Writer logFile) throws XMLStreamException, SQLException {
         final String fileName = file.toString();
 
         if (fileName.endsWith(".xml.gz") || fileName.endsWith(".xml")) {
@@ -208,6 +205,8 @@ public class MainConvertor {
                 } else {
                     readInputStream(con, inputStream, logFile);
                 }
+            } catch (final IOException ex) {
+                throw new RuntimeException("Failed to read input file", ex);
             }
 
             Utils.printToLog(logFile, "File processed in "
@@ -225,23 +224,24 @@ public class MainConvertor {
      * @param inputStream input stream containing XML data
      * @param logFile     log file writer
      *
-     * @throws IOException                  Thrown if I/O problem occurred.
-     * @throws UnsupportedEncodingException Thrown if UTF-8 encoding is not
-     *                                      supported.
-     * @throws XMLStreamException           Thrown if problem occurred while
-     *                                      reading XML stream.
-     * @throws SQLException                 Thrown if problem occurred while
-     *                                      communicating with database.
+     * @throws XMLStreamException Thrown if problem occurred while reading XML
+     *                            stream.
+     * @throws SQLException       Thrown if problem occurred while communicating
+     *                            with database.
      */
     private static void readInputStream(final Connection con,
             final InputStream inputStream, final Writer logFile)
-            throws UnsupportedEncodingException, XMLStreamException,
-            SQLException, IOException {
+            throws XMLStreamException, SQLException {
         final XMLInputFactory xMLInputFactory = XMLInputFactory.newInstance();
 
-        final XMLStreamReader reader =
-                xMLInputFactory.createXMLStreamReader(
-                new InputStreamReader(inputStream, "UTF-8"));
+        final XMLStreamReader reader;
+
+        try {
+            reader = xMLInputFactory.createXMLStreamReader(
+                    new InputStreamReader(inputStream, "UTF-8"));
+        } catch (final UnsupportedEncodingException ex) {
+            throw new RuntimeException("UTF-8 encoding is not supported", ex);
+        }
 
         while (reader.hasNext()) {
             final int event = reader.next();
@@ -259,7 +259,6 @@ public class MainConvertor {
      * @param con     database connection
      * @param logFile log file writer
      *
-     * @throws IOException        Thrown if I/O problem occurred.
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      * @throws SQLException       Thrown if problem occurred while communicating
@@ -267,7 +266,7 @@ public class MainConvertor {
      */
     private static void processElement(final XMLStreamReader reader,
             final Connection con, final Writer logFile)
-            throws XMLStreamException, SQLException, IOException {
+            throws XMLStreamException, SQLException {
         switch (reader.getNamespaceURI()) {
             case Namespaces.VYMENNY_FORMAT_TYPY:
                 switch (reader.getLocalName()) {

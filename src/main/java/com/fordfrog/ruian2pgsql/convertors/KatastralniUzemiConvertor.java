@@ -25,7 +25,6 @@ import com.fordfrog.ruian2pgsql.containers.KatastralniUzemi;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
 import com.fordfrog.ruian2pgsql.utils.Utils;
-import java.io.IOException;
 import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -115,7 +114,7 @@ public class KatastralniUzemiConvertor
     @Override
     protected void processElement(final XMLStreamReader reader,
             final Connection con, final KatastralniUzemi item,
-            final Writer logFile) throws IOException, XMLStreamException {
+            final Writer logFile) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {

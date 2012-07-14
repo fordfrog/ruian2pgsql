@@ -24,7 +24,6 @@ package com.fordfrog.ruian2pgsql.convertors;
 import com.fordfrog.ruian2pgsql.containers.BonitovanyDil;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.Utils;
-import java.io.IOException;
 import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -93,7 +92,7 @@ public class BonitovanyDilConvertor
     @Override
     protected void processElement(final XMLStreamReader reader,
             final Connection con, final BonitovanyDil item,
-            final Writer logFile) throws IOException, XMLStreamException {
+            final Writer logFile) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {

@@ -22,7 +22,6 @@
 package com.fordfrog.ruian2pgsql.convertors;
 
 import com.fordfrog.ruian2pgsql.utils.Utils;
-import java.io.IOException;
 import java.io.Writer;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -65,7 +64,6 @@ public abstract class AbstractConvertor implements Convertor {
      * @param con     database connection
      * @param logFile log file writer
      *
-     * @throws IOException        Thrown if I/O problem occurred.
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      * @throws SQLException       Thrown if problem occurred while communicating
@@ -73,8 +71,7 @@ public abstract class AbstractConvertor implements Convertor {
      */
     @Override
     public void convert(final XMLStreamReader reader, final Connection con,
-            final Writer logFile) throws XMLStreamException, IOException,
-            SQLException {
+            final Writer logFile) throws XMLStreamException, SQLException {
         while (reader.hasNext()) {
             final int event = reader.next();
 
@@ -99,13 +96,12 @@ public abstract class AbstractConvertor implements Convertor {
      * @param con     database connection
      * @param logFile log file writer
      *
-     * @throws IOException        Thrown if I/O problem occurred.
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      * @throws SQLException       Thrown if problem occurred while communicating
      *                            with database.
      */
     protected abstract void processElement(final XMLStreamReader reader,
-            final Connection con, final Writer logFile) throws IOException,
-            XMLStreamException, SQLException;
+            final Connection con, final Writer logFile)
+            throws XMLStreamException, SQLException;
 }

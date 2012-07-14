@@ -25,7 +25,6 @@ import com.fordfrog.ruian2pgsql.containers.Parcela;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
 import com.fordfrog.ruian2pgsql.utils.Utils;
-import java.io.IOException;
 import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -109,7 +108,7 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
     @Override
     protected void processElement(final XMLStreamReader reader,
             final Connection con, final Parcela item, final Writer logFile)
-            throws IOException, XMLStreamException, SQLException {
+            throws XMLStreamException, SQLException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {

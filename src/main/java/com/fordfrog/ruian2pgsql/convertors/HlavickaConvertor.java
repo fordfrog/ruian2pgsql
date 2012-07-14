@@ -25,7 +25,6 @@ import com.fordfrog.ruian2pgsql.containers.Hlavicka;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
 import com.fordfrog.ruian2pgsql.utils.Utils;
-import java.io.IOException;
 import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -95,7 +94,7 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
     @Override
     protected void processElement(final XMLStreamReader reader,
             final Connection con, final Hlavicka item, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
@@ -148,11 +147,10 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/O problem occurred
      */
     private void processTransakceOd(final XMLStreamReader reader,
             final Hlavicka item, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         while (reader.hasNext()) {
             final int event = reader.next();
 
@@ -179,11 +177,10 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/O problem occurred
      */
     private void processTransakceOdElement(final XMLStreamReader reader,
             final Hlavicka header, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case Namespaces.COMMON_TYPY:
                 switch (reader.getLocalName()) {
@@ -213,11 +210,10 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/O problem occurred
      */
     private void processTransakceDo(final XMLStreamReader reader,
             final Hlavicka header, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         while (reader.hasNext()) {
             final int event = reader.next();
 
@@ -243,11 +239,10 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/O problem occurred
      */
     private void processTransakceDoElement(final XMLStreamReader reader,
             final Hlavicka header, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case Namespaces.COMMON_TYPY:
                 switch (reader.getLocalName()) {

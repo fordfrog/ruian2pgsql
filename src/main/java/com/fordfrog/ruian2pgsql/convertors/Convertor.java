@@ -21,7 +21,6 @@
  */
 package com.fordfrog.ruian2pgsql.convertors;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -42,12 +41,11 @@ public interface Convertor {
      * @param con     database connection
      * @param logFile log file writer
      *
-     * @throws IOException        Thrown if I/O problem occurred.
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      * @throws SQLException       Thrown if problem occurred while communicating
      *                            with database.
      */
     void convert(XMLStreamReader reader, Connection con, Writer logFile)
-            throws XMLStreamException, IOException, SQLException;
+            throws XMLStreamException, SQLException;
 }

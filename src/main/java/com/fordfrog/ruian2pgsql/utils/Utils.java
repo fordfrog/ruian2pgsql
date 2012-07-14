@@ -88,13 +88,16 @@ public class Utils {
      *
      * @param logFile log file writer
      * @param reader  XML stream reader
-     *
-     * @throws IOException Thrown if I/O problem occurred.
      */
     public static void printWarningIgnoringElement(final Writer logFile,
-            final XMLStreamReader reader) throws IOException {
-        logFile.write("Warning: Ingoring element " + reader.getNamespaceURI()
-                + ' ' + reader.getLocalName() + '\n');
+            final XMLStreamReader reader) {
+        try {
+            logFile.write("Warning: Ingoring element "
+                    + reader.getNamespaceURI() + ' ' + reader.getLocalName()
+                    + '\n');
+        } catch (final IOException ex) {
+            throw new RuntimeException("Failed to write to log file", ex);
+        }
     }
 
     /**
@@ -102,13 +105,14 @@ public class Utils {
      *
      * @param logFile log file writer
      * @param text    text
-     *
-     * @throws IOException Thrown if I/O problem occurred.
      */
-    public static void printToLog(final Writer logFile, final String text)
-            throws IOException {
-        logFile.write(text);
-        logFile.write('\n');
+    public static void printToLog(final Writer logFile, final String text) {
+        try {
+            logFile.write(text);
+            logFile.write('\n');
+        } catch (final IOException ex) {
+            throw new RuntimeException("Failed to write to log file", ex);
+        }
     }
 
     /**
@@ -139,11 +143,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     public static PGpoint processDefinicniBod(final XMLStreamReader reader,
             final String endNamespace, final String engLocalName,
-            final Writer logFile) throws XMLStreamException, IOException {
+            final Writer logFile) throws XMLStreamException {
         PGpoint definicniBod = null;
 
         while (reader.hasNext()) {
@@ -171,13 +174,12 @@ public class Utils {
      *
      * @return parsed point
      *
-     * @throws IOException        Thrown if I/0 problem occurred.
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
     private static PGpoint processDefinicniBodElement(
             final XMLStreamReader reader, final Writer logFile)
-            throws IOException, XMLStreamException {
+            throws XMLStreamException {
         PGpoint point = null;
 
         switch (reader.getNamespaceURI()) {
@@ -232,10 +234,9 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     private static List<PGpoint> processMultiPoint(final XMLStreamReader reader,
-            final Writer logFile) throws XMLStreamException, IOException {
+            final Writer logFile) throws XMLStreamException {
         final List<PGpoint> list = new ArrayList<>(10);
 
         while (reader.hasNext()) {
@@ -263,13 +264,12 @@ public class Utils {
      *
      * @return list of parsed points
      *
-     * @throws IOException        Thrown if I/0 problem occurred.
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
     private static List<PGpoint> processMultiPointElement(
             final XMLStreamReader reader, final Writer logFile)
-            throws IOException, XMLStreamException {
+            throws XMLStreamException {
         final List<PGpoint> list = new ArrayList<>(10);
 
         switch (reader.getNamespaceURI()) {
@@ -300,11 +300,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     private static List<PGpoint> processPointMembers(
             final XMLStreamReader reader, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         final List<PGpoint> list = new ArrayList<>(10);
 
         while (reader.hasNext()) {
@@ -334,11 +333,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     private static List<PGpoint> processPointMembersElement(
             final XMLStreamReader reader, final Writer logFile)
-            throws IOException, XMLStreamException {
+            throws XMLStreamException {
         final List<PGpoint> list = new ArrayList<>(10);
         int pointsCount = 0;
 
@@ -371,10 +369,9 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     private static PGpoint processAdresniBod(final XMLStreamReader reader,
-            final Writer logFile) throws XMLStreamException, IOException {
+            final Writer logFile) throws XMLStreamException {
         PGpoint point = null;
 
         while (reader.hasNext()) {
@@ -405,11 +402,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     private static PGpoint processAdresniBodElement(
             final XMLStreamReader reader, final Writer logFile)
-            throws IOException, XMLStreamException {
+            throws XMLStreamException {
         PGpoint point = null;
 
         switch (reader.getNamespaceURI()) {
@@ -440,10 +436,9 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     private static PGpoint processPoint(final XMLStreamReader reader,
-            final Writer logFile) throws XMLStreamException, IOException {
+            final Writer logFile) throws XMLStreamException {
         PGpoint point = null;
 
         while (reader.hasNext()) {
@@ -473,10 +468,9 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     private static PGpoint processPointElement(final XMLStreamReader reader,
-            final Writer logFile) throws IOException, XMLStreamException {
+            final Writer logFile) throws XMLStreamException {
         PGpoint point = null;
 
         switch (reader.getNamespaceURI()) {
@@ -523,11 +517,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     public static Integer getAdresniMistoKod(final XMLStreamReader reader,
             final String endNamespace, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         return getElementValue(reader, Namespaces.BASE_TYPY, "Kod",
                 endNamespace, "AdresniMistoKod", logFile).intValue();
     }
@@ -543,11 +536,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     public static Integer getCastObceKod(final XMLStreamReader reader,
             final String endNamespace, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         return getElementValue(reader, Namespaces.CAST_OBCE_INT_TYPY, "Kod",
                 endNamespace, "CastObce", logFile).intValue();
     }
@@ -563,11 +555,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     public static Long getIdentifikacniParcelaId(
             final XMLStreamReader reader, final String endNamespace,
-            final Writer logFile) throws XMLStreamException, IOException {
+            final Writer logFile) throws XMLStreamException {
         return getElementValue(reader, Namespaces.PARCELA_INT_TYPY, "Id",
                 endNamespace, "IdentifikacniParcela", logFile);
     }
@@ -583,11 +574,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     public static Integer getKatastralniUzemiKod(final XMLStreamReader reader,
             final String endNamespace, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         return getElementValue(reader, Namespaces.KAT_UZ_INT_TYPY, "Kod",
                 endNamespace, "KatastralniUzemi", logFile).intValue();
     }
@@ -603,11 +593,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     public static Integer getKrajKod(final XMLStreamReader reader,
             final String endNamespace, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         return getElementValue(reader, Namespaces.KRAJ_INT_TYPY, "Kod",
                 endNamespace, "Kraj", logFile).intValue();
     }
@@ -623,11 +612,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     public static Integer getMomcKod(final XMLStreamReader reader,
             final String endNamespace, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         return getElementValue(reader, Namespaces.MOMC_INT_TYPY, "Kod",
                 endNamespace, "Momc", logFile).intValue();
     }
@@ -643,11 +631,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     public static Integer getMopKod(final XMLStreamReader reader,
             final String endNamespace, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         return getElementValue(reader, Namespaces.MOP_INT_TYPY, "Kod",
                 endNamespace, "Mop", logFile).intValue();
     }
@@ -663,11 +650,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     public static Integer getObecKod(final XMLStreamReader reader,
             final String endNamespace, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         return getElementValue(reader, Namespaces.OBEC_INT_TYPY, "Kod",
                 endNamespace, "Obec", logFile).intValue();
     }
@@ -683,11 +669,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     public static Integer getOkresKod(final XMLStreamReader reader,
             final String endNamespace, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         return getElementValue(reader, Namespaces.OKRES_INT_TYPY, "Kod",
                 endNamespace, "Okres", logFile).intValue();
     }
@@ -703,11 +688,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     public static Integer getOrpKod(final XMLStreamReader reader,
             final String endNamespace, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         return getElementValue(reader, Namespaces.ORP_INT_TYPY, "Kod",
                 endNamespace, "Orp", logFile).intValue();
     }
@@ -723,11 +707,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     public static Integer getPouKod(final XMLStreamReader reader,
             final String endNamespace, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         return getElementValue(reader, Namespaces.POU_INT_TYPY, "Kod",
                 endNamespace, "Pou", logFile).intValue();
     }
@@ -743,11 +726,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     public static Integer getRegionSoudrznostiKod(final XMLStreamReader reader,
             final String endNamespace, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         return getElementValue(reader, Namespaces.REG_SOU_INTI_TYPY, "Kod",
                 endNamespace, "RegionSoudrznosti", logFile).intValue();
     }
@@ -763,11 +745,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     public static Integer getSpravniObvodKod(final XMLStreamReader reader,
             final String endNamespace, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         return getElementValue(reader, Namespaces.SPRAV_OBV_INT_TYPY, "Kod",
                 endNamespace, "SpravniObvod", logFile).intValue();
     }
@@ -783,11 +764,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     public static Integer getStatKod(final XMLStreamReader reader,
             final String endNamespace, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         return getElementValue(reader, Namespaces.STAT_INT_TYPY, "Kod",
                 endNamespace, "Stat", logFile).intValue();
     }
@@ -803,11 +783,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     public static Integer getStavebniObjektKod(final XMLStreamReader reader,
             final String endNamespace, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         return getElementValue(reader, Namespaces.STAV_OBJ_INT_TYPY, "Kod",
                 endNamespace, "StavebniObjekt", logFile).intValue();
     }
@@ -823,11 +802,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     public static Integer getUliceKod(final XMLStreamReader reader,
             final String endNamespace, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         return getElementValue(reader, Namespaces.ULICE_INT_TYPY, "Kod",
                 endNamespace, "Ulice", logFile).intValue();
     }
@@ -843,11 +821,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     public static Integer getVuscKod(final XMLStreamReader reader,
             final String endNamespace, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         return getElementValue(reader, Namespaces.VUSC_INT_TYPY, "Kod",
                 endNamespace, "Vusc", logFile).intValue();
     }
@@ -866,12 +843,11 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     private static Long getElementValue(final XMLStreamReader reader,
             final String valueNamespace, final String valueLocalName,
             final String endNamespace, final String endElement,
-            final Writer logFile) throws XMLStreamException, IOException {
+            final Writer logFile) throws XMLStreamException {
         Long kod = null;
 
         while (reader.hasNext()) {
@@ -904,12 +880,11 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     private static Long getElementValueFromElement(
             final XMLStreamReader reader, final String namespace,
             final String localName, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         if (namespace.equals(reader.getNamespaceURI())
                 && localName.equals(reader.getLocalName())) {
             return Long.valueOf(reader.getElementText());
@@ -932,11 +907,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     public static void processGeometrie(final XMLStreamReader reader,
             final Object item, final String namespace, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         while (reader.hasNext()) {
             final int event = reader.next();
 
@@ -962,11 +936,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     private static void processGeometrieElement(final XMLStreamReader reader,
             final Object item, final String namespace, final Writer logFile)
-            throws IOException, XMLStreamException {
+            throws XMLStreamException {
         if (namespace.equals(reader.getNamespaceURI())) {
             final String localName = reader.getLocalName();
 
@@ -994,12 +967,11 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     public static void processMluvnickeCharakteristiky(
             final XMLStreamReader reader, final ItemWithMluvCharPad item,
             final String endNamespace, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         while (reader.hasNext()) {
             final int event = reader.next();
 
@@ -1026,11 +998,10 @@ public class Utils {
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/0 problem occurred.
      */
     private static void processMluvnickeCharakteristikyElement(
             final XMLStreamReader reader, final ItemWithMluvCharPad item,
-            final Writer logFile) throws XMLStreamException, IOException {
+            final Writer logFile) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case Namespaces.COMMON_TYPY:
                 switch (reader.getLocalName()) {

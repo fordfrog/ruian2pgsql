@@ -26,7 +26,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -45,15 +44,14 @@ public class App {
      *
      * @param args application arguments.
      *
-     * @throws IOException        Thrown if I/O problem occurred.
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      * @throws SQLException       Thrown if problem occurred while communicating
      *                            with database.
      */
     @SuppressWarnings("AssignmentToForLoopParameter")
-    public static void main(final String[] args) throws IOException,
-            XMLStreamException, SQLException {
+    public static void main(final String[] args) throws XMLStreamException,
+            SQLException {
         if (args.length == 0) {
             printUsage();
 
@@ -96,14 +94,9 @@ public class App {
 
     /**
      * Prints application usage information.
-     *
-     * @throws UnsupportedEncodingException Thrown if UTF-8 encoding is not
-     *                                      supported.
-     * @throws IOException                  Thrown if I/O problem occurred.
      */
     @SuppressWarnings("UseOfSystemOutOrSystemErr")
-    private static void printUsage() throws UnsupportedEncodingException,
-            IOException {
+    private static void printUsage() {
         try (final InputStream inputStream =
                         App.class.getResourceAsStream("/usage.txt")) {
             final BufferedReader reader = new BufferedReader(
@@ -114,6 +107,9 @@ public class App {
                 System.out.println(line);
                 line = reader.readLine();
             }
+        } catch (final IOException ex) {
+            throw new RuntimeException(
+                    "Failed to output usage information", ex);
         }
     }
 }

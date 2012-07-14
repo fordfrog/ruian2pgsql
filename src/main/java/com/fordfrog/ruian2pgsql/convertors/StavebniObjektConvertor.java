@@ -25,7 +25,6 @@ import com.fordfrog.ruian2pgsql.containers.StavebniObjekt;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
 import com.fordfrog.ruian2pgsql.utils.Utils;
-import java.io.IOException;
 import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -135,8 +134,7 @@ public class StavebniObjektConvertor
     @Override
     protected void processElement(final XMLStreamReader reader,
             final Connection con, final StavebniObjekt item,
-            final Writer logFile) throws IOException, XMLStreamException,
-            SQLException {
+            final Writer logFile) throws XMLStreamException, SQLException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
@@ -275,11 +273,10 @@ public class StavebniObjektConvertor
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/O problem occurred.
      */
     private void processCislaDomovni(final XMLStreamReader reader,
             final StavebniObjekt item, final Writer logFile)
-            throws XMLStreamException, IOException {
+            throws XMLStreamException {
         while (reader.hasNext()) {
             final int event = reader.next();
 
@@ -304,11 +301,10 @@ public class StavebniObjektConvertor
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws IOException        Thrown if I/O problem occurred.
      */
     private void processCislaDomovniElement(final XMLStreamReader reader,
             final StavebniObjekt item, final Writer logFile)
-            throws IOException, XMLStreamException {
+            throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case Namespaces.COMMON_TYPY:
                 switch (reader.getLocalName()) {
