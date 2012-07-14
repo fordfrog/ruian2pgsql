@@ -26,6 +26,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -61,7 +64,7 @@ public class App {
         Path inputDirPath = null;
         String dbConnectionUrl = null;
         boolean createTables = false;
-        Path logFilePath = Paths.get("log.txt");
+        Path logFilePath = null;
 
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
@@ -88,8 +91,15 @@ public class App {
                 + "&password=p4ssw0rd)");
         Objects.requireNonNull(inputDirPath, "--input-dir must be set");
 
-        MainConvertor.convert(
-                inputDirPath, dbConnectionUrl, createTables, logFilePath);
+        try (@SuppressWarnings("UseOfSystemOutOrSystemErr")
+                final Writer logFile = new OutputStreamWriter(
+                        logFilePath == null ? System.out
+                        : Files.newOutputStream(logFilePath))) {
+            MainConvertor.convert(
+                    inputDirPath, dbConnectionUrl, createTables, logFile);
+        } catch (final IOException ex) {
+            throw new RuntimeException("Failed to create log writer", ex);
+        }
     }
 
     /**

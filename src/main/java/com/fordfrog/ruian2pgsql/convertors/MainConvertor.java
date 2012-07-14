@@ -24,13 +24,11 @@ package com.fordfrog.ruian2pgsql.convertors;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.Utils;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.nio.charset.Charset;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -68,7 +66,7 @@ public class MainConvertor {
      * @param inputDirPath    path to directory that contains input files
      * @param dbConnectionUrl database connection URL
      * @param createTables    whether data tables should be (re)created
-     * @param logFilePath     log file path
+     * @param logFile         log file writer
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
@@ -77,13 +75,11 @@ public class MainConvertor {
      */
     public static void convert(final Path inputDirPath,
             final String dbConnectionUrl, final boolean createTables,
-            final Path logFilePath) throws XMLStreamException, SQLException {
+            final Writer logFile) throws XMLStreamException, SQLException {
         final long startTimestamp = System.currentTimeMillis();
 
         try (final Connection con =
-                        DriverManager.getConnection(dbConnectionUrl);
-                final BufferedWriter logFile = Files.newBufferedWriter(
-                        logFilePath, Charset.forName("UTF-8"))) {
+                        DriverManager.getConnection(dbConnectionUrl)) {
             con.setAutoCommit(false);
 
             if (createTables) {
@@ -98,8 +94,6 @@ public class MainConvertor {
 
             Utils.printToLog(logFile, "Total duration: "
                     + (System.currentTimeMillis() - startTimestamp) + " ms");
-        } catch (final IOException ex) {
-            throw new RuntimeException("Failed to create log file", ex);
         }
     }
 
