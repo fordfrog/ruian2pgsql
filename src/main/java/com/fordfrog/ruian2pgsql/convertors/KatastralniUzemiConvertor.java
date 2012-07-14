@@ -84,7 +84,7 @@ public class KatastralniUzemiConvertor
             throws SQLException {
         final PreparedStatementEx pstmEx = new PreparedStatementEx(pstm);
         pstm.setString(1, item.getNazev());
-        pstm.setBoolean(2, item.isNespravny());
+        pstmEx.setBoolean(2, item.getNespravny());
         pstm.setInt(3, item.getObecKod());
         pstm.setBoolean(4, item.isMaDkm());
         pstm.setString(5, item.getMluvCharPad2());

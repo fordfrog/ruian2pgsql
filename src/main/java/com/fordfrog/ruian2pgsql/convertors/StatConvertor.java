@@ -77,7 +77,7 @@ public class StatConvertor extends AbstractSaveConvertor<Stat> {
             final boolean update) throws SQLException {
         final PreparedStatementEx pstmEx = new PreparedStatementEx(pstm);
         pstm.setString(1, item.getNazev());
-        pstm.setBoolean(2, item.isNespravny());
+        pstmEx.setBoolean(2, item.getNespravny());
         pstm.setLong(3, item.getIdTransRuian());
         pstm.setString(4, item.getNutsLau());
         pstmEx.setDate(5, item.getPlatiOd());

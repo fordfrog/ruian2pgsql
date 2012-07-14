@@ -33,7 +33,7 @@ import org.postgresql.geometric.PGpoint;
 public class Parcela implements ItemWithDefinicniBod, ItemWithHranice {
 
     private Long id;
-    private boolean nespravny;
+    private Boolean nespravny;
     private Integer katuzKod;
     private Integer druhPozemkuKod;
     private Integer druhCislovaniKod;
@@ -55,11 +55,11 @@ public class Parcela implements ItemWithDefinicniBod, ItemWithHranice {
         this.id = id;
     }
 
-    public boolean isNespravny() {
+    public Boolean getNespravny() {
         return nespravny;
     }
 
-    public void setNespravny(final boolean nespravny) {
+    public void setNespravny(final Boolean nespravny) {
         this.nespravny = nespravny;
     }
 

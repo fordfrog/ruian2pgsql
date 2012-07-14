@@ -33,7 +33,7 @@ public class Ulice implements ItemWithDefinicniCary {
 
     private Integer kod;
     private String nazev;
-    private boolean nespravny;
+    private Boolean nespravny;
     private Integer obecKod;
     private Long idTransRuian;
     private Date platiOd;
@@ -57,11 +57,11 @@ public class Ulice implements ItemWithDefinicniCary {
         this.nazev = nazev;
     }
 
-    public boolean isNespravny() {
+    public Boolean getNespravny() {
         return nespravny;
     }
 
-    public void setNespravny(final boolean nespravny) {
+    public void setNespravny(final Boolean nespravny) {
         this.nespravny = nespravny;
     }
 

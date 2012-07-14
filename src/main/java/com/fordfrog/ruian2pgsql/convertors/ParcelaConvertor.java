@@ -80,7 +80,7 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
     protected void fill(final PreparedStatement pstm, final Parcela item,
             final boolean update) throws SQLException {
         final PreparedStatementEx pstmEx = new PreparedStatementEx(pstm);
-        pstm.setBoolean(1, item.isNespravny());
+        pstmEx.setBoolean(1, item.getNespravny());
         pstm.setInt(2, item.getKatuzKod());
         pstm.setInt(3, item.getDruhPozemkuKod());
         pstm.setInt(4, item.getDruhCislovaniKod());

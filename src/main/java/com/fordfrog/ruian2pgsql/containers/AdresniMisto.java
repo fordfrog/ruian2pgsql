@@ -32,7 +32,7 @@ import org.postgresql.geometric.PGpoint;
 public class AdresniMisto implements ItemWithDefinicniBod {
 
     private Integer kod;
-    private boolean nespravny;
+    private Boolean nespravny;
     private Integer adrpPsc;
     private Integer uliceKod;
     private Integer stavobjKod;
@@ -53,11 +53,11 @@ public class AdresniMisto implements ItemWithDefinicniBod {
         this.kod = kod;
     }
 
-    public boolean isNespravny() {
+    public Boolean getNespravny() {
         return nespravny;
     }
 
-    public void setNespravny(final boolean nespravny) {
+    public void setNespravny(final Boolean nespravny) {
         this.nespravny = nespravny;
     }
 

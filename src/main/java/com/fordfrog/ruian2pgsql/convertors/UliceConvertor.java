@@ -62,7 +62,7 @@ public class UliceConvertor extends AbstractSaveConvertor<Ulice> {
             final boolean update) throws SQLException {
         final PreparedStatementEx pstmEx = new PreparedStatementEx(pstm);
         pstm.setString(1, item.getNazev());
-        pstm.setBoolean(2, item.isNespravny());
+        pstmEx.setBoolean(2, item.getNespravny());
         pstm.setInt(3, item.getObecKod());
         pstm.setLong(4, item.getIdTransRuian());
         pstmEx.setDate(5, item.getPlatiOd());

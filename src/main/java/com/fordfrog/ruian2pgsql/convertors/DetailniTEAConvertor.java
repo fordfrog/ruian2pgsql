@@ -84,7 +84,7 @@ public class DetailniTEAConvertor extends AbstractSaveConvertor<DetailniTEA> {
         pstmEx.setInt(1, item.getKod());
         pstm.setInt(2, stavebniObjektId);
         pstm.setInt(3, item.getAdresniMistoKod());
-        pstm.setBoolean(4, item.isNespravny());
+        pstmEx.setBoolean(4, item.getNespravny());
         pstmEx.setInt(5, item.getPocetBytu());
         pstmEx.setInt(6, item.getPocetPodlazi());
         pstmEx.setInt(7, item.getDruhKonstrukceKod());

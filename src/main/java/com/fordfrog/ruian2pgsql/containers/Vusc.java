@@ -34,7 +34,7 @@ public class Vusc implements ItemWithDefinicniBod, ItemWithHranice {
 
     private Integer kod;
     private String nazev;
-    private boolean nespravny;
+    private Boolean nespravny;
     private Integer regsoudrKod;
     private Long idTransRuian;
     private String nutsLau;
@@ -60,11 +60,11 @@ public class Vusc implements ItemWithDefinicniBod, ItemWithHranice {
         this.nazev = nazev;
     }
 
-    public boolean isNespravny() {
+    public Boolean getNespravny() {
         return nespravny;
     }
 
-    public void setNespravny(final boolean nespravny) {
+    public void setNespravny(final Boolean nespravny) {
         this.nespravny = nespravny;
     }
 

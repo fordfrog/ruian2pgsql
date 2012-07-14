@@ -89,7 +89,7 @@ public class ObecConvertor extends AbstractSaveConvertor<Obec> {
             final boolean update) throws SQLException {
         final PreparedStatementEx pstmEx = new PreparedStatementEx(pstm);
         pstm.setString(1, item.getNazev());
-        pstm.setBoolean(2, item.isNespravny());
+        pstmEx.setBoolean(2, item.getNespravny());
         pstm.setInt(3, item.getOkresKod());
         pstm.setInt(4, item.getPouKod());
         pstm.setString(5, item.getNutsLau());

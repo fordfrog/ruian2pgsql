@@ -33,7 +33,7 @@ public class DetailniTEA {
     private Integer kod;
     private Integer stavobjKod;
     private Integer adresniMistoKod;
-    private boolean nespravny;
+    private Boolean nespravny;
     private Integer pocetBytu;
     private Integer pocetPodlazi;
     private Integer druhKonstrukceKod;
@@ -70,11 +70,11 @@ public class DetailniTEA {
         this.adresniMistoKod = adresniMistoKod;
     }
 
-    public boolean isNespravny() {
+    public Boolean getNespravny() {
         return nespravny;
     }
 
-    public void setNespravny(final boolean nespravny) {
+    public void setNespravny(final Boolean nespravny) {
         this.nespravny = nespravny;
     }
 

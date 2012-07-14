@@ -35,7 +35,7 @@ public class Momc implements ItemWithDefinicniBod, ItemWithHranice,
 
     private Integer kod;
     private String nazev;
-    private boolean nespravny;
+    private Boolean nespravny;
     private Integer obecKod;
     private Integer mopKod;
     private Integer spravobvKod;
@@ -72,11 +72,11 @@ public class Momc implements ItemWithDefinicniBod, ItemWithHranice,
         this.nazev = nazev;
     }
 
-    public boolean isNespravny() {
+    public Boolean getNespravny() {
         return nespravny;
     }
 
-    public void setNespravny(final boolean nespravny) {
+    public void setNespravny(final Boolean nespravny) {
         this.nespravny = nespravny;
     }
 

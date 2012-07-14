@@ -33,7 +33,7 @@ import org.postgresql.geometric.PGpoint;
 public class StavebniObjekt implements ItemWithDefinicniBod, ItemWithHranice {
 
     private Integer kod;
-    private boolean nespravny;
+    private Boolean nespravny;
     private Long identifikacniParcelaId;
     private Integer momcKod;
     private Integer cobceKod;
@@ -70,11 +70,11 @@ public class StavebniObjekt implements ItemWithDefinicniBod, ItemWithHranice {
         this.kod = kod;
     }
 
-    public boolean isNespravny() {
+    public Boolean getNespravny() {
         return nespravny;
     }
 
-    public void setNespravny(final boolean nespravny) {
+    public void setNespravny(final Boolean nespravny) {
         this.nespravny = nespravny;
     }
 

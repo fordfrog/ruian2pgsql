@@ -66,7 +66,7 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
     protected void fill(final PreparedStatement pstm, final AdresniMisto item,
             final boolean update) throws SQLException {
         final PreparedStatementEx pstmEx = new PreparedStatementEx(pstm);
-        pstm.setBoolean(1, item.isNespravny());
+        pstmEx.setBoolean(1, item.getNespravny());
         pstmEx.setInt(2, item.getAdrpPsc());
         pstmEx.setInt(3, item.getUliceKod());
         pstm.setInt(4, item.getStavobjKod());

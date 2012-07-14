@@ -35,7 +35,7 @@ public class Obec implements ItemWithDefinicniBod, ItemWithHranice,
 
     private Integer kod;
     private String nazev;
-    private boolean nespravny;
+    private Boolean nespravny;
     private Integer okresKod;
     private Integer pouKod;
     private String nutsLau;
@@ -75,11 +75,11 @@ public class Obec implements ItemWithDefinicniBod, ItemWithHranice,
         this.nazev = nazev;
     }
 
-    public boolean isNespravny() {
+    public Boolean getNespravny() {
         return nespravny;
     }
 
-    public void setNespravny(final boolean nespravny) {
+    public void setNespravny(final Boolean nespravny) {
         this.nespravny = nespravny;
     }
 
