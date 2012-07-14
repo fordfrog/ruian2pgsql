@@ -33,7 +33,8 @@ CREATE TABLE hlavicka (
     transakce_do_zapsano timestamp without time zone,
     predchozi_soubor varchar,
     plny_soubor varchar,
-    metadata varchar
+    metadata varchar,
+    import_timestamp timestamp without time zone DEFAULT timezone('utc', now())
 );
 
 CREATE TABLE rn_stat (
