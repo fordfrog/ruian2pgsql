@@ -107,6 +107,10 @@ public class UliceConvertor extends AbstractSaveConvertor<Ulice> {
                     case "Nazev":
                         item.setNazev(reader.getElementText());
                         break;
+                    case "Nespravny":
+                        item.setNespravny(
+                                Boolean.valueOf(reader.getElementText()));
+                        break;
                     case "Obec":
                         item.setObecKod(
                                 Utils.getObecKod(reader, NAMESPACE, logFile));

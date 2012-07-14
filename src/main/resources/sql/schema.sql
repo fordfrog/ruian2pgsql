@@ -31,6 +31,8 @@ CREATE TABLE hlavicka (
     transakce_od_zapsano timestamp without time zone,
     transakce_do_id int,
     transakce_do_zapsano timestamp without time zone,
+    predchozi_soubor varchar,
+    plny_soubor varchar,
     metadata varchar
 );
 

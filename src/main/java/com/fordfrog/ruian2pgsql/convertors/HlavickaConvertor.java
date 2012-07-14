@@ -57,8 +57,8 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
     private static final String SQL_INSERT = "INSERT INTO hlavicka "
             + "(typ_zaznamu, typ_davky, typ_souboru, datum, transakce_od_id, "
             + "transakce_od_zapsano, transakce_do_id, transakce_do_zapsano, "
-            + "metadata) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "predchozi_soubor, plny_soubor, metadata) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     /**
      * Creates new instance of HlavickaConvertor.
@@ -80,7 +80,9 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
         pstmEx.setTimestamp(6, item.getTransakceOdZapsano());
         pstm.setInt(7, item.getTransakceDoId());
         pstmEx.setTimestamp(8, item.getTransakceDoZapsano());
-        pstm.setString(9, item.getMetadata());
+        pstm.setString(9, item.getPredchoziSoubor());
+        pstm.setString(10, item.getPlnySoubor());
+        pstm.setString(11, item.getMetadata());
     }
 
     @Override
@@ -104,6 +106,12 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
                     case "Metadata":
                         item.setMetadata(reader.getAttributeValue(
                                 Namespaces.XLINK, "href"));
+                        break;
+                    case "PlnySoubor":
+                        item.setPlnySoubor(reader.getElementText());
+                        break;
+                    case "PredchoziSoubor":
+                        item.setPredchoziSoubor(reader.getElementText());
                         break;
                     case "TransakceOd":
                     case "TrasakceOd":

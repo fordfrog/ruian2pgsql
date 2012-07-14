@@ -613,6 +613,26 @@ public class Utils {
     }
 
     /**
+     * Reads Kod of Momc from current element.
+     *
+     * @param reader       XML stream reader
+     * @param endNamespace end namespace of current element
+     * @param logFile      log file writer
+     *
+     * @return Kod value
+     *
+     * @throws XMLStreamException Thrown if problem occurred while reading XML
+     *                            stream.
+     * @throws IOException        Thrown if I/0 problem occurred.
+     */
+    public static Integer getMomcKod(final XMLStreamReader reader,
+            final String endNamespace, final Writer logFile)
+            throws XMLStreamException, IOException {
+        return getElementValue(reader, Namespaces.MOMC_INT_TYPY, "Kod",
+                endNamespace, "Momc", logFile).intValue();
+    }
+
+    /**
      * Reads Kod of Mop from current element.
      *
      * @param reader       XML stream reader

@@ -149,6 +149,10 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
                         item.setKmenoveCislo(
                                 Integer.parseInt(reader.getElementText()));
                         break;
+                    case "Nespravny":
+                        item.setNespravny(
+                                Boolean.valueOf(reader.getElementText()));
+                        break;
                     case "PlatiOd":
                         item.setPlatiOd(
                                 Utils.parseTimestamp(reader.getElementText()));

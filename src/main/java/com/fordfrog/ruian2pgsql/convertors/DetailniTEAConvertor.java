@@ -130,12 +130,20 @@ public class DetailniTEAConvertor extends AbstractSaveConvertor<DetailniTEA> {
                     case "Kod":
                         item.setKod(Integer.parseInt(reader.getElementText()));
                         break;
+                    case "Nespravny":
+                        item.setNespravny(
+                                Boolean.valueOf(reader.getElementText()));
+                        break;
                     case "PlatiOd":
                         item.setPlatiOd(
                                 Utils.parseTimestamp(reader.getElementText()));
                         break;
                     case "PocetBytu":
                         item.setPocetBytu(
+                                Integer.parseInt(reader.getElementText()));
+                        break;
+                    case "PocetPodlazi":
+                        item.setPocetPodlazi(
                                 Integer.parseInt(reader.getElementText()));
                         break;
                     case "PripojeniKanalizaceKod":

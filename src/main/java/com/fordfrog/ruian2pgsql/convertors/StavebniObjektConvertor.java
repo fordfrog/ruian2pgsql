@@ -189,6 +189,14 @@ public class StavebniObjektConvertor
                         deleteDetailniTEA(con, item.getKod());
                         deleteZpusobyOchranyObjektu(con, item.getKod());
                         break;
+                    case "Momc":
+                        item.setMomcKod(
+                                Utils.getMomcKod(reader, NAMESPACE, logFile));
+                        break;
+                    case "Nespravny":
+                        item.setNespravny(
+                                Boolean.valueOf(reader.getElementText()));
+                        break;
                     case "ObestavenyProstor":
                         item.setObestavenyProstor(
                                 Integer.parseInt(reader.getElementText()));

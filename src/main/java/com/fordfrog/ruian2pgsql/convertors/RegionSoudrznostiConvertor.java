@@ -126,6 +126,10 @@ public class RegionSoudrznostiConvertor
                     case "Nazev":
                         item.setNazev(reader.getElementText());
                         break;
+                    case "Nespravny":
+                        item.setNespravny(
+                                Boolean.valueOf(reader.getElementText()));
+                        break;
                     case "NutsLau":
                         item.setNutsLau(reader.getElementText());
                         break;

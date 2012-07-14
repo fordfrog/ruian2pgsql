@@ -38,6 +38,8 @@ public class Hlavicka {
     private Date transakceOdZapsano;
     private Integer transakceDoId;
     private Date transakceDoZapsano;
+    private String predchoziSoubor;
+    private String plnySoubor;
     private String metadata;
 
     public String getTypZaznamu() {
@@ -108,6 +110,22 @@ public class Hlavicka {
     @SuppressWarnings("AssignmentToDateFieldFromParameter")
     public void setTransakceDoZapsano(final Date transakceDoZapsano) {
         this.transakceDoZapsano = transakceDoZapsano;
+    }
+
+    public String getPredchoziSoubor() {
+        return predchoziSoubor;
+    }
+
+    public void setPredchoziSoubor(final String predchoziSoubor) {
+        this.predchoziSoubor = predchoziSoubor;
+    }
+
+    public String getPlnySoubor() {
+        return plnySoubor;
+    }
+
+    public void setPlnySoubor(final String plnySoubor) {
+        this.plnySoubor = plnySoubor;
     }
 
     public String getMetadata() {

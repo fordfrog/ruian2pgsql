@@ -127,6 +127,10 @@ public class OrpConvertor extends AbstractSaveConvertor<Orp> {
                     case "Nazev":
                         item.setNazev(reader.getElementText());
                         break;
+                    case "Nespravny":
+                        item.setNespravny(
+                                Boolean.valueOf(reader.getElementText()));
+                        break;
                     case "PlatiOd":
                         item.setPlatiOd(
                                 Utils.parseTimestamp(reader.getElementText()));

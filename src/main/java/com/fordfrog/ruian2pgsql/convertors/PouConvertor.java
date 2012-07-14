@@ -127,6 +127,10 @@ public class PouConvertor extends AbstractSaveConvertor<Pou> {
                     case "Nazev":
                         item.setNazev(reader.getElementText());
                         break;
+                    case "Nespravny":
+                        item.setNespravny(
+                                Boolean.valueOf(reader.getElementText()));
+                        break;
                     case "Orp":
                         item.setOrpKod(
                                 Utils.getOrpKod(reader, NAMESPACE, logFile));

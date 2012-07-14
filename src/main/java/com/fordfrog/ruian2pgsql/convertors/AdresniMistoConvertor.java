@@ -102,6 +102,13 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
                         item.setCisloDomovni(
                                 Integer.parseInt(reader.getElementText()));
                         break;
+                    case "CisloOrientacni":
+                        item.setCisloOrientacniHodnota(
+                                Integer.parseInt(reader.getElementText()));
+                        break;
+                    case "CisloOrientacniPismeno":
+                        item.setCisloOrientacniPismeno(reader.getElementText());
+                        break;
                     case "Geometrie":
                         Utils.processGeometrie(
                                 reader, item, NAMESPACE, logFile);
@@ -116,6 +123,10 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
                         break;
                     case "Kod":
                         item.setKod(Integer.parseInt(reader.getElementText()));
+                        break;
+                    case "Nespravny":
+                        item.setNespravny(
+                                Boolean.valueOf(reader.getElementText()));
                         break;
                     case "PlatiOd":
                         item.setPlatiOd(
