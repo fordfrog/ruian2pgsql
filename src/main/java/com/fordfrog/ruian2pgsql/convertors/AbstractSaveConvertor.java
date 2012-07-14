@@ -122,7 +122,7 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
                     break;
                 case XMLStreamReader.END_ELEMENT:
                     if (Utils.isEndElement(namespace, localName, reader)) {
-                        saveData(con, item);
+                        saveData(con, item, logFile);
 
                         return;
                     }
@@ -139,14 +139,15 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
      * called. Testing for whether item exists is performed via
      * {@link #exists(java.sql.Connection, java.lang.Object)}.
      *
-     * @param con  database connection
-     * @param item item to be saved
+     * @param con     database connection
+     * @param item    item to be saved
+     * @param logFile log file writer
      *
      * @throws SQLException Thrown if problem occurred while saving item into
      *                      database.
      */
-    protected void saveData(final Connection con, final T item)
-            throws SQLException {
+    protected void saveData(final Connection con, final T item,
+            final Writer logFile) throws SQLException {
         if (exists(con, item)) {
             updateItem(con, item);
         } else {

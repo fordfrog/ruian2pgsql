@@ -51,7 +51,6 @@ spustíte bez parametrů (výpis je v angličtině, zde je přeložený):
 To do
 -----
 
-* zpracovávat odstranění objektů při zpracování aktualizačního souboru
 * importovat hranice a cesty
 
 Licence

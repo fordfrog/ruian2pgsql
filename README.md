@@ -50,7 +50,6 @@ parameters:
 To do
 -----
 
-* process removals of objects when processing update file
 * import borders and paths
 
 License

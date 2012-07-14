@@ -128,6 +128,10 @@ public class DataConvertor extends AbstractConvertor {
                         convertor = new CollectionConvertor(
                                 "Vusc", "Vusc", new VuscConvertor());
                         break;
+                    case "ZaniklePrvky":
+                        convertor = new CollectionConvertor("ZaniklePrvky",
+                                "ZaniklyPrvek", new ZaniklyPrvekConvertor());
+                        break;
                     case "Zsj":
                         convertor = new CollectionConvertor(
                                 "Zsj", "Zsj", new ZsjConvertor());
