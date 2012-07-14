@@ -38,7 +38,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -86,14 +90,8 @@ public class MainConvertor {
                 initDatabase(con);
             }
 
-            try (final DirectoryStream<Path> files =
-                            Files.newDirectoryStream(inputDirPath)) {
-                final Iterator<Path> filesIterator = files.iterator();
-
-                while (filesIterator.hasNext()) {
-                    final Path file = filesIterator.next();
-                    processFile(con, file, logFile);
-                }
+            for (final Path file : getInputFiles(inputDirPath)) {
+                processFile(con, file, logFile);
             }
 
             con.commit();
@@ -133,6 +131,44 @@ public class MainConvertor {
         } catch (final SQLException ex) {
             throw new RuntimeException("Statement failed: " + sbSQL.toString());
         }
+    }
+
+    /**
+     * Reads input files from input directory and sorts them in ascending order.
+     *
+     * @param inputDirPath input directory
+     *
+     * @return sorted list of input files
+     *
+     * @throws IOException Thrown if problem occurred while reading files from
+     *                     input directory.
+     */
+    private static List<Path> getInputFiles(final Path inputDirPath)
+            throws IOException {
+        final List<Path> result = new ArrayList<>(10);
+
+        try (final DirectoryStream<Path> files =
+                        Files.newDirectoryStream(inputDirPath)) {
+            final Iterator<Path> filesIterator = files.iterator();
+
+            while (filesIterator.hasNext()) {
+                final Path file = filesIterator.next();
+
+                if (!Files.isDirectory(file)) {
+                    result.add(file);
+                }
+            }
+        }
+
+        Collections.sort(result, new Comparator<Path>() {
+            @Override
+            public int compare(final Path o1, final Path o2) {
+                return o1.getFileName().toString().compareTo(
+                        o2.getFileName().toString());
+            }
+        });
+
+        return result;
     }
 
     /**
