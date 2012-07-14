@@ -80,6 +80,8 @@ public class MainConvertor {
             final String dbConnectionUrl, final boolean createTables,
             final Path logFilePath)
             throws IOException, XMLStreamException, SQLException {
+        final long startTimestamp = System.currentTimeMillis();
+
         try (final Connection con =
                         DriverManager.getConnection(dbConnectionUrl);
                 final BufferedWriter logFile = Files.newBufferedWriter(
@@ -95,6 +97,9 @@ public class MainConvertor {
             }
 
             con.commit();
+
+            Utils.printToLog(logFile, "Total duration: "
+                    + (System.currentTimeMillis() - startTimestamp) + " ms");
         }
     }
 
@@ -191,19 +196,22 @@ public class MainConvertor {
             UnsupportedEncodingException, XMLStreamException, SQLException {
         final String fileName = file.toString();
 
-        if (fileName.endsWith(".xml.gz")) {
-            Utils.printToLog(logFile, "Processing file " + file);
+        if (fileName.endsWith(".xml.gz") || fileName.endsWith(".xml")) {
+            final long startTimestamp = System.currentTimeMillis();
 
-            try (final GZIPInputStream gZIPInputStream =
-                            new GZIPInputStream(Files.newInputStream(file))) {
-                readInputStream(con, gZIPInputStream, logFile);
-            }
-        } else if (fileName.endsWith(".xml")) {
             Utils.printToLog(logFile, "Processing file " + file);
 
             try (final InputStream inputStream = Files.newInputStream(file)) {
-                readInputStream(con, inputStream, logFile);
+                if (fileName.endsWith(".gz")) {
+                    readInputStream(
+                            con, new GZIPInputStream(inputStream), logFile);
+                } else {
+                    readInputStream(con, inputStream, logFile);
+                }
             }
+
+            Utils.printToLog(logFile, "File processed in "
+                    + (System.currentTimeMillis() - startTimestamp) + " ms");
         } else {
             Utils.printToLog(logFile,
                     "Unsupported file extension, ignoring file " + file);
