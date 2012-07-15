@@ -18,7 +18,7 @@ Požadavky
 ---------
 
 * JRE nebo JDK 7+
-* server PostgreSQL
+* server PostgreSQL s nainstalovanou knihovnou PostGIS
 * Apache Maven 3+ (pouze v případě, že si chcete sami aplikaci zkompilovat)
 
 Kompilace
@@ -51,7 +51,7 @@ spustíte bez parametrů (výpis je v angličtině, zde je přeložený):
 To do
 -----
 
-* importovat hranice a cesty
+seznam je aktuálně prázdný
 
 Licence
 -------

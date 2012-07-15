@@ -22,8 +22,6 @@
 package com.fordfrog.ruian2pgsql.containers;
 
 import java.util.Date;
-import org.postgresql.geometric.PGpath;
-import org.postgresql.geometric.PGpoint;
 
 /**
  * Container for CastObce information.
@@ -47,8 +45,8 @@ public class CastObce implements ItemWithDefinicniBod, ItemWithHranice,
     private Boolean zmenaGrafiky;
     private Date platiOd;
     private Long nzIdGlobalni;
-    private PGpoint definicniBod;
-    private PGpath hranice;
+    private String definicniBod;
+    private String hranice;
 
     public Integer getKod() {
         return kod;
@@ -177,22 +175,22 @@ public class CastObce implements ItemWithDefinicniBod, ItemWithHranice,
     }
 
     @Override
-    public PGpoint getDefinicniBod() {
+    public String getDefinicniBod() {
         return definicniBod;
     }
 
     @Override
-    public void setDefinicniBod(final PGpoint definicniBod) {
+    public void setDefinicniBod(final String definicniBod) {
         this.definicniBod = definicniBod;
     }
 
     @Override
-    public PGpath getHranice() {
+    public String getHranice() {
         return hranice;
     }
 
     @Override
-    public void setHranice(final PGpath hranice) {
+    public void setHranice(final String hranice) {
         this.hranice = hranice;
     }
 }

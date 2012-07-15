@@ -56,8 +56,9 @@ public class ZsjConvertor extends AbstractSaveConvertor<Zsj> {
             + "mluv_char_pad_2, mluv_char_pad_3, mluv_char_pad_4, "
             + "mluv_char_pad_5, mluv_char_pad_6, mluv_char_pad_7, "
             + "vymera, plati_od, zmena_grafiky, nz_id_globalni, "
-            + "id_trans_ruian, definicni_bod, hranice, kod) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "id_trans_ruian, definicni_bod, hranice, kod) VALUES (?, ?, ?, "
+            + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_GeomFromGML(?), "
+            + "ST_GeomFromGML(?), ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -67,8 +68,8 @@ public class ZsjConvertor extends AbstractSaveConvertor<Zsj> {
             + "mluv_char_pad_3 = ?, mluv_char_pad_4 = ?, mluv_char_pad_5 = ?, "
             + "mluv_char_pad_6 = ?, mluv_char_pad_7 = ?, vymera = ?, "
             + "plati_od = ?, zmena_grafiky = ?, nz_id_globalni = ?, "
-            + "id_trans_ruian = ?, definicni_bod = ?, hranice = ? "
-            + "WHERE kod = ? AND plati_od < ?";
+            + "id_trans_ruian = ?, definicni_bod = ST_GeomFromGML(?), "
+            + "hranice = ST_GeomFromGML(?) WHERE kod = ? AND plati_od < ?";
 
     /**
      * Creates new instance of ZsjConvertor.
@@ -97,8 +98,8 @@ public class ZsjConvertor extends AbstractSaveConvertor<Zsj> {
         pstmEx.setBoolean(13, item.getZmenaGrafiky());
         pstm.setLong(14, item.getNzIdGlobalni());
         pstm.setLong(15, item.getIdTransRuian());
-        pstm.setObject(16, item.getDefinicniBod());
-        pstm.setObject(17, item.getHranice());
+        pstm.setString(16, item.getDefinicniBod());
+        pstm.setString(17, item.getHranice());
         pstm.setInt(18, item.getKod());
 
         if (update) {

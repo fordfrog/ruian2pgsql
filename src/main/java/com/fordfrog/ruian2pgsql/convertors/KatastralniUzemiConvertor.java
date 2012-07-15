@@ -57,7 +57,8 @@ public class KatastralniUzemiConvertor
             + "mluv_char_pad_3, mluv_char_pad_4, mluv_char_pad_5, "
             + "mluv_char_pad_6, mluv_char_pad_7, id_trans_ruian, plati_od, "
             + "nz_id_globalni, rizeni_id, definicni_bod, hranice, kod) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
+            + "ST_GeomFromGML(?), ST_GeomFromGML(?), ?)";
     /**
      * SQL statement for updating of existing item.
      */
@@ -66,8 +67,8 @@ public class KatastralniUzemiConvertor
             + "mluv_char_pad_2 = ?, mluv_char_pad_3 = ?, mluv_char_pad_4 = ?, "
             + "mluv_char_pad_5 = ?, mluv_char_pad_6 = ?, mluv_char_pad_7 = ?, "
             + "id_trans_ruian = ?, plati_od = ?, nz_id_globalni = ?, "
-            + "rizeni_id = ?, definicni_bod = ?, hranice = ? "
-            + "WHERE kod = ? AND plati_od < ?";
+            + "rizeni_id = ?, definicni_bod = ST_GeomFromGML(?), "
+            + "hranice = ST_GeomFromGML(?) WHERE kod = ? AND plati_od < ?";
 
     /**
      * Creates new instance of KatastralniUzemiConvertor.
@@ -96,8 +97,8 @@ public class KatastralniUzemiConvertor
         pstmEx.setDate(12, item.getPlatiOd());
         pstm.setLong(13, item.getNzIdGlobalni());
         pstmEx.setLong(14, item.getRizeniId());
-        pstm.setObject(15, item.getDefinicniBod());
-        pstm.setObject(16, item.getHranice());
+        pstm.setString(15, item.getDefinicniBod());
+        pstm.setString(16, item.getHranice());
         pstm.setInt(17, item.getKod());
 
         if (update) {

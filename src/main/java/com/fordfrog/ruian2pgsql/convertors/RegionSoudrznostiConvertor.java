@@ -56,16 +56,16 @@ public class RegionSoudrznostiConvertor
             "INSERT INTO rn_region_soudrznosti "
             + "(nazev, nespravny, stat_kod, id_trans_ruian, nuts_lau, "
             + "plati_od, nz_id_globalni, zmena_grafiky, definicni_bod, "
-            + "hranice, kod) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "hranice, kod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, "
+            + "ST_GeomFromGML(?), ST_GeomFromGML(?), ?)";
     /**
      * SQL statement for update of existing item.
      */
     private static final String SQL_UPDATE = "UPDATE rn_region_soudrznosti "
             + "SET nazev = ?, nespravny = ?, stat_kod = ?, id_trans_ruian = ?, "
             + "nuts_lau = ?, plati_od = ?, nz_id_globalni = ?, "
-            + "zmena_grafiky = ?, definicni_bod = ?, hranice = ? "
-            + "WHERE kod = ? AND plati_od < ?";
+            + "zmena_grafiky = ?, definicni_bod = ST_GeomFromGML(?), "
+            + "hranice = ST_GeomFromGML(?) WHERE kod = ? AND plati_od < ?";
 
     /**
      * Creates new instance of RegionSoudrznostiConvertor.
@@ -88,8 +88,8 @@ public class RegionSoudrznostiConvertor
         pstmEx.setDate(6, item.getPlatiOd());
         pstm.setLong(7, item.getNzIdGlobalni());
         pstmEx.setBoolean(8, item.getZmenaGrafiky());
-        pstm.setObject(9, item.getDefinicniBod());
-        pstm.setObject(10, item.getHranice());
+        pstm.setString(9, item.getDefinicniBod());
+        pstm.setString(10, item.getHranice());
         pstm.setInt(11, item.getKod());
 
         if (update) {

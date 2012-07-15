@@ -17,7 +17,7 @@ Prerequisities
 --------------
 
 * JRE or JDK 7+
-* PostgreSQL server
+* PostgreSQL server with installed PostGIS
 * Apache Maven 3+ (just in case you want to compile the application yourself)
 
 Compilation
@@ -50,7 +50,7 @@ parameters:
 To do
 -----
 
-* import borders and paths
+the list is empty now
 
 License
 -------

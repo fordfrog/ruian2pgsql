@@ -56,7 +56,8 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
             + "mluv_char_pad_4, mluv_char_pad_5, mluv_char_pad_6, "
             + "mluv_char_pad_7, id_trans_ruian, zmena_grafiky, plati_od, "
             + "nz_id_globalni, definicni_bod, hranice, kod) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
+            + "ST_GeomFromGML(?), ST_GeomFromGML(?), ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -65,8 +66,8 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
             + "mluv_char_pad_2 = ?, mluv_char_pad_3 = ?, mluv_char_pad_4 = ?, "
             + "mluv_char_pad_5 = ?, mluv_char_pad_6 = ?, mluv_char_pad_7 = ?, "
             + "id_trans_ruian = ?, zmena_grafiky = ?, plati_od = ?, "
-            + "nz_id_globalni = ?, definicni_bod = ?, hranice = ? "
-            + "WHERE kod = ? AND plati_od < ?";
+            + "nz_id_globalni = ?, definicni_bod = ST_GeomFromGML(?), "
+            + "hranice = ST_GeomFromGML(?) WHERE kod = ? AND plati_od < ?";
 
     /**
      * Creates new instance of CastObceConvertor.
@@ -93,8 +94,8 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
         pstmEx.setBoolean(11, item.getZmenaGrafiky());
         pstmEx.setDate(12, item.getPlatiOd());
         pstm.setLong(13, item.getNzIdGlobalni());
-        pstm.setObject(14, item.getDefinicniBod());
-        pstm.setObject(15, item.getHranice());
+        pstm.setString(14, item.getDefinicniBod());
+        pstm.setString(15, item.getHranice());
         pstm.setInt(16, item.getKod());
 
         if (update) {

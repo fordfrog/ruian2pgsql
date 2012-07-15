@@ -62,7 +62,7 @@ public class StavebniObjektConvertor
             + "zpusob_vytapeni_kod, zpusob_vyuziti_kod, id_trans_ruian, "
             + "plati_od, nz_id_globalni, definicni_bod, hranice, kod) "
             + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-            + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "?, ?, ?, ?, ?, ?, ?, ST_GeomFromGML(?), ST_GeomFromGML(?), ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -76,7 +76,8 @@ public class StavebniObjektConvertor
             + "pripoj_vodovod_kod = ?, typ_kod = ?, zastavena_plocha = ?, "
             + "zpusob_vytapeni_kod = ?, zpusob_vyuziti_kod = ?, "
             + "id_trans_ruian = ?, plati_od = ?, nz_id_globalni = ?, "
-            + "definicni_bod = ?, hranice = ? WHERE kod = ? AND plati_od < ?";
+            + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?) "
+            + "WHERE kod = ? AND plati_od < ?";
 
     /**
      * Creates new instance of StavebniObjektConvertor.
@@ -116,8 +117,8 @@ public class StavebniObjektConvertor
         pstm.setLong(24, item.getIdTransRuian());
         pstmEx.setDate(25, item.getPlatiOd());
         pstm.setLong(26, item.getNzIdGlobalni());
-        pstm.setObject(27, item.getDefinicniBod());
-        pstm.setObject(28, item.getHranice());
+        pstm.setString(27, item.getDefinicniBod());
+        pstm.setString(28, item.getHranice());
         pstm.setInt(29, item.getKod());
 
         if (update) {

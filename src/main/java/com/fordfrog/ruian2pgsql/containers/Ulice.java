@@ -22,7 +22,6 @@
 package com.fordfrog.ruian2pgsql.containers;
 
 import java.util.Date;
-import org.postgresql.geometric.PGpath;
 
 /**
  * Container for Ulice information.
@@ -39,7 +38,7 @@ public class Ulice implements ItemWithDefinicniCary {
     private Date platiOd;
     private Long nzIdGlobalni;
     private Boolean zmenaGrafiky;
-    private PGpath definicniCary;
+    private String definicniCary;
 
     public Integer getKod() {
         return kod;
@@ -108,12 +107,12 @@ public class Ulice implements ItemWithDefinicniCary {
     }
 
     @Override
-    public PGpath getDefinicniCary() {
+    public String getDefinicniCary() {
         return definicniCary;
     }
 
     @Override
-    public void setDefinicniCary(final PGpath definicniCary) {
+    public void setDefinicniCary(final String definicniCary) {
         this.definicniCary = definicniCary;
     }
 }

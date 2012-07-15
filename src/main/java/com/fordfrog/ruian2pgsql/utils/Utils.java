@@ -22,19 +22,17 @@
 package com.fordfrog.ruian2pgsql.utils;
 
 import com.fordfrog.ruian2pgsql.containers.ItemWithDefinicniBod;
+import com.fordfrog.ruian2pgsql.containers.ItemWithHranice;
 import com.fordfrog.ruian2pgsql.containers.ItemWithMluvCharPad;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import org.postgresql.geometric.PGpoint;
 
 /**
  * Utilities.
@@ -192,15 +190,15 @@ public class Utils {
      * @param engLocalName local name of DefinicniBod element
      * @param logFile      log file writer
      *
-     * @return parsed point
+     * @return GML geometry as string
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
-    public static PGpoint processDefinicniBod(final XMLStreamReader reader,
+    public static String processDefinicniBod(final XMLStreamReader reader,
             final String endNamespace, final String engLocalName,
             final Writer logFile) throws XMLStreamException {
-        PGpoint definicniBod = null;
+        String definicniBod = null;
 
         while (reader.hasNext()) {
             final int event = reader.next();
@@ -220,196 +218,101 @@ public class Utils {
     }
 
     /**
+     * Processes OriginalniHranice element.
+     *
+     * @param reader       XML stream reader
+     * @param endNamespace namespace of DefinicniBod element
+     * @param engLocalName local name of DefinicniBod element
+     * @param logFile      log file writer
+     *
+     * @return GML geometry as string
+     *
+     * @throws XMLStreamException Thrown if problem occurred while reading XML
+     *                            stream.
+     */
+    public static String processOriginalniHranice(final XMLStreamReader reader,
+            final String endNamespace, final String engLocalName,
+            final Writer logFile) throws XMLStreamException {
+        String hranice = null;
+
+        while (reader.hasNext()) {
+            final int event = reader.next();
+
+            switch (event) {
+                case XMLStreamReader.START_ELEMENT:
+                    hranice = processOriginalniHraniceElement(reader, logFile);
+                    break;
+                case XMLStreamReader.END_ELEMENT:
+                    if (isEndElement(endNamespace, engLocalName, reader)) {
+                        return hranice;
+                    }
+            }
+        }
+
+        return hranice;
+    }
+
+    /**
      * Processes sub-elements of DefinicniBod element.
      *
      * @param reader  XML stream reader
      * @param logFile log file writer
      *
-     * @return parsed point
+     * @return GML geometry as string
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
-    private static PGpoint processDefinicniBodElement(
+    private static String processDefinicniBodElement(
             final XMLStreamReader reader, final Writer logFile)
             throws XMLStreamException {
-        PGpoint point = null;
+        String result = null;
 
         switch (reader.getNamespaceURI()) {
             case Namespaces.ADR_MISTO_INT_TYPY:
                 switch (reader.getLocalName()) {
                     case "AdresniBod":
-                        point = processAdresniBod(reader, logFile);
+                        result = processAdresniBod(reader, logFile);
                         break;
                     default:
                         processUnsupported(reader, logFile);
                 }
                 break;
             case Namespaces.GML:
-                switch (reader.getLocalName()) {
-                    case "MultiPoint":
-                        final List<PGpoint> list =
-                                processMultiPoint(reader, logFile);
-
-                        if (list.size() > 1) {
-                            printToLog(logFile, "Warning: definition point "
-                                    + "contains more than one point, using "
-                                    + "first one.");
-                        }
-
-                        if (!list.isEmpty()) {
-                            point = list.get(0);
-                        }
-
-                        break;
-                    case "Point":
-                        point = processPoint(reader, logFile);
-                        break;
-                    default:
-                        processUnsupported(reader, logFile);
-                }
-
+                result = XMLStringUtil.createString(reader);
                 break;
             default:
                 processUnsupported(reader, logFile);
         }
 
-        return point;
+        return result;
     }
 
     /**
-     * Processes MultiPoint element.
+     * Processes sub-elements of OriginalniHranice element.
      *
      * @param reader  XML stream reader
      * @param logFile log file writer
      *
-     * @return list of parsed points
+     * @return GML geometry as string
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
-    private static List<PGpoint> processMultiPoint(final XMLStreamReader reader,
-            final Writer logFile) throws XMLStreamException {
-        final List<PGpoint> list = new ArrayList<>(10);
-
-        while (reader.hasNext()) {
-            final int event = reader.next();
-
-            switch (event) {
-                case XMLStreamReader.START_ELEMENT:
-                    list.addAll(processMultiPointElement(reader, logFile));
-                    break;
-                case XMLStreamReader.END_ELEMENT:
-                    if (isEndElement(Namespaces.GML, "MultiPoint", reader)) {
-                        return list;
-                    }
-            }
-        }
-
-        return list;
-    }
-
-    /**
-     * Processes sub-elements of MultiPoint element.
-     *
-     * @param reader  XML stream reader
-     * @param logFile log file writer
-     *
-     * @return list of parsed points
-     *
-     * @throws XMLStreamException Thrown if problem occurred while reading XML
-     *                            stream.
-     */
-    private static List<PGpoint> processMultiPointElement(
+    private static String processOriginalniHraniceElement(
             final XMLStreamReader reader, final Writer logFile)
             throws XMLStreamException {
-        final List<PGpoint> list = new ArrayList<>(10);
+        String result = null;
 
         switch (reader.getNamespaceURI()) {
             case Namespaces.GML:
-                switch (reader.getLocalName()) {
-                    case "pointMembers":
-                        list.addAll(processPointMembers(reader, logFile));
-                        break;
-                    default:
-                        processUnsupported(reader, logFile);
-                }
-
+                result = XMLStringUtil.createString(reader);
                 break;
             default:
                 processUnsupported(reader, logFile);
         }
 
-        return list;
-    }
-
-    /**
-     * Processes pointMembers element.
-     *
-     * @param reader  XML stream reader
-     * @param logFile log file writer
-     *
-     * @return list of parsed points
-     *
-     * @throws XMLStreamException Thrown if problem occurred while reading XML
-     *                            stream.
-     */
-    private static List<PGpoint> processPointMembers(
-            final XMLStreamReader reader, final Writer logFile)
-            throws XMLStreamException {
-        final List<PGpoint> list = new ArrayList<>(10);
-
-        while (reader.hasNext()) {
-            final int event = reader.next();
-
-            switch (event) {
-                case XMLStreamReader.START_ELEMENT:
-                    list.addAll(processPointMembersElement(reader, logFile));
-                    break;
-                case XMLStreamReader.END_ELEMENT:
-                    if (isEndElement(Namespaces.GML, "pointMembers", reader)) {
-                        return list;
-                    }
-            }
-        }
-
-        return list;
-    }
-
-    /**
-     * Processes sub-elements of pointMembers element.
-     *
-     * @param reader  XML stream reader
-     * @param logFile log file writer
-     *
-     * @return list of parsed points
-     *
-     * @throws XMLStreamException Thrown if problem occurred while reading XML
-     *                            stream.
-     */
-    private static List<PGpoint> processPointMembersElement(
-            final XMLStreamReader reader, final Writer logFile)
-            throws XMLStreamException {
-        final List<PGpoint> list = new ArrayList<>(10);
-        int pointsCount = 0;
-
-        switch (reader.getNamespaceURI()) {
-            case Namespaces.GML:
-                switch (reader.getLocalName()) {
-                    case "Point":
-                        list.add(processPoint(reader, logFile));
-                        pointsCount++;
-                        break;
-                    default:
-                        processUnsupported(reader, logFile);
-                }
-
-                break;
-            default:
-                processUnsupported(reader, logFile);
-        }
-
-        return list;
+        return result;
     }
 
     /**
@@ -418,31 +321,31 @@ public class Utils {
      * @param reader  XML stream reader
      * @param logFile log file writer
      *
-     * @return parsed point
+     * @return GML geometry as string
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
-    private static PGpoint processAdresniBod(final XMLStreamReader reader,
+    private static String processAdresniBod(final XMLStreamReader reader,
             final Writer logFile) throws XMLStreamException {
-        PGpoint point = null;
+        String result = null;
 
         while (reader.hasNext()) {
             final int event = reader.next();
 
             switch (event) {
                 case XMLStreamReader.START_ELEMENT:
-                    point = processAdresniBodElement(reader, logFile);
+                    result = processAdresniBodElement(reader, logFile);
                     break;
                 case XMLStreamReader.END_ELEMENT:
                     if (isEndElement(Namespaces.ADR_MISTO_INT_TYPY,
                             "AdresniBod", reader)) {
-                        return point;
+                        return result;
                     }
             }
         }
 
-        return point;
+        return result;
     }
 
     /**
@@ -456,107 +359,20 @@ public class Utils {
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
-    private static PGpoint processAdresniBodElement(
+    private static String processAdresniBodElement(
             final XMLStreamReader reader, final Writer logFile)
             throws XMLStreamException {
-        PGpoint point = null;
+        String result = null;
 
         switch (reader.getNamespaceURI()) {
             case Namespaces.GML:
-                switch (reader.getLocalName()) {
-                    case "Point":
-                        point = processPoint(reader, logFile);
-                        break;
-                    default:
-                        processUnsupported(reader, logFile);
-                }
-
+                result = XMLStringUtil.createString(reader);
                 break;
             default:
                 processUnsupported(reader, logFile);
         }
 
-        return point;
-    }
-
-    /**
-     * Processes Point element.
-     *
-     * @param reader  XML stream reader
-     * @param logFile log file writer
-     *
-     * @return parsed point
-     *
-     * @throws XMLStreamException Thrown if problem occurred while reading XML
-     *                            stream.
-     */
-    private static PGpoint processPoint(final XMLStreamReader reader,
-            final Writer logFile) throws XMLStreamException {
-        PGpoint point = null;
-
-        while (reader.hasNext()) {
-            final int event = reader.next();
-
-            switch (event) {
-                case XMLStreamReader.START_ELEMENT:
-                    point = processPointElement(reader, logFile);
-                    break;
-                case XMLStreamReader.END_ELEMENT:
-                    if (isEndElement(Namespaces.GML, "Point", reader)) {
-                        return point;
-                    }
-            }
-        }
-
-        return point;
-    }
-
-    /**
-     * Processes sub-elements of Point element.
-     *
-     * @param reader  XML stream reader
-     * @param logFile log file writer
-     *
-     * @return parsed point
-     *
-     * @throws XMLStreamException Thrown if problem occurred while reading XML
-     *                            stream.
-     */
-    private static PGpoint processPointElement(final XMLStreamReader reader,
-            final Writer logFile) throws XMLStreamException {
-        PGpoint point = null;
-
-        switch (reader.getNamespaceURI()) {
-            case Namespaces.GML:
-                switch (reader.getLocalName()) {
-                    case "pos":
-                        point = parsePoint(reader.getElementText());
-                        break;
-                    default:
-                        processUnsupported(reader, logFile);
-                }
-
-                break;
-            default:
-                processUnsupported(reader, logFile);
-        }
-
-        return point;
-    }
-
-    /**
-     * Parses point value into point object.
-     *
-     * @param value string value
-     *
-     * @return point object
-     */
-    private static PGpoint parsePoint(final String value) {
-        final String[] parts = value.split(" ");
-
-        return new PGpoint(
-                Double.parseDouble(parts[0]),
-                Double.parseDouble(parts[1]));
+        return result;
     }
 
     /**
@@ -1001,6 +817,11 @@ public class Utils {
                 final ItemWithDefinicniBod itemDefinicniBod =
                         (ItemWithDefinicniBod) item;
                 itemDefinicniBod.setDefinicniBod(processDefinicniBod(
+                        reader, namespace, localName, logFile));
+            } else if ("OriginalniHranice".equals(localName)
+                    && item instanceof ItemWithHranice) {
+                final ItemWithHranice itemHranice = (ItemWithHranice) item;
+                itemHranice.setHranice(processOriginalniHranice(
                         reader, namespace, localName, logFile));
             } else {
                 processUnsupported(reader, logFile);

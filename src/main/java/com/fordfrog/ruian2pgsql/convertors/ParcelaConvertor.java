@@ -55,8 +55,8 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
             + "(nespravny, katuz_kod, druh_pozemku_kod, druh_cislovani_kod, "
             + "kmenove_cislo, poddeleni_cisla, vymera_parcely, id_trans_ruian, "
             + "zpusob_vyu_poz_kod, rizeni_id, plati_od, definicni_bod, "
-            + "hranice, id) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "hranice, id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
+            + "ST_GeomFromGML(?), ST_GeomFromGML(?), ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -65,7 +65,8 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
             + "druh_cislovani_kod = ?, kmenove_cislo = ?, poddeleni_cisla = ?, "
             + "vymera_parcely = ?, id_trans_ruian = ?, "
             + "zpusob_vyu_poz_kod = ?, rizeni_id = ?, plati_od = ?, "
-            + "definicni_bod = ?, hranice = ? WHERE id = ? AND plati_od < ?";
+            + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?) "
+            + "WHERE id = ? AND plati_od < ?";
 
     /**
      * Creates new instance of ParcelaConvertor.
@@ -90,8 +91,8 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
         pstmEx.setInt(9, item.getZpusobVyuPozKod());
         pstm.setLong(10, item.getRizeniId());
         pstmEx.setDate(11, item.getPlatiOd());
-        pstm.setObject(12, item.getDefinicniBod());
-        pstm.setObject(13, item.getHranice());
+        pstm.setString(12, item.getDefinicniBod());
+        pstm.setString(13, item.getHranice());
         pstm.setLong(14, item.getId());
 
         if (update) {

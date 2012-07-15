@@ -46,8 +46,8 @@ CREATE TABLE rn_stat (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
-    definicni_bod point,
-    hranice path
+    definicni_bod geometry,
+    hranice geometry
 );
 
 CREATE TABLE rn_region_soudrznosti (
@@ -60,8 +60,8 @@ CREATE TABLE rn_region_soudrznosti (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
-    definicni_bod point,
-    hranice path
+    definicni_bod geometry,
+    hranice geometry
 );
 
 CREATE TABLE rn_vusc (
@@ -74,8 +74,8 @@ CREATE TABLE rn_vusc (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
-    definicni_bod point,
-    hranice path
+    definicni_bod geometry,
+    hranice geometry
 );
 
 CREATE TABLE rn_kraj_1960 (
@@ -87,8 +87,8 @@ CREATE TABLE rn_kraj_1960 (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
-    definicni_bod point,
-    hranice path
+    definicni_bod geometry,
+    hranice geometry
 );
 
 CREATE TABLE rn_okres (
@@ -102,8 +102,8 @@ CREATE TABLE rn_okres (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
-    definicni_bod point,
-    hranice path
+    definicni_bod geometry,
+    hranice geometry
 );
 
 CREATE TABLE rn_orp (
@@ -116,8 +116,8 @@ CREATE TABLE rn_orp (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
-    definicni_bod point,
-    hranice path
+    definicni_bod geometry,
+    hranice geometry
 );
 
 CREATE TABLE rn_pou (
@@ -130,8 +130,8 @@ CREATE TABLE rn_pou (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
-    definicni_bod point,
-    hranice path
+    definicni_bod geometry,
+    hranice geometry
 );
 
 CREATE TABLE rn_obec (
@@ -158,8 +158,8 @@ CREATE TABLE rn_obec (
     id_trans_ruian bigint,
     plati_od date,
     nz_id_globalni bigint,
-    definicni_bod point,
-    hranice path
+    definicni_bod geometry,
+    hranice geometry
 );
 
 CREATE TABLE rn_cast_obce (
@@ -177,8 +177,8 @@ CREATE TABLE rn_cast_obce (
     zmena_grafiky boolean,
     plati_od date,
     nz_id_globalni bigint,
-    definicni_bod point,
-    hranice path
+    definicni_bod geometry,
+    hranice geometry
 );
 
 CREATE TABLE rn_mop (
@@ -190,8 +190,8 @@ CREATE TABLE rn_mop (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
-    definicni_bod point,
-    hranice path
+    definicni_bod geometry,
+    hranice geometry
 );
 
 CREATE TABLE rn_spravni_obvod (
@@ -204,8 +204,8 @@ CREATE TABLE rn_spravni_obvod (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
-    definicni_bod point,
-    hranice path
+    definicni_bod geometry,
+    hranice geometry
 );
 
 CREATE TABLE rn_momc (
@@ -229,8 +229,8 @@ CREATE TABLE rn_momc (
     id_trans_ruian bigint,
     plati_od date,
     nz_id_globalni bigint,
-    definicni_bod point,
-    hranice path
+    definicni_bod geometry,
+    hranice geometry
 );
 
 CREATE TABLE rn_parcela (
@@ -246,8 +246,8 @@ CREATE TABLE rn_parcela (
     zpusob_vyu_poz_kod int,
     rizeni_id bigint,
     plati_od date,
-    definicni_bod point,
-    hranice path
+    definicni_bod geometry,
+    hranice geometry
 );
 
 CREATE TABLE rn_zpusob_ochrany_pozemku (
@@ -275,7 +275,7 @@ CREATE TABLE rn_ulice (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
-    definicni_cary path
+    definicni_cary geometry
 );
 
 CREATE TABLE rn_stavebni_objekt (
@@ -306,8 +306,8 @@ CREATE TABLE rn_stavebni_objekt (
     id_trans_ruian bigint,
     plati_od date,
     nz_id_globalni bigint,
-    definicni_bod point,
-    hranice path
+    definicni_bod geometry,
+    hranice geometry
 );
 
 CREATE TABLE rn_detailni_tea (
@@ -349,7 +349,7 @@ CREATE TABLE rn_adresni_misto (
     plati_od date,
     zmena_grafiky boolean,
     nz_id_globalni bigint,
-    definicni_bod point
+    definicni_bod geometry
 );
 
 CREATE TABLE rn_katastralni_uzemi (
@@ -368,8 +368,8 @@ CREATE TABLE rn_katastralni_uzemi (
     plati_od date,
     nz_id_globalni bigint,
     rizeni_id bigint,
-    definicni_bod point,
-    hranice path
+    definicni_bod geometry,
+    hranice geometry
 );
 
 CREATE TABLE rn_zsj (
@@ -389,6 +389,6 @@ CREATE TABLE rn_zsj (
     zmena_grafiky boolean,
     nz_id_globalni bigint,
     id_trans_ruian bigint,
-    definicni_bod point,
-    hranice path
+    definicni_bod geometry,
+    hranice geometry
 );

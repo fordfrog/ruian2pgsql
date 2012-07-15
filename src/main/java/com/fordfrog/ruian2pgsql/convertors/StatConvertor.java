@@ -54,14 +54,16 @@ public class StatConvertor extends AbstractSaveConvertor<Stat> {
     private static final String SQL_INSERT = "INSERT INTO rn_stat "
             + "(nazev, nespravny, id_trans_ruian, nuts_lau, plati_od, "
             + "nz_id_globalni, zmena_grafiky, definicni_bod, hranice, kod) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ST_GeomFromGML(?), "
+            + "ST_GeomFromGML(?), ?)";
     /**
      * SQL statement for update of the item.
      */
     private static final String SQL_UPDATE = "UPDATE rn_stat "
             + "SET nazev = ?, nespravny = ?, id_trans_ruian = ?, nuts_lau = ?, "
             + "plati_od = ?, nz_id_globalni = ?, zmena_grafiky = ?, "
-            + "definicni_bod = ?, hranice = ? WHERE kod = ? AND plati_od < ?";
+            + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?) "
+            + "WHERE kod = ? AND plati_od < ?";
 
     /**
      * Creates new instance of StatConvertor.
@@ -82,8 +84,8 @@ public class StatConvertor extends AbstractSaveConvertor<Stat> {
         pstmEx.setDate(5, item.getPlatiOd());
         pstm.setLong(6, item.getNzIdGlobalni());
         pstmEx.setBoolean(7, item.getZmenaGrafiky());
-        pstm.setObject(8, item.getDefinicniBod());
-        pstm.setObject(9, item.getHranice());
+        pstm.setString(8, item.getDefinicniBod());
+        pstm.setString(9, item.getHranice());
         pstm.setInt(10, item.getKod());
 
         if (update) {

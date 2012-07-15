@@ -21,8 +21,6 @@
  */
 package com.fordfrog.ruian2pgsql.containers;
 
-import org.postgresql.geometric.PGpoint;
-
 /**
  * Interface for items with DefinicniBod.
  *
@@ -30,7 +28,7 @@ import org.postgresql.geometric.PGpoint;
  */
 public interface ItemWithDefinicniBod {
 
-    PGpoint getDefinicniBod();
+    String getDefinicniBod();
 
-    void setDefinicniBod(PGpoint definicniBod);
+    void setDefinicniBod(String definicniBod);
 }

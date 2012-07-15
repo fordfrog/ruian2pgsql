@@ -54,16 +54,17 @@ public class PouConvertor extends AbstractSaveConvertor<Pou> {
     private static final String SQL_INSERT = "INSERT INTO rn_pou "
             + "(nazev, nespravny, orp_kod, spravni_obec_kod, id_trans_ruian, "
             + "plati_od, nz_id_globalni, zmena_grafiky, definicni_bod, "
-            + "hranice, kod) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "hranice, kod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, "
+            + "ST_GeomFromGML(?), ST_GeomFromGML(?), ?)";
     /**
      * SQL statement for update of existing item.
      */
     private static final String SQL_UPDATE = "UPDATE rn_pou "
             + "SET nazev = ?, nespravny = ?, orp_kod = ?, "
             + "spravni_obec_kod = ?, id_trans_ruian = ?, plati_od = ?, "
-            + "nz_id_globalni = ?, zmena_grafiky = ?, definicni_bod = ?, "
-            + "hranice = ? WHERE kod = ?";
+            + "nz_id_globalni = ?, zmena_grafiky = ?, "
+            + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?) "
+            + "WHERE kod = ?";
 
     /**
      * Creates new instance of PouConvertor.
@@ -85,8 +86,8 @@ public class PouConvertor extends AbstractSaveConvertor<Pou> {
         pstmEx.setDate(6, item.getPlatiOd());
         pstm.setLong(7, item.getNzIdGlobalni());
         pstmEx.setBoolean(8, item.getZmenaGrafiky());
-        pstm.setObject(9, item.getDefinicniBod());
-        pstm.setObject(10, item.getHranice());
+        pstm.setString(9, item.getDefinicniBod());
+        pstm.setString(10, item.getHranice());
         pstm.setInt(11, item.getKod());
 
         if (update) {

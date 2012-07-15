@@ -21,8 +21,6 @@
  */
 package com.fordfrog.ruian2pgsql.containers;
 
-import org.postgresql.geometric.PGpath;
-
 /**
  * Interface for items with DefinicniCary.
  *
@@ -30,7 +28,7 @@ import org.postgresql.geometric.PGpath;
  */
 public interface ItemWithDefinicniCary {
 
-    PGpath getDefinicniCary();
+    String getDefinicniCary();
 
-    void setDefinicniCary(PGpath definicniCary);
+    void setDefinicniCary(String definicniCary);
 }

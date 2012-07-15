@@ -59,7 +59,7 @@ public class MomcConvertor extends AbstractSaveConvertor<Momc> {
             + "znak_obrazek, id_trans_ruian, plati_od, nz_id_globalni, "
             + "definicni_bod, hranice, kod) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-            + "?, ?, ?, ?)";
+            + "?, ST_GeomFromGML(?), ST_GeomFromGML(?), ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -70,7 +70,8 @@ public class MomcConvertor extends AbstractSaveConvertor<Momc> {
             + "mluv_char_pad_7 = ?, zmena_grafiky = ?, vlajka_text = ?, "
             + "vlajka_obrazek = ?, znak_text = ?, znak_obrazek = ?, "
             + "id_trans_ruian = ?, plati_od = ?, nz_id_globalni = ?, "
-            + "definicni_bod = ?, hranice = ? WHERE kod = ? AND plati_od < ?";
+            + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?) "
+            + "WHERE kod = ? AND plati_od < ?";
 
     /**
      * Creates new instance of MomcConvertor.
@@ -103,8 +104,8 @@ public class MomcConvertor extends AbstractSaveConvertor<Momc> {
         pstm.setLong(17, item.getIdTransRuian());
         pstmEx.setDate(18, item.getPlatiOd());
         pstm.setLong(19, item.getNzIdGlobalni());
-        pstm.setObject(20, item.getDefinicniBod());
-        pstm.setObject(21, item.getHranice());
+        pstm.setString(20, item.getDefinicniBod());
+        pstm.setString(21, item.getHranice());
         pstm.setInt(22, item.getKod());
 
         if (update) {

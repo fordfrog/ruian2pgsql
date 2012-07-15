@@ -21,8 +21,6 @@
  */
 package com.fordfrog.ruian2pgsql.containers;
 
-import org.postgresql.geometric.PGpath;
-
 /**
  * Interface for items with Hranice.
  *
@@ -30,7 +28,7 @@ import org.postgresql.geometric.PGpath;
  */
 public interface ItemWithHranice {
 
-    PGpath getHranice();
+    String getHranice();
 
-    void setHranice(PGpath hranice);
+    void setHranice(String hranice);
 }

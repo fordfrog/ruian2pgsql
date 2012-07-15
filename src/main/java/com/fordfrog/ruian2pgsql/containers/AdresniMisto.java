@@ -22,7 +22,6 @@
 package com.fordfrog.ruian2pgsql.containers;
 
 import java.util.Date;
-import org.postgresql.geometric.PGpoint;
 
 /**
  * Container for AdresniMisto information.
@@ -43,7 +42,7 @@ public class AdresniMisto implements ItemWithDefinicniBod {
     private Date platiOd;
     private Boolean zmenaGrafiky;
     private Long nzIdGlobalni;
-    private PGpoint definicniBod;
+    private String definicniBod;
 
     public Integer getKod() {
         return kod;
@@ -145,12 +144,12 @@ public class AdresniMisto implements ItemWithDefinicniBod {
     }
 
     @Override
-    public PGpoint getDefinicniBod() {
+    public String getDefinicniBod() {
         return definicniBod;
     }
 
     @Override
-    public void setDefinicniBod(final PGpoint definicniBod) {
+    public void setDefinicniBod(final String definicniBod) {
         this.definicniBod = definicniBod;
     }
 }

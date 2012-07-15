@@ -45,11 +45,11 @@ public class UliceConvertor extends AbstractSaveConvertor<Ulice> {
     private static final String SQL_INSERT = "INSERT INTO rn_ulice "
             + "(nazev, nespravny, obec_kod, id_trans_ruian, plati_od, "
             + "nz_id_globalni, zmena_grafiky, definicni_cary, kod) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ST_GeomFromGML(?), ?)";
     private static final String SQL_UPDATE = "UPDATE rn_ulice "
             + "SET nazev = ?, nespravny = ?, obec_kod = ?, id_trans_ruian = ?, "
             + "plati_od = ?, nz_id_globalni = ?, zmena_grafiky = ?, "
-            + "definicni_cary = ? WHERE kod = ? AND plati_od < ?";
+            + "definicni_cary = ST_GeomFromGML(?) WHERE kod = ? AND plati_od < ?";
 
     public UliceConvertor() {
         super(Ulice.class, Namespaces.VYMENNY_FORMAT_TYPY, "Ulice", SQL_EXISTS,
@@ -67,7 +67,7 @@ public class UliceConvertor extends AbstractSaveConvertor<Ulice> {
         pstmEx.setDate(5, item.getPlatiOd());
         pstm.setLong(6, item.getNzIdGlobalni());
         pstmEx.setBoolean(7, item.getZmenaGrafiky());
-        pstm.setObject(8, item.getDefinicniCary());
+        pstm.setString(8, item.getDefinicniCary());
         pstm.setInt(9, item.getKod());
 
         if (update) {

@@ -54,16 +54,17 @@ public class OkresConvertor extends AbstractSaveConvertor<Okres> {
     private static final String SQL_INSERT = "INSERT INTO rn_okres "
             + "(nazev, nespravny, vusc_kod, kraj_1960_kod, id_trans_ruian, "
             + "nuts_lau, plati_od, nz_id_globalni, zmena_grafiky, "
-            + "definicni_bod, hranice, kod) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "definicni_bod, hranice, kod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "
+            + "ST_GeomFromGML(?), ST_GeomFromGML(?), ?)";
     /**
      * SQL statement for update of existing item.
      */
     private static final String SQL_UPDATE = "UPDATE rn_okres "
             + "SET nazev = ?, nespravny = ?, vusc_kod = ?, kraj_1960_kod = ?, "
             + "id_trans_ruian = ?, nuts_lau = ?, plati_od = ?, "
-            + "nz_id_globalni = ?, zmena_grafiky = ?, definicni_bod = ?, "
-            + "hranice = ? WHERE kod = ? AND plati_od < ?";
+            + "nz_id_globalni = ?, zmena_grafiky = ?, "
+            + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML?) "
+            + "WHERE kod = ? AND plati_od < ?";
 
     /**
      * Creates new instance of OkresConvertor.
@@ -86,8 +87,8 @@ public class OkresConvertor extends AbstractSaveConvertor<Okres> {
         pstmEx.setDate(7, item.getPlatiOd());
         pstm.setLong(8, item.getNzIdGlobalni());
         pstmEx.setBoolean(9, item.getZmenaGrafiky());
-        pstm.setObject(10, item.getDefinicniBod());
-        pstm.setObject(11, item.getHranice());
+        pstm.setString(10, item.getDefinicniBod());
+        pstm.setString(11, item.getHranice());
         pstm.setInt(12, item.getKod());
 
         if (update) {

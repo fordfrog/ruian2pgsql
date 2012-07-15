@@ -60,7 +60,7 @@ public class ObecConvertor extends AbstractSaveConvertor<Obec> {
             + "znak_obrazek, id_trans_ruian, plati_od, nz_id_globalni, "
             + "definicni_bod, hranice, kod) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-            + "?, ?, ?, ?, ?, ?, ?)";
+            + "?, ?, ?, ?, ST_GeomFromGML(?), ST_GeomFromGML(?), ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -72,8 +72,9 @@ public class ObecConvertor extends AbstractSaveConvertor<Obec> {
             + "cleneni_sm_rozsah_kod = ?, cleneni_sm_typ_kod = ?, "
             + "status_kod = ?, vlajka_text = ?, vlajka_obrazek = ?, "
             + "znak_text = ?, znak_obrazek = ?, id_trans_ruian = ?, "
-            + "plati_od = ?, nz_id_globalni = ?, definicni_bod = ?, "
-            + "hranice = ? WHERE kod = ? AND plati_od < ?";
+            + "plati_od = ?, nz_id_globalni = ?, "
+            + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML?) "
+            + "WHERE kod = ? AND plati_od < ?";
 
     /**
      * Creates new instance of ObecConvertor.
@@ -109,8 +110,8 @@ public class ObecConvertor extends AbstractSaveConvertor<Obec> {
         pstm.setLong(20, item.getIdTransRuian());
         pstmEx.setDate(21, item.getPlatiOd());
         pstm.setLong(22, item.getNzIdGlobalni());
-        pstm.setObject(23, item.getDefinicniBod());
-        pstm.setObject(24, item.getHranice());
+        pstm.setString(23, item.getDefinicniBod());
+        pstm.setString(24, item.getHranice());
         pstm.setInt(25, item.getKod());
 
         if (update) {
