@@ -152,7 +152,8 @@ public class XMLStringUtil {
                     writer.writeEndElement();
                     return;
                 case XMLStreamReader.CHARACTERS:
-                    writer.writeCharacters(reader.getText());
+                    writer.writeCharacters(reader.getText().
+                            replaceAll("(\\d+(?:\\.\\d+)?)", "-$1"));
                     break;
                 default:
                     throw new RuntimeException(
