@@ -58,7 +58,8 @@ parameters:
 To do
 -----
 
-the list is empty now
+* consider using object transaction id for checking whether item should be updated
+  rather than valid since date
 
 License
 -------

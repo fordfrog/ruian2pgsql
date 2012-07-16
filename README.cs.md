@@ -57,7 +57,8 @@ spustíte bez parametrů (výpis je v angličtině, zde je přeložený):
 To do
 -----
 
-seznam je aktuálně prázdný
+* zvážit použití id transakce objektu pro kontrolu, jestli má být záznam zaktualizovaný,
+  místo aktuálně používaného data platnosti od
 
 Licence
 -------
