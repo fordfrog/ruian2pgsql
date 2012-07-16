@@ -142,7 +142,7 @@ public class ObecConvertor extends AbstractSaveConvertor<Obec> {
                         break;
                     case "Geometrie":
                         Utils.processGeometrie(
-                                reader, item, NAMESPACE, logFile);
+                                reader, con, item, NAMESPACE, logFile);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(

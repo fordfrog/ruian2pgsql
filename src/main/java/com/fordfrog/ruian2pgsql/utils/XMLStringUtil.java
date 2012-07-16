@@ -23,6 +23,11 @@
 package com.fordfrog.ruian2pgsql.utils;
 
 import java.io.StringWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Savepoint;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -37,24 +42,47 @@ import javax.xml.stream.XMLStreamWriter;
 public class XMLStringUtil {
 
     /**
+     * Whether to ignore invalid GML strings.
+     */
+    private static boolean ignoreInvalidGML;
+
+    /**
      * Creates new instance of XMLStringUtil.
      */
     private XMLStringUtil() {
     }
 
     /**
-     * Creates string from XML element and its sub-elements. The method is GML
-     * specific.
+     * Getter for {@link #ignoreInvalidGML}.
+     *
+     * @return {@link #ignoreInvalidGML}
+     */
+    public static boolean isIgnoreInvalidGML() {
+        return ignoreInvalidGML;
+    }
+
+    /**
+     * Setter for {@link #ignoreInvalidGML}.
+     *
+     * @param ignoreInvalidGML {@link #ignoreInvalidGML}
+     */
+    public static void setIgnoreInvalidGML(boolean ignoreInvalidGML) {
+        XMLStringUtil.ignoreInvalidGML = ignoreInvalidGML;
+    }
+
+    /**
+     * Creates GML string from XML element and its sub-elements.
      *
      * @param reader XML stream reader
+     * @param con    database connection
      *
      * @return element tree as string
      *
      * @throws XMLStreamException Thrown if problem occurred while reading or
      *                            writing XML stream.
      */
-    public static String createString(final XMLStreamReader reader)
-            throws XMLStreamException {
+    public static String createGMLString(final XMLStreamReader reader,
+            final Connection con) throws XMLStreamException {
         final XMLOutputFactory xMLOutputFactory =
                 XMLOutputFactory.newInstance();
         final StringWriter stringWriter = new StringWriter(1024);
@@ -69,7 +97,13 @@ public class XMLStringUtil {
         writer.writeEndDocument();
         writer.close();
 
-        return stripDeclaration(stringWriter.toString());
+        final String result = stripDeclaration(stringWriter.toString());
+
+        if (ignoreInvalidGML) {
+            return isValidGML(con, result) ? result : null;
+        } else {
+            return result;
+        }
     }
 
     /**
@@ -142,5 +176,35 @@ public class XMLStringUtil {
         } else {
             return string.substring(pos + 2).trim();
         }
+    }
+
+    /**
+     * Checks whether specified GML string is valid for ST_GeomFromGML()
+     * function.
+     *
+     * @param con database connection
+     * @param gml GML string
+     *
+     * @return true if GML string is valid, otherwise false
+     */
+    private static boolean isValidGML(final Connection con, final String gml) {
+        try (final PreparedStatement pstm = con.prepareStatement(
+                        "SELECT st_geomfromgml(?)")) {
+            final Savepoint savepoint = con.setSavepoint("gml_check");
+
+            pstm.setString(1, gml);
+
+            try (final ResultSet rs = pstm.executeQuery()) {
+                con.releaseSavepoint(savepoint);
+            } catch (final SQLException ex) {
+                con.rollback(savepoint);
+
+                return false;
+            }
+        } catch (final SQLException ex) {
+            throw new RuntimeException("Failed to validate GML string", ex);
+        }
+
+        return true;
     }
 }

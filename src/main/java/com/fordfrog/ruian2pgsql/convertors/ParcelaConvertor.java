@@ -130,7 +130,7 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
                         break;
                     case "Geometrie":
                         Utils.processGeometrie(
-                                reader, item, NAMESPACE, logFile);
+                                reader, con, item, NAMESPACE, logFile);
                         break;
                     case "Id":
                         item.setId(Long.parseLong(reader.getElementText()));

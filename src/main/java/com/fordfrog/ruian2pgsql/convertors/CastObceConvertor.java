@@ -118,7 +118,7 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
                 switch (reader.getLocalName()) {
                     case "Geometrie":
                         Utils.processGeometrie(
-                                reader, item, NAMESPACE, logFile);
+                                reader, con, item, NAMESPACE, logFile);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(

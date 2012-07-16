@@ -22,6 +22,7 @@
 package com.fordfrog.ruian2pgsql;
 
 import com.fordfrog.ruian2pgsql.convertors.MainConvertor;
+import com.fordfrog.ruian2pgsql.utils.XMLStringUtil;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -74,6 +75,9 @@ public class App {
                 case "--db-connection-url":
                     i++;
                     dbConnectionUrl = args[i];
+                    break;
+                case "--ignore-invalid-gml":
+                    XMLStringUtil.setIgnoreInvalidGML(true);
                     break;
                 case "--input-dir":
                     i++;

@@ -163,7 +163,7 @@ public class StavebniObjektConvertor
                         break;
                     case "Geometrie":
                         Utils.processGeometrie(
-                                reader, item, NAMESPACE, logFile);
+                                reader, con, item, NAMESPACE, logFile);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(
