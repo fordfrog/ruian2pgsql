@@ -63,7 +63,7 @@ public class MopConvertor extends AbstractSaveConvertor<Mop> {
             + "SET nazev = ?, nespravny = ?, obec_kod = ?, id_trans_ruian = ?, "
             + "plati_od = ?, nz_id_globalni = ?, zmena_grafiky = ?, "
             + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?) "
-            + "WHERE kod = ? AND plati_od < ?";
+            + "WHERE kod = ? AND id_trans_ruian < ?";
 
     /**
      * Creates new instance of MopConvertor.
@@ -89,7 +89,7 @@ public class MopConvertor extends AbstractSaveConvertor<Mop> {
         pstm.setInt(10, item.getKod());
 
         if (update) {
-            pstmEx.setDate(11, item.getPlatiOd());
+            pstm.setLong(11, item.getIdTransRuian());
         }
     }
 

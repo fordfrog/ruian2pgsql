@@ -68,7 +68,8 @@ public class KatastralniUzemiConvertor
             + "mluv_char_pad_5 = ?, mluv_char_pad_6 = ?, mluv_char_pad_7 = ?, "
             + "id_trans_ruian = ?, plati_od = ?, nz_id_globalni = ?, "
             + "rizeni_id = ?, definicni_bod = ST_GeomFromGML(?), "
-            + "hranice = ST_GeomFromGML(?) WHERE kod = ? AND plati_od < ?";
+            + "hranice = ST_GeomFromGML(?) WHERE kod = ? "
+            + "AND id_trans_ruian < ?";
 
     /**
      * Creates new instance of KatastralniUzemiConvertor.
@@ -102,7 +103,7 @@ public class KatastralniUzemiConvertor
         pstm.setInt(17, item.getKod());
 
         if (update) {
-            pstmEx.setDate(18, item.getPlatiOd());
+            pstm.setLong(18, item.getIdTransRuian());
         }
     }
 

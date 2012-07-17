@@ -66,7 +66,7 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
             + "vymera_parcely = ?, id_trans_ruian = ?, "
             + "zpusob_vyu_poz_kod = ?, rizeni_id = ?, plati_od = ?, "
             + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?) "
-            + "WHERE id = ? AND plati_od < ?";
+            + "WHERE id = ? AND id_trans_ruian < ?";
 
     /**
      * Creates new instance of ParcelaConvertor.
@@ -96,7 +96,7 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
         pstm.setLong(14, item.getId());
 
         if (update) {
-            pstmEx.setDate(15, item.getPlatiOd());
+            pstm.setLong(15, item.getIdTransRuian());
         }
     }
 

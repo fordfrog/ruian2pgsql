@@ -64,7 +64,7 @@ public class OrpConvertor extends AbstractSaveConvertor<Orp> {
             + "spravni_obec_kod = ?, id_trans_ruian = ?, plati_od, "
             + "nz_id_globalni = ?, zmena_grafiky = ?, "
             + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?) "
-            + "WHERE kod = ? AND plati_od < ?";
+            + "WHERE kod = ? AND id_trans_ruian < ?";
 
     /**
      * Creates new instance of OrpConvertor.
@@ -91,7 +91,7 @@ public class OrpConvertor extends AbstractSaveConvertor<Orp> {
         pstm.setInt(11, item.getKod());
 
         if (update) {
-            pstmEx.setDate(12, item.getPlatiOd());
+            pstm.setLong(12, item.getIdTransRuian());
         }
     }
 

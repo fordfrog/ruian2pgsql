@@ -69,7 +69,8 @@ public class ZsjConvertor extends AbstractSaveConvertor<Zsj> {
             + "mluv_char_pad_6 = ?, mluv_char_pad_7 = ?, vymera = ?, "
             + "plati_od = ?, zmena_grafiky = ?, nz_id_globalni = ?, "
             + "id_trans_ruian = ?, definicni_bod = ST_GeomFromGML(?), "
-            + "hranice = ST_GeomFromGML(?) WHERE kod = ? AND plati_od < ?";
+            + "hranice = ST_GeomFromGML(?) WHERE kod = ? "
+            + "AND id_trans_ruian < ?";
 
     /**
      * Creates new instance of ZsjConvertor.
@@ -103,7 +104,7 @@ public class ZsjConvertor extends AbstractSaveConvertor<Zsj> {
         pstm.setInt(18, item.getKod());
 
         if (update) {
-            pstmEx.setDate(19, item.getPlatiOd());
+            pstm.setLong(19, item.getIdTransRuian());
         }
     }
 

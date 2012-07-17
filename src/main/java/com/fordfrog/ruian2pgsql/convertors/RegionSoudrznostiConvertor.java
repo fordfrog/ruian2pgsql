@@ -65,7 +65,8 @@ public class RegionSoudrznostiConvertor
             + "SET nazev = ?, nespravny = ?, stat_kod = ?, id_trans_ruian = ?, "
             + "nuts_lau = ?, plati_od = ?, nz_id_globalni = ?, "
             + "zmena_grafiky = ?, definicni_bod = ST_GeomFromGML(?), "
-            + "hranice = ST_GeomFromGML(?) WHERE kod = ? AND plati_od < ?";
+            + "hranice = ST_GeomFromGML(?) WHERE kod = ? "
+            + "AND id_trans_ruian < ?";
 
     /**
      * Creates new instance of RegionSoudrznostiConvertor.
@@ -93,7 +94,7 @@ public class RegionSoudrznostiConvertor
         pstm.setInt(11, item.getKod());
 
         if (update) {
-            pstmEx.setDate(12, item.getPlatiOd());
+            pstm.setLong(12, item.getIdTransRuian());
         }
     }
 

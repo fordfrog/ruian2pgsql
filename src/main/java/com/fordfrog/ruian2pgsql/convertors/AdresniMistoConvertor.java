@@ -54,7 +54,7 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
             + "cislo_orientacni_hodnota = ?, cislo_orientacni_pismeno = ?, "
             + "id_trans_ruian = ?, plati_od = ?, zmena_grafiky = ?, "
             + "nz_id_globalni = ?, definicni_bod = ST_GeomFromGML(?) "
-            + "WHERE kod = ? AND plati_od < ?";
+            + "WHERE kod = ? AND id_trans_ruian < ?";
 
     public AdresniMistoConvertor() {
         super(AdresniMisto.class, Namespaces.VYMENNY_FORMAT_TYPY,
@@ -80,7 +80,7 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
         pstm.setInt(13, item.getKod());
 
         if (update) {
-            pstmEx.setDate(14, item.getPlatiOd());
+            pstm.setLong(14, item.getIdTransRuian());
         }
     }
 

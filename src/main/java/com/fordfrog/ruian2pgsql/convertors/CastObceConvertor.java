@@ -67,7 +67,8 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
             + "mluv_char_pad_5 = ?, mluv_char_pad_6 = ?, mluv_char_pad_7 = ?, "
             + "id_trans_ruian = ?, zmena_grafiky = ?, plati_od = ?, "
             + "nz_id_globalni = ?, definicni_bod = ST_GeomFromGML(?), "
-            + "hranice = ST_GeomFromGML(?) WHERE kod = ? AND plati_od < ?";
+            + "hranice = ST_GeomFromGML(?) WHERE kod = ? "
+            + "AND id_trans_ruian < ?";
 
     /**
      * Creates new instance of CastObceConvertor.
@@ -99,7 +100,7 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
         pstm.setInt(16, item.getKod());
 
         if (update) {
-            pstmEx.setDate(17, item.getPlatiOd());
+            pstm.setLong(17, item.getIdTransRuian());
         }
     }
 

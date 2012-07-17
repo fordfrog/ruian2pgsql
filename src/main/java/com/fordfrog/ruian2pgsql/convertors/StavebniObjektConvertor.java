@@ -77,7 +77,7 @@ public class StavebniObjektConvertor
             + "zpusob_vytapeni_kod = ?, zpusob_vyuziti_kod = ?, "
             + "id_trans_ruian = ?, plati_od = ?, nz_id_globalni = ?, "
             + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?) "
-            + "WHERE kod = ? AND plati_od < ?";
+            + "WHERE kod = ? AND id_trans_ruian < ?";
 
     /**
      * Creates new instance of StavebniObjektConvertor.
@@ -122,7 +122,7 @@ public class StavebniObjektConvertor
         pstm.setInt(29, item.getKod());
 
         if (update) {
-            pstmEx.setDate(30, item.getPlatiOd());
+            pstm.setLong(30, item.getIdTransRuian());
         }
     }
 

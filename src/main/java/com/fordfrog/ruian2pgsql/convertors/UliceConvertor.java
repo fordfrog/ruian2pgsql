@@ -49,7 +49,8 @@ public class UliceConvertor extends AbstractSaveConvertor<Ulice> {
     private static final String SQL_UPDATE = "UPDATE rn_ulice "
             + "SET nazev = ?, nespravny = ?, obec_kod = ?, id_trans_ruian = ?, "
             + "plati_od = ?, nz_id_globalni = ?, zmena_grafiky = ?, "
-            + "definicni_cary = ST_GeomFromGML(?) WHERE kod = ? AND plati_od < ?";
+            + "definicni_cary = ST_GeomFromGML(?) WHERE kod = ? "
+            + "AND id_trans_ruian < ?";
 
     public UliceConvertor() {
         super(Ulice.class, Namespaces.VYMENNY_FORMAT_TYPY, "Ulice", SQL_EXISTS,
@@ -71,7 +72,7 @@ public class UliceConvertor extends AbstractSaveConvertor<Ulice> {
         pstm.setInt(9, item.getKod());
 
         if (update) {
-            pstmEx.setDate(10, item.getPlatiOd());
+            pstm.setLong(10, item.getIdTransRuian());
         }
     }
 
