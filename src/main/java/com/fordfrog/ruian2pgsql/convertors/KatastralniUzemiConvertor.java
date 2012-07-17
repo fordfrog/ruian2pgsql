@@ -68,7 +68,8 @@ public class KatastralniUzemiConvertor
             + "mluv_char_pad_5 = ?, mluv_char_pad_6 = ?, mluv_char_pad_7 = ?, "
             + "id_trans_ruian = ?, plati_od = ?, nz_id_globalni = ?, "
             + "rizeni_id = ?, definicni_bod = ST_GeomFromGML(?), "
-            + "hranice = ST_GeomFromGML(?) WHERE kod = ? "
+            + "hranice = ST_GeomFromGML(?), "
+            + "item_timestamp = timezone('utc', now()) WHERE kod = ? "
             + "AND id_trans_ruian < ?";
 
     /**

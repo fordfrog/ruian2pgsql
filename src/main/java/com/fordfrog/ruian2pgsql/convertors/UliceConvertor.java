@@ -49,7 +49,8 @@ public class UliceConvertor extends AbstractSaveConvertor<Ulice> {
     private static final String SQL_UPDATE = "UPDATE rn_ulice "
             + "SET nazev = ?, nespravny = ?, obec_kod = ?, id_trans_ruian = ?, "
             + "plati_od = ?, nz_id_globalni = ?, zmena_grafiky = ?, "
-            + "definicni_cary = ST_GeomFromGML(?) WHERE kod = ? "
+            + "definicni_cary = ST_GeomFromGML(?), "
+            + "item_timestamp = timezone('utc', now()) WHERE kod = ? "
             + "AND id_trans_ruian < ?";
 
     public UliceConvertor() {

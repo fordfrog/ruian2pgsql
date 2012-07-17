@@ -47,7 +47,8 @@ CREATE TABLE rn_stat (
     nz_id_globalni bigint,
     zmena_grafiky boolean,
     definicni_bod geometry,
-    hranice geometry
+    hranice geometry,
+    item_timestamp timestamp without time zone DEFAULT timezone('utc', now())
 );
 
 CREATE TABLE rn_region_soudrznosti (
@@ -61,7 +62,8 @@ CREATE TABLE rn_region_soudrznosti (
     nz_id_globalni bigint,
     zmena_grafiky boolean,
     definicni_bod geometry,
-    hranice geometry
+    hranice geometry,
+    item_timestamp timestamp without time zone DEFAULT timezone('utc', now())
 );
 
 CREATE TABLE rn_vusc (
@@ -75,7 +77,8 @@ CREATE TABLE rn_vusc (
     nz_id_globalni bigint,
     zmena_grafiky boolean,
     definicni_bod geometry,
-    hranice geometry
+    hranice geometry,
+    item_timestamp timestamp without time zone DEFAULT timezone('utc', now())
 );
 
 CREATE TABLE rn_kraj_1960 (
@@ -88,7 +91,8 @@ CREATE TABLE rn_kraj_1960 (
     nz_id_globalni bigint,
     zmena_grafiky boolean,
     definicni_bod geometry,
-    hranice geometry
+    hranice geometry,
+    item_timestamp timestamp without time zone DEFAULT timezone('utc', now())
 );
 
 CREATE TABLE rn_okres (
@@ -103,7 +107,8 @@ CREATE TABLE rn_okres (
     nz_id_globalni bigint,
     zmena_grafiky boolean,
     definicni_bod geometry,
-    hranice geometry
+    hranice geometry,
+    item_timestamp timestamp without time zone DEFAULT timezone('utc', now())
 );
 
 CREATE TABLE rn_orp (
@@ -117,7 +122,8 @@ CREATE TABLE rn_orp (
     nz_id_globalni bigint,
     zmena_grafiky boolean,
     definicni_bod geometry,
-    hranice geometry
+    hranice geometry,
+    item_timestamp timestamp without time zone DEFAULT timezone('utc', now())
 );
 
 CREATE TABLE rn_pou (
@@ -131,7 +137,8 @@ CREATE TABLE rn_pou (
     nz_id_globalni bigint,
     zmena_grafiky boolean,
     definicni_bod geometry,
-    hranice geometry
+    hranice geometry,
+    item_timestamp timestamp without time zone DEFAULT timezone('utc', now())
 );
 
 CREATE TABLE rn_obec (
@@ -159,7 +166,8 @@ CREATE TABLE rn_obec (
     plati_od date,
     nz_id_globalni bigint,
     definicni_bod geometry,
-    hranice geometry
+    hranice geometry,
+    item_timestamp timestamp without time zone DEFAULT timezone('utc', now())
 );
 
 CREATE TABLE rn_cast_obce (
@@ -178,7 +186,8 @@ CREATE TABLE rn_cast_obce (
     plati_od date,
     nz_id_globalni bigint,
     definicni_bod geometry,
-    hranice geometry
+    hranice geometry,
+    item_timestamp timestamp without time zone DEFAULT timezone('utc', now())
 );
 
 CREATE TABLE rn_mop (
@@ -191,7 +200,8 @@ CREATE TABLE rn_mop (
     nz_id_globalni bigint,
     zmena_grafiky boolean,
     definicni_bod geometry,
-    hranice geometry
+    hranice geometry,
+    item_timestamp timestamp without time zone DEFAULT timezone('utc', now())
 );
 
 CREATE TABLE rn_spravni_obvod (
@@ -205,7 +215,8 @@ CREATE TABLE rn_spravni_obvod (
     nz_id_globalni bigint,
     zmena_grafiky boolean,
     definicni_bod geometry,
-    hranice geometry
+    hranice geometry,
+    item_timestamp timestamp without time zone DEFAULT timezone('utc', now())
 );
 
 CREATE TABLE rn_momc (
@@ -230,7 +241,8 @@ CREATE TABLE rn_momc (
     plati_od date,
     nz_id_globalni bigint,
     definicni_bod geometry,
-    hranice geometry
+    hranice geometry,
+    item_timestamp timestamp without time zone DEFAULT timezone('utc', now())
 );
 
 CREATE TABLE rn_parcela (
@@ -247,7 +259,8 @@ CREATE TABLE rn_parcela (
     rizeni_id bigint,
     plati_od date,
     definicni_bod geometry,
-    hranice geometry
+    hranice geometry,
+    item_timestamp timestamp without time zone DEFAULT timezone('utc', now())
 );
 
 CREATE TABLE rn_zpusob_ochrany_pozemku (
@@ -275,7 +288,8 @@ CREATE TABLE rn_ulice (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
-    definicni_cary geometry
+    definicni_cary geometry,
+    item_timestamp timestamp without time zone DEFAULT timezone('utc', now())
 );
 
 CREATE TABLE rn_stavebni_objekt (
@@ -307,7 +321,8 @@ CREATE TABLE rn_stavebni_objekt (
     plati_od date,
     nz_id_globalni bigint,
     definicni_bod geometry,
-    hranice geometry
+    hranice geometry,
+    item_timestamp timestamp without time zone DEFAULT timezone('utc', now())
 );
 
 CREATE TABLE rn_detailni_tea (
@@ -349,7 +364,8 @@ CREATE TABLE rn_adresni_misto (
     plati_od date,
     zmena_grafiky boolean,
     nz_id_globalni bigint,
-    definicni_bod geometry
+    definicni_bod geometry,
+    item_timestamp timestamp without time zone DEFAULT timezone('utc', now())
 );
 
 CREATE TABLE rn_katastralni_uzemi (
@@ -369,7 +385,8 @@ CREATE TABLE rn_katastralni_uzemi (
     nz_id_globalni bigint,
     rizeni_id bigint,
     definicni_bod geometry,
-    hranice geometry
+    hranice geometry,
+    item_timestamp timestamp without time zone DEFAULT timezone('utc', now())
 );
 
 CREATE TABLE rn_zsj (
@@ -390,5 +407,6 @@ CREATE TABLE rn_zsj (
     nz_id_globalni bigint,
     id_trans_ruian bigint,
     definicni_bod geometry,
-    hranice geometry
+    hranice geometry,
+    item_timestamp timestamp without time zone DEFAULT timezone('utc', now())
 );

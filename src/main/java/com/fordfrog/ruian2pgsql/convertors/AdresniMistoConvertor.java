@@ -53,8 +53,9 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
             + "stavobj_kod = ?, cislo_domovni = ?, "
             + "cislo_orientacni_hodnota = ?, cislo_orientacni_pismeno = ?, "
             + "id_trans_ruian = ?, plati_od = ?, zmena_grafiky = ?, "
-            + "nz_id_globalni = ?, definicni_bod = ST_GeomFromGML(?) "
-            + "WHERE kod = ? AND id_trans_ruian < ?";
+            + "nz_id_globalni = ?, definicni_bod = ST_GeomFromGML(?), "
+            + "item_timestamp = timezone('utc', now()) WHERE kod = ? "
+            + "AND id_trans_ruian < ?";
 
     public AdresniMistoConvertor() {
         super(AdresniMisto.class, Namespaces.VYMENNY_FORMAT_TYPY,

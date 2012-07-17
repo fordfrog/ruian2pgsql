@@ -63,8 +63,9 @@ public class OrpConvertor extends AbstractSaveConvertor<Orp> {
             + "SET nazev = ?, nespravny = ?, vusc_kod = ?, "
             + "spravni_obec_kod = ?, id_trans_ruian = ?, plati_od, "
             + "nz_id_globalni = ?, zmena_grafiky = ?, "
-            + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?) "
-            + "WHERE kod = ? AND id_trans_ruian < ?";
+            + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?), "
+            + "item_timestamp = timezone('utc', now()) WHERE kod = ? "
+            + "AND id_trans_ruian < ?";
 
     /**
      * Creates new instance of OrpConvertor.

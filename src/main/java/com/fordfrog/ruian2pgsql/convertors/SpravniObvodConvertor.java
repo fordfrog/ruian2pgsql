@@ -63,8 +63,9 @@ public class SpravniObvodConvertor extends AbstractSaveConvertor<SpravniObvod> {
             + "SET nazev = ?, nespravny = ?, obec_kod = ?, "
             + "spravni_momc_kod = ?, id_trans_ruian = ?, plati_od = ?, "
             + "nz_id_globalni = ?, zmena_grafiky = ?, "
-            + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?) "
-            + "WHERE kod = ? AND id_trans_ruian < ?";
+            + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?), "
+            + "item_timestamp = timezone('utc', now()) WHERE kod = ? "
+            + "AND id_trans_ruian < ?";
 
     /**
      * Creates new instance of SpravniObvodConvertor.

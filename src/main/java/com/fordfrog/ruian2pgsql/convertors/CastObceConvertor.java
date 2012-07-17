@@ -67,7 +67,8 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
             + "mluv_char_pad_5 = ?, mluv_char_pad_6 = ?, mluv_char_pad_7 = ?, "
             + "id_trans_ruian = ?, zmena_grafiky = ?, plati_od = ?, "
             + "nz_id_globalni = ?, definicni_bod = ST_GeomFromGML(?), "
-            + "hranice = ST_GeomFromGML(?) WHERE kod = ? "
+            + "hranice = ST_GeomFromGML(?), "
+            + "item_timestamp = timezone('utc', now()) WHERE kod = ? "
             + "AND id_trans_ruian < ?";
 
     /**

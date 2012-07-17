@@ -62,8 +62,9 @@ public class KrajConvertor extends AbstractSaveConvertor<Kraj> {
     private static final String SQL_UPDATE = "UPDATE rn_kraj_1960 "
             + "SET nazev = ?, nespravny = ?, stat_kod = ?, id_trans_ruian = ?, "
             + "plati_od = ?, nz_id_globalni = ?, zmena_grafiky = ?, "
-            + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?) "
-            + "WHERE kod = ? AND id_trans_ruian < ?";
+            + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?), "
+            + "item_timestamp = timezone('utc', now()) WHERE kod = ? "
+            + "AND id_trans_ruian < ?";
 
     /**
      * Creates new instance of KrajConvertor.
