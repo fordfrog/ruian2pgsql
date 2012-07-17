@@ -385,6 +385,8 @@ CREATE TABLE rn_adresni_misto (
     zmena_grafiky boolean,
     nz_id_globalni bigint,
     definicni_bod geometry,
+    zachranka geometry,
+    hasici geometry,
     item_timestamp timestamp without time zone DEFAULT timezone('utc', now()),
     deleted boolean DEFAULT false
 );

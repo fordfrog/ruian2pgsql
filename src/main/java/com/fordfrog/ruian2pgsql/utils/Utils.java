@@ -23,6 +23,7 @@ package com.fordfrog.ruian2pgsql.utils;
 
 import com.fordfrog.ruian2pgsql.containers.ItemWithDefinicniBod;
 import com.fordfrog.ruian2pgsql.containers.ItemWithDefinicniCara;
+import com.fordfrog.ruian2pgsql.containers.ItemWithEmergency;
 import com.fordfrog.ruian2pgsql.containers.ItemWithHranice;
 import com.fordfrog.ruian2pgsql.containers.ItemWithMluvCharPad;
 import java.io.IOException;
@@ -309,6 +310,18 @@ public class Utils {
                         (ItemWithDefinicniBod) item;
                 itemDefinicniBod.setDefinicniBod(processGML(reader, con,
                         namespace, "AdresniBod", logFile));
+            } else if ("Hasici".equals(localName)
+                    && item instanceof ItemWithEmergency) {
+                final ItemWithEmergency itemEmergency =
+                        (ItemWithEmergency) item;
+                itemEmergency.setHasici(
+                        processGML(reader, con, namespace, "Hasici", logFile));
+            } else if ("Zachranka".equals(localName)
+                    && item instanceof ItemWithEmergency) {
+                final ItemWithEmergency itemEmergency =
+                        (ItemWithEmergency) item;
+                itemEmergency.setZachranka(processGML(
+                        reader, con, namespace, "Zachranka", logFile));
             } else {
                 processUnsupported(reader, logFile);
             }

@@ -28,7 +28,7 @@ import java.util.Date;
  *
  * @author fordfrog
  */
-public class AdresniMisto implements ItemWithDefinicniBod {
+public class AdresniMisto implements ItemWithDefinicniBod, ItemWithEmergency {
 
     private Integer kod;
     private Boolean nespravny;
@@ -43,6 +43,8 @@ public class AdresniMisto implements ItemWithDefinicniBod {
     private Boolean zmenaGrafiky;
     private Long nzIdGlobalni;
     private String definicniBod;
+    private String zachranka;
+    private String hasici;
 
     public Integer getKod() {
         return kod;
@@ -151,5 +153,25 @@ public class AdresniMisto implements ItemWithDefinicniBod {
     @Override
     public void setDefinicniBod(final String definicniBod) {
         this.definicniBod = definicniBod;
+    }
+
+    @Override
+    public String getZachranka() {
+        return zachranka;
+    }
+
+    @Override
+    public void setZachranka(final String zachranka) {
+        this.zachranka = zachranka;
+    }
+
+    @Override
+    public String getHasici() {
+        return hasici;
+    }
+
+    @Override
+    public void setHasici(final String hasici) {
+        this.hasici = hasici;
     }
 }

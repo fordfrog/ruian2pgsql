@@ -46,14 +46,16 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
             + "(nespravny, adrp_psc, ulice_kod, stavobj_kod, cislo_domovni, "
             + "cislo_orientacni_hodnota, cislo_orientacni_pismeno, "
             + "id_trans_ruian, plati_od, zmena_grafiky, nz_id_globalni, "
-            + "definicni_bod, kod) "
-            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_GeomFromGML(?), ?)";
+            + "definicni_bod, zachranka, hasici, kod) "
+            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_GeomFromGML(?), "
+            + "ST_GeomFromGML(?), ST_GeomFromGML(?), ?)";
     private static final String SQL_UPDATE = "UPDATE rn_adresni_misto "
             + "SET nespravny = ?, adrp_psc = ?, ulice_kod = ?, "
             + "stavobj_kod = ?, cislo_domovni = ?, "
             + "cislo_orientacni_hodnota = ?, cislo_orientacni_pismeno = ?, "
             + "id_trans_ruian = ?, plati_od = ?, zmena_grafiky = ?, "
             + "nz_id_globalni = ?, definicni_bod = ST_GeomFromGML(?), "
+            + "zachranka = ST_GeomFromGML(?), hasici = ST_GeomFromGML(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
 
@@ -78,10 +80,12 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
         pstmEx.setBoolean(10, item.getZmenaGrafiky());
         pstm.setLong(11, item.getNzIdGlobalni());
         pstm.setString(12, item.getDefinicniBod());
-        pstm.setInt(13, item.getKod());
+        pstm.setString(13, item.getZachranka());
+        pstm.setString(14, item.getHasici());
+        pstm.setInt(15, item.getKod());
 
         if (update) {
-            pstm.setLong(14, item.getIdTransRuian());
+            pstm.setLong(16, item.getIdTransRuian());
         }
     }
 
