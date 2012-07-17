@@ -189,19 +189,16 @@ public class Utils {
      *
      * @param reader       XML stream reader
      * @param con          database connection
+     * @param item         item
      * @param endNamespace namespace of DefinicniBod element
-     * @param engLocalName local name of DefinicniBod element
      * @param logFile      log file writer
-     *
-     * @return GML geometry as string
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
-    public static String processDefinicniBod(final XMLStreamReader reader,
-            final Connection con, final String endNamespace,
-            final String engLocalName, final Writer logFile)
-            throws XMLStreamException {
+    private static void processDefinicniBod(final XMLStreamReader reader,
+            final Connection con, final Object item, final String endNamespace,
+            final Writer logFile) throws XMLStreamException {
         String definicniBod = null;
 
         while (reader.hasNext()) {
@@ -209,26 +206,24 @@ public class Utils {
 
             switch (event) {
                 case XMLStreamReader.START_ELEMENT:
-                    definicniBod =
-                            processDefinicniBodElement(reader, con, logFile);
+                    processDefinicniBodElement(
+                            reader, con, item, endNamespace, logFile);
                     break;
                 case XMLStreamReader.END_ELEMENT:
-                    if (isEndElement(endNamespace, engLocalName, reader)) {
-                        return definicniBod;
+                    if (isEndElement(endNamespace, "DefinicniBod", reader)) {
+                        return;
                     }
             }
         }
-
-        return definicniBod;
     }
 
     /**
-     * Processes DefinicniCara element.
+     * Processes GML element(s).
      *
      * @param reader       XML stream reader
      * @param con          database connection
      * @param endNamespace namespace of DefinicniBod element
-     * @param engLocalName local name of DefinicniBod element
+     * @param endLocalName local name of DefinicniBod element
      * @param logFile      log file writer
      *
      * @return GML geometry as string
@@ -236,9 +231,9 @@ public class Utils {
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
-    public static String processDefinicniCara(final XMLStreamReader reader,
+    private static String processGML(final XMLStreamReader reader,
             final Connection con, final String endNamespace,
-            final String engLocalName, final Writer logFile)
+            final String endLocalName, final Writer logFile)
             throws XMLStreamException {
         String definicniBod = null;
 
@@ -248,10 +243,10 @@ public class Utils {
             switch (event) {
                 case XMLStreamReader.START_ELEMENT:
                     definicniBod =
-                            processDefinicniCaraElement(reader, con, logFile);
+                            processGMLElement(reader, con, logFile);
                     break;
                 case XMLStreamReader.END_ELEMENT:
-                    if (isEndElement(endNamespace, engLocalName, reader)) {
+                    if (isEndElement(endNamespace, endLocalName, reader)) {
                         return definicniBod;
                     }
             }
@@ -261,7 +256,7 @@ public class Utils {
     }
 
     /**
-     * Processes sub-elements of DefinicniCara element.
+     * Processes sub-elements of an element containing GML.
      *
      * @param reader  XML stream reader
      * @param con     database connection
@@ -272,9 +267,9 @@ public class Utils {
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
-    private static String processDefinicniCaraElement(
-            final XMLStreamReader reader, final Connection con,
-            final Writer logFile) throws XMLStreamException {
+    private static String processGMLElement(final XMLStreamReader reader,
+            final Connection con, final Writer logFile)
+            throws XMLStreamException {
         String result = null;
 
         switch (reader.getNamespaceURI()) {
@@ -286,172 +281,46 @@ public class Utils {
         }
 
         return result;
-    }
-
-    /**
-     * Processes OriginalniHranice element.
-     *
-     * @param reader       XML stream reader
-     * @param con          database connection
-     * @param endNamespace namespace of DefinicniBod element
-     * @param engLocalName local name of DefinicniBod element
-     * @param logFile      log file writer
-     *
-     * @return GML geometry as string
-     *
-     * @throws XMLStreamException Thrown if problem occurred while reading XML
-     *                            stream.
-     */
-    public static String processOriginalniHranice(final XMLStreamReader reader,
-            final Connection con, final String endNamespace,
-            final String engLocalName, final Writer logFile)
-            throws XMLStreamException {
-        String hranice = null;
-
-        while (reader.hasNext()) {
-            final int event = reader.next();
-
-            switch (event) {
-                case XMLStreamReader.START_ELEMENT:
-                    hranice = processOriginalniHraniceElement(
-                            reader, con, logFile);
-                    break;
-                case XMLStreamReader.END_ELEMENT:
-                    if (isEndElement(endNamespace, engLocalName, reader)) {
-                        return hranice;
-                    }
-            }
-        }
-
-        return hranice;
     }
 
     /**
      * Processes sub-elements of DefinicniBod element.
      *
-     * @param reader  XML stream reader
-     * @param con     database connection
-     * @param logFile log file writer
-     *
-     * @return GML geometry as string
+     * @param reader    XML stream reader
+     * @param con       database connection
+     * @param item      item
+     * @param namespace namespace
+     * @param logFile   log file writer
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
-    private static String processDefinicniBodElement(
-            final XMLStreamReader reader, final Connection con,
+    private static void processDefinicniBodElement(final XMLStreamReader reader,
+            final Connection con, final Object item, final String namespace,
             final Writer logFile) throws XMLStreamException {
-        String result = null;
+        final String curNamespace = reader.getNamespaceURI();
 
-        switch (reader.getNamespaceURI()) {
-            case Namespaces.ADR_MISTO_INT_TYPY:
-                switch (reader.getLocalName()) {
-                    case "AdresniBod":
-                        result = processAdresniBod(reader, con, logFile);
-                        break;
-                    default:
-                        processUnsupported(reader, logFile);
-                }
-                break;
-            case Namespaces.GML:
-                result = XMLStringUtil.createGMLString(reader, con);
-                break;
-            default:
+        if (namespace.equals(curNamespace)) {
+            final String localName = reader.getLocalName();
+
+            if ("AdresniBod".equals(localName)
+                    && item instanceof ItemWithDefinicniBod) {
+                final ItemWithDefinicniBod itemDefinicniBod =
+                        (ItemWithDefinicniBod) item;
+                itemDefinicniBod.setDefinicniBod(processGML(reader, con,
+                        namespace, "AdresniBod", logFile));
+            } else {
                 processUnsupported(reader, logFile);
-        }
-
-        return result;
-    }
-
-    /**
-     * Processes sub-elements of OriginalniHranice element.
-     *
-     * @param reader  XML stream reader
-     * @param con     database connection
-     * @param logFile log file writer
-     *
-     * @return GML geometry as string
-     *
-     * @throws XMLStreamException Thrown if problem occurred while reading XML
-     *                            stream.
-     */
-    private static String processOriginalniHraniceElement(
-            final XMLStreamReader reader, final Connection con,
-            final Writer logFile) throws XMLStreamException {
-        String result = null;
-
-        switch (reader.getNamespaceURI()) {
-            case Namespaces.GML:
-                result = XMLStringUtil.createGMLString(reader, con);
-                break;
-            default:
-                processUnsupported(reader, logFile);
-        }
-
-        return result;
-    }
-
-    /**
-     * Processes AdresniBod element.
-     *
-     * @param reader  XML stream reader
-     * @param con     database connection
-     * @param logFile log file writer
-     *
-     * @return GML geometry as string
-     *
-     * @throws XMLStreamException Thrown if problem occurred while reading XML
-     *                            stream.
-     */
-    private static String processAdresniBod(final XMLStreamReader reader,
-            final Connection con, final Writer logFile)
-            throws XMLStreamException {
-        String result = null;
-
-        while (reader.hasNext()) {
-            final int event = reader.next();
-
-            switch (event) {
-                case XMLStreamReader.START_ELEMENT:
-                    result = processAdresniBodElement(reader, con, logFile);
-                    break;
-                case XMLStreamReader.END_ELEMENT:
-                    if (isEndElement(Namespaces.ADR_MISTO_INT_TYPY,
-                            "AdresniBod", reader)) {
-                        return result;
-                    }
             }
+        } else if (Namespaces.GML.equals(curNamespace)
+                && item instanceof ItemWithDefinicniBod) {
+            final ItemWithDefinicniBod itemDefinicniBod =
+                    (ItemWithDefinicniBod) item;
+            itemDefinicniBod.setDefinicniBod(
+                    XMLStringUtil.createGMLString(reader, con));
+        } else {
+            processUnsupported(reader, logFile);
         }
-
-        return result;
-    }
-
-    /**
-     * Processes sub-elements of AdresniBod element.
-     *
-     * @param reader  XML stream reader
-     * @param con     database connection
-     * @param logFile log file writer
-     *
-     * @return parsed point
-     *
-     * @throws XMLStreamException Thrown if problem occurred while reading XML
-     *                            stream.
-     */
-    private static String processAdresniBodElement(
-            final XMLStreamReader reader, final Connection con,
-            final Writer logFile) throws XMLStreamException {
-        String result = null;
-
-        switch (reader.getNamespaceURI()) {
-            case Namespaces.GML:
-                result = XMLStringUtil.createGMLString(reader, con);
-                break;
-            default:
-                processUnsupported(reader, logFile);
-        }
-
-        return result;
     }
 
     /**
@@ -894,23 +763,19 @@ public class Utils {
         if (namespace.equals(reader.getNamespaceURI())) {
             final String localName = reader.getLocalName();
 
-            if ("DefinicniBod".equals(localName)
-                    && item instanceof ItemWithDefinicniBod) {
-                final ItemWithDefinicniBod itemDefinicniBod =
-                        (ItemWithDefinicniBod) item;
-                itemDefinicniBod.setDefinicniBod(processDefinicniBod(
-                        reader, con, namespace, localName, logFile));
+            if ("DefinicniBod".equals(localName)) {
+                processDefinicniBod(reader, con, item, namespace, logFile);
             } else if ("DefinicniCara".equals(localName)
                     && item instanceof ItemWithDefinicniCara) {
-                final ItemWithDefinicniCara itemDefinicniCary =
+                final ItemWithDefinicniCara itemDefinicniCara =
                         (ItemWithDefinicniCara) item;
-                itemDefinicniCary.setDefinicniCara(processDefinicniCara(
-                        reader, con, namespace, localName, logFile));
+                itemDefinicniCara.setDefinicniCara(
+                        processGML(reader, con, namespace, localName, logFile));
             } else if ("OriginalniHranice".equals(localName)
                     && item instanceof ItemWithHranice) {
                 final ItemWithHranice itemHranice = (ItemWithHranice) item;
-                itemHranice.setHranice(processOriginalniHranice(
-                        reader, con, namespace, localName, logFile));
+                itemHranice.setHranice(
+                        processGML(reader, con, namespace, localName, logFile));
             } else {
                 processUnsupported(reader, logFile);
             }
