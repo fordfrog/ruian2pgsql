@@ -22,6 +22,7 @@
 package com.fordfrog.ruian2pgsql.utils;
 
 import com.fordfrog.ruian2pgsql.containers.ItemWithDefinicniBod;
+import com.fordfrog.ruian2pgsql.containers.ItemWithDefinicniCara;
 import com.fordfrog.ruian2pgsql.containers.ItemWithHranice;
 import com.fordfrog.ruian2pgsql.containers.ItemWithMluvCharPad;
 import java.io.IOException;
@@ -219,6 +220,72 @@ public class Utils {
         }
 
         return definicniBod;
+    }
+
+    /**
+     * Processes DefinicniCara element.
+     *
+     * @param reader       XML stream reader
+     * @param con          database connection
+     * @param endNamespace namespace of DefinicniBod element
+     * @param engLocalName local name of DefinicniBod element
+     * @param logFile      log file writer
+     *
+     * @return GML geometry as string
+     *
+     * @throws XMLStreamException Thrown if problem occurred while reading XML
+     *                            stream.
+     */
+    public static String processDefinicniCara(final XMLStreamReader reader,
+            final Connection con, final String endNamespace,
+            final String engLocalName, final Writer logFile)
+            throws XMLStreamException {
+        String definicniBod = null;
+
+        while (reader.hasNext()) {
+            final int event = reader.next();
+
+            switch (event) {
+                case XMLStreamReader.START_ELEMENT:
+                    definicniBod =
+                            processDefinicniCaraElement(reader, con, logFile);
+                    break;
+                case XMLStreamReader.END_ELEMENT:
+                    if (isEndElement(endNamespace, engLocalName, reader)) {
+                        return definicniBod;
+                    }
+            }
+        }
+
+        return definicniBod;
+    }
+
+    /**
+     * Processes sub-elements of DefinicniCara element.
+     *
+     * @param reader  XML stream reader
+     * @param con     database connection
+     * @param logFile log file writer
+     *
+     * @return GML geometry as string
+     *
+     * @throws XMLStreamException Thrown if problem occurred while reading XML
+     *                            stream.
+     */
+    private static String processDefinicniCaraElement(
+            final XMLStreamReader reader, final Connection con,
+            final Writer logFile) throws XMLStreamException {
+        String result = null;
+
+        switch (reader.getNamespaceURI()) {
+            case Namespaces.GML:
+                result = XMLStringUtil.createGMLString(reader, con);
+                break;
+            default:
+                processUnsupported(reader, logFile);
+        }
+
+        return result;
     }
 
     /**
@@ -832,6 +899,12 @@ public class Utils {
                 final ItemWithDefinicniBod itemDefinicniBod =
                         (ItemWithDefinicniBod) item;
                 itemDefinicniBod.setDefinicniBod(processDefinicniBod(
+                        reader, con, namespace, localName, logFile));
+            } else if ("DefinicniCara".equals(localName)
+                    && item instanceof ItemWithDefinicniCara) {
+                final ItemWithDefinicniCara itemDefinicniCary =
+                        (ItemWithDefinicniCara) item;
+                itemDefinicniCary.setDefinicniCara(processDefinicniCara(
                         reader, con, namespace, localName, logFile));
             } else if ("OriginalniHranice".equals(localName)
                     && item instanceof ItemWithHranice) {

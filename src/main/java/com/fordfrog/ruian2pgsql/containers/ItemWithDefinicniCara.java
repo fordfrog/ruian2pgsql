@@ -22,13 +22,13 @@
 package com.fordfrog.ruian2pgsql.containers;
 
 /**
- * Interface for items with DefinicniCary.
+ * Interface for items with DefinicniCara.
  *
  * @author fordfrog
  */
-public interface ItemWithDefinicniCary {
+public interface ItemWithDefinicniCara {
 
-    String getDefinicniCary();
+    String getDefinicniCara();
 
-    void setDefinicniCary(String definicniCary);
+    void setDefinicniCara(String definicniCara);
 }

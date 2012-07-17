@@ -28,7 +28,7 @@ import java.util.Date;
  *
  * @author fordfrog
  */
-public class Ulice implements ItemWithDefinicniCary {
+public class Ulice implements ItemWithDefinicniCara {
 
     private Integer kod;
     private String nazev;
@@ -38,7 +38,7 @@ public class Ulice implements ItemWithDefinicniCary {
     private Date platiOd;
     private Long nzIdGlobalni;
     private Boolean zmenaGrafiky;
-    private String definicniCary;
+    private String definicniCara;
 
     public Integer getKod() {
         return kod;
@@ -107,12 +107,12 @@ public class Ulice implements ItemWithDefinicniCary {
     }
 
     @Override
-    public String getDefinicniCary() {
-        return definicniCary;
+    public String getDefinicniCara() {
+        return definicniCara;
     }
 
     @Override
-    public void setDefinicniCary(final String definicniCary) {
-        this.definicniCary = definicniCary;
+    public void setDefinicniCara(final String definicniCara) {
+        this.definicniCara = definicniCara;
     }
 }

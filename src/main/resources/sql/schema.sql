@@ -304,7 +304,7 @@ CREATE TABLE rn_ulice (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
-    definicni_cary geometry,
+    definicni_cara geometry,
     item_timestamp timestamp without time zone DEFAULT timezone('utc', now()),
     deleted boolean DEFAULT false
 );
