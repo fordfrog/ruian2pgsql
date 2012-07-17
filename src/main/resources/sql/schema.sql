@@ -435,3 +435,8 @@ CREATE TABLE rn_zsj (
     item_timestamp timestamp without time zone DEFAULT timezone('utc', now()),
     deleted boolean DEFAULT false
 );
+
+CREATE INDEX ON rn_bonit_dily_parcel (parcela_id);
+CREATE INDEX ON rn_detailni_tea (stavobj_kod);
+CREATE INDEX ON rn_zpusob_ochrany_objektu (stavobj_kod);
+CREATE INDEX ON rn_zpusob_ochrany_pozemku (parcela_id);

@@ -44,13 +44,6 @@ public class ZpusobOchranyObjektuConvertor
      */
     private static final String NAMESPACE = Namespaces.COMMON_TYPY;
     /**
-     * SQL statement for checking whether the item exists. We always insert the
-     * items as new because they are children of StavebniObjekt element and
-     * their live is bound to the parent element.
-     */
-    private static final String SQL_EXISTS =
-            "SELECT 1 FROM rn_zpusob_ochrany_objektu WHERE stavobj_kod IS NULL";
-    /**
      * SQL statement for insertion of new item.
      */
     private static final String SQL_INSERT =
@@ -68,8 +61,8 @@ public class ZpusobOchranyObjektuConvertor
      * @param stavebniObjektId {@link #stavebniObjektId}
      */
     public ZpusobOchranyObjektuConvertor(final int stavebniObjektId) {
-        super(ZpusobOchranyObjektu.class, NAMESPACE, "ZpusobOchrany",
-                SQL_EXISTS, SQL_INSERT, null);
+        super(ZpusobOchranyObjektu.class, NAMESPACE, "ZpusobOchrany", null,
+                SQL_INSERT, null);
 
         this.stavebniObjektId = stavebniObjektId;
     }
@@ -121,5 +114,12 @@ public class ZpusobOchranyObjektuConvertor
             default:
                 Utils.processUnsupported(reader, logFile);
         }
+    }
+
+    @Override
+    protected void saveData(final Connection con,
+            final ZpusobOchranyObjektu item, final Writer logFile)
+            throws SQLException {
+        insertItem(con, item);
     }
 }

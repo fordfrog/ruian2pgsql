@@ -44,13 +44,6 @@ public class DetailniTEAConvertor extends AbstractSaveConvertor<DetailniTEA> {
      */
     private static final String NAMESPACE = Namespaces.STAV_OBJ_INT_TYPY;
     /**
-     * SQL statement for checking whether the item exists. We always insert the
-     * items as new because they are children of StavebniObjekt element and
-     * their live is bound to the parent element.
-     */
-    private static final String SQL_EXISTS =
-            "SELECT 1 FROM rn_detailni_tea WHERE stavobj_kod IS NULL";
-    /**
      * SQL statement for insertion of new item.
      */
     private static final String SQL_INSERT = "INSERT INTO rn_detailni_tea "
@@ -70,8 +63,8 @@ public class DetailniTEAConvertor extends AbstractSaveConvertor<DetailniTEA> {
      * @param stavebniObjektId {@link #stavebniObjektId}
      */
     public DetailniTEAConvertor(final int stavebniObjektId) {
-        super(DetailniTEA.class, NAMESPACE, "DetailniTEA", SQL_EXISTS,
-                SQL_INSERT, null);
+        super(DetailniTEA.class, NAMESPACE, "DetailniTEA", null, SQL_INSERT,
+                null);
 
         this.stavebniObjektId = stavebniObjektId;
     }
@@ -169,5 +162,11 @@ public class DetailniTEAConvertor extends AbstractSaveConvertor<DetailniTEA> {
             default:
                 Utils.processUnsupported(reader, logFile);
         }
+    }
+
+    @Override
+    protected void saveData(final Connection con, final DetailniTEA item,
+            final Writer logFile) throws SQLException {
+        insertItem(con, item);
     }
 }

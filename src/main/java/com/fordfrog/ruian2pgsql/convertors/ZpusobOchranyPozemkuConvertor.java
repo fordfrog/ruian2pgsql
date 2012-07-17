@@ -44,13 +44,6 @@ public class ZpusobOchranyPozemkuConvertor
      */
     private static final String NAMESPACE = Namespaces.COMMON_TYPY;
     /**
-     * SQL statement for checking whether the item exists. We always insert the
-     * items as new because they are children of Parcela element and their live
-     * is bound to the parent element.
-     */
-    private static final String SQL_EXISTS =
-            "SELECT 1 FROM rn_zpusob_ochrany_pozemku WHERE parcela_id IS NULL";
-    /**
      * SQL statement for insertion of new item.
      */
     private static final String SQL_INSERT =
@@ -68,8 +61,8 @@ public class ZpusobOchranyPozemkuConvertor
      * @param parcelaId {@link #parcelaId}
      */
     public ZpusobOchranyPozemkuConvertor(final long parcelaId) {
-        super(ZpusobOchranyPozemku.class, NAMESPACE, "ZpusobOchrany",
-                SQL_EXISTS, SQL_INSERT, null);
+        super(ZpusobOchranyPozemku.class, NAMESPACE, "ZpusobOchrany", null,
+                SQL_INSERT, null);
 
         this.parcelaId = parcelaId;
     }
@@ -121,5 +114,12 @@ public class ZpusobOchranyPozemkuConvertor
             default:
                 Utils.processUnsupported(reader, logFile);
         }
+    }
+
+    @Override
+    protected void saveData(final Connection con,
+            final ZpusobOchranyPozemku item, final Writer logFile)
+            throws SQLException {
+        insertItem(con, item);
     }
 }

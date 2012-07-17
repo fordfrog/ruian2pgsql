@@ -44,13 +44,6 @@ public class BonitovanyDilConvertor
      */
     private static final String NAMESPACE = Namespaces.COMMON_TYPY;
     /**
-     * SQL statement for checking whether the item exists. We always insert the
-     * items as new because they are children of Parcela element and their live
-     * is bound to the parent element.
-     */
-    private static final String SQL_EXISTS =
-            "SELECT 1 FROM rn_bonit_dily_parcel WHERE parcela_id IS NULL";
-    /**
      * SQL statement for insertion of new item.
      */
     private static final String SQL_INSERT = "INSERT INTO rn_bonit_dily_parcel "
@@ -67,8 +60,8 @@ public class BonitovanyDilConvertor
      * @param parcelaId {@link #parcelaId}
      */
     public BonitovanyDilConvertor(final long parcelaId) {
-        super(BonitovanyDil.class, NAMESPACE, "BonitovanyDil", SQL_EXISTS,
-                SQL_INSERT, null);
+        super(BonitovanyDil.class, NAMESPACE, "BonitovanyDil", null, SQL_INSERT,
+                null);
 
         this.parcelaId = parcelaId;
     }
@@ -121,5 +114,11 @@ public class BonitovanyDilConvertor
             default:
                 Utils.processUnsupported(reader, logFile);
         }
+    }
+
+    @Override
+    protected void saveData(final Connection con, final BonitovanyDil item,
+            final Writer logFile) throws SQLException {
+        insertItem(con, item);
     }
 }
