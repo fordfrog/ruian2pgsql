@@ -70,8 +70,8 @@ public class ZsjConvertor extends AbstractSaveConvertor<Zsj> {
             + "plati_od = ?, zmena_grafiky = ?, nz_id_globalni = ?, "
             + "id_trans_ruian = ?, definicni_bod = ST_GeomFromGML(?), "
             + "hranice = ST_GeomFromGML(?), "
-            + "item_timestamp = timezone('utc', now()) WHERE kod = ? "
-            + "AND id_trans_ruian < ?";
+            + "item_timestamp = timezone('utc', now()), deleted = false "
+            + "WHERE kod = ? AND id_trans_ruian < ?";
 
     /**
      * Creates new instance of ZsjConvertor.

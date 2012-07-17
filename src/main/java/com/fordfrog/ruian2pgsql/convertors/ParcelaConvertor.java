@@ -66,8 +66,8 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
             + "vymera_parcely = ?, id_trans_ruian = ?, "
             + "zpusob_vyu_poz_kod = ?, rizeni_id = ?, plati_od = ?, "
             + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?), "
-            + "item_timestamp = timezone('utc', now()) WHERE id = ? "
-            + "AND id_trans_ruian < ?";
+            + "item_timestamp = timezone('utc', now()), deleted = false "
+            + "WHERE id = ? AND id_trans_ruian < ?";
 
     /**
      * Creates new instance of ParcelaConvertor.

@@ -130,10 +130,13 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
     private void deleteAdresniMisto(final Connection con,
             final ZaniklyPrvek item) throws SQLException {
         try (final PreparedStatement pstm = con.prepareStatement(
-                        "DELETE FROM rn_adresni_misto "
-                        + "WHERE kod = ? AND id_trans_ruian < ?")) {
-            pstm.setInt(1, item.getPrvekId().intValue());
-            pstm.setLong(2, item.getIdTransakce());
+                        "UPDATE rn_adresni_misto SET deleted = true, "
+                        + "item_timestamp = timezone('utc', now()), "
+                        + "id_trans_ruian = ? WHERE kod = ? "
+                        + "AND id_trans_ruian < ?")) {
+            pstm.setLong(1, item.getIdTransakce());
+            pstm.setInt(2, item.getPrvekId().intValue());
+            pstm.setLong(3, item.getIdTransakce());
             pstm.execute();
         }
     }
@@ -150,10 +153,29 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
     private void deleteStavebniObjekt(final Connection con,
             final ZaniklyPrvek item) throws SQLException {
         try (final PreparedStatement pstm = con.prepareStatement(
-                        "DELETE FROM rn_stavebni_objekt "
-                        + "WHERE kod = ? AND id_trans_ruian < ?")) {
+                        "UPDATE rn_stavebni_objekt SET deleted = true, "
+                        + "item_timestamp = timezone('utc', now()), "
+                        + "id_trans_ruian = ? WHERE kod = ? "
+                        + "AND id_trans_ruian < ?")) {
+            pstm.setLong(1, item.getIdTransakce());
+            pstm.setInt(2, item.getPrvekId().intValue());
+            pstm.setLong(3, item.getIdTransakce());
+            pstm.execute();
+        }
+
+        try (final PreparedStatement pstm = con.prepareStatement(
+                        "UPDATE rn_detailni_tea SET deleted = true, "
+                        + "item_timestamp = timezone('utc', now()) "
+                        + "WHERE stavobj_id = ?")) {
             pstm.setInt(1, item.getPrvekId().intValue());
-            pstm.setLong(2, item.getIdTransakce());
+            pstm.execute();
+        }
+
+        try (final PreparedStatement pstm = con.prepareStatement(
+                        "UPDATE rn_zpusob_ochrany_pozemku SET deleted = true, "
+                        + "item_timestamp = timezone('utc', now()) "
+                        + "WHERE stavobj_id = ?")) {
+            pstm.setInt(1, item.getPrvekId().intValue());
             pstm.execute();
         }
     }
@@ -170,10 +192,29 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
     private void deleteParcela(final Connection con, final ZaniklyPrvek item)
             throws SQLException {
         try (final PreparedStatement pstm = con.prepareStatement(
-                        "DELETE FROM rn_parcela "
-                        + "WHERE id = ? AND id_trans_ruian < ?")) {
-            pstm.setInt(1, item.getPrvekId().intValue());
-            pstm.setLong(2, item.getIdTransakce());
+                        "UPDATE rn_parcela SET deleted = true, "
+                        + "item_timestamp = timezone('utc', now()), "
+                        + "id_trans_ruian = ? WHERE id = ? "
+                        + "AND id_trans_ruian < ?")) {
+            pstm.setLong(1, item.getIdTransakce());
+            pstm.setInt(2, item.getPrvekId().intValue());
+            pstm.setLong(3, item.getIdTransakce());
+            pstm.execute();
+        }
+
+        try (final PreparedStatement pstm = con.prepareStatement(
+                        "UPDATE rn_zpusob_ochrany_pozemku SET deleted = true, "
+                        + "item_timestamp = timezone('utc', now()) "
+                        + "WHERE parcela_id = ?")) {
+            pstm.setLong(1, item.getPrvekId());
+            pstm.execute();
+        }
+
+        try (final PreparedStatement pstm = con.prepareStatement(
+                        "UPDATE rn_bonit_dily_parcel SET deleted = true, "
+                        + "item_timestamp = timezone('utc', now()) "
+                        + "WHERE parcela_id = ?")) {
+            pstm.setLong(1, item.getPrvekId());
             pstm.execute();
         }
     }
@@ -190,10 +231,13 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
     private void deleteUlice(final Connection con, final ZaniklyPrvek item)
             throws SQLException {
         try (final PreparedStatement pstm = con.prepareStatement(
-                        "DELETE FROM rn_ulice "
-                        + "WHERE kod = ? AND id_trans_ruian < ?")) {
-            pstm.setInt(1, item.getPrvekId().intValue());
-            pstm.setLong(2, item.getIdTransakce());
+                        "UPDATE rn_ulice SET deleted = true, "
+                        + "item_timestamp = timezone('utc', now()), "
+                        + "id_trans_ruian = ? WHERE kod = ? "
+                        + "AND id_trans_ruian < ?")) {
+            pstm.setLong(1, item.getIdTransakce());
+            pstm.setInt(2, item.getPrvekId().intValue());
+            pstm.setLong(3, item.getIdTransakce());
             pstm.execute();
         }
     }

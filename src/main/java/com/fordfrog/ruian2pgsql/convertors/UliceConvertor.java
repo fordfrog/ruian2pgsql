@@ -50,8 +50,8 @@ public class UliceConvertor extends AbstractSaveConvertor<Ulice> {
             + "SET nazev = ?, nespravny = ?, obec_kod = ?, id_trans_ruian = ?, "
             + "plati_od = ?, nz_id_globalni = ?, zmena_grafiky = ?, "
             + "definicni_cary = ST_GeomFromGML(?), "
-            + "item_timestamp = timezone('utc', now()) WHERE kod = ? "
-            + "AND id_trans_ruian < ?";
+            + "item_timestamp = timezone('utc', now()), deleted = false "
+            + "WHERE kod = ? AND id_trans_ruian < ?";
 
     public UliceConvertor() {
         super(Ulice.class, Namespaces.VYMENNY_FORMAT_TYPY, "Ulice", SQL_EXISTS,
