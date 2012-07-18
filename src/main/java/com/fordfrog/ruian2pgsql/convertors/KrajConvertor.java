@@ -111,6 +111,10 @@ public class KrajConvertor extends AbstractSaveConvertor<Kraj> {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
+                    case "Geometrie":
+                        Utils.processGeometrie(reader, getConnection(), item,
+                                NAMESPACE, logFile);
+                        break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(
                                 Long.parseLong(reader.getElementText()));

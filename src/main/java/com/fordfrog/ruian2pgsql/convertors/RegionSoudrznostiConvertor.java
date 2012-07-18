@@ -117,6 +117,10 @@ public class RegionSoudrznostiConvertor
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
+                    case "Geometrie":
+                        Utils.processGeometrie(reader, getConnection(), item,
+                                NAMESPACE, logFile);
+                        break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(
                                 Long.parseLong(reader.getElementText()));
