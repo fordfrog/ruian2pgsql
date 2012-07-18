@@ -71,10 +71,15 @@ public class RegionSoudrznostiConvertor
 
     /**
      * Creates new instance of RegionSoudrznostiConvertor.
+     *
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
      */
-    public RegionSoudrznostiConvertor() {
+    public RegionSoudrznostiConvertor(final Connection con) throws SQLException {
         super(RegionSoudrznosti.class, Namespaces.VYMENNY_FORMAT_TYPY,
-                "RegionSoudrznosti", SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
+                "RegionSoudrznosti", con, SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
     }
 
     @Override
@@ -107,8 +112,8 @@ public class RegionSoudrznostiConvertor
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final RegionSoudrznosti item,
-            final Writer logFile) throws XMLStreamException {
+            final RegionSoudrznosti item, final Writer logFile)
+            throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {

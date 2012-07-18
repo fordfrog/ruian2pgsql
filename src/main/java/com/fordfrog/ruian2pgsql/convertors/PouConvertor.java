@@ -69,9 +69,14 @@ public class PouConvertor extends AbstractSaveConvertor<Pou> {
 
     /**
      * Creates new instance of PouConvertor.
+     *
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
      */
-    public PouConvertor() {
-        super(Pou.class, Namespaces.VYMENNY_FORMAT_TYPY, "Pou", SQL_EXISTS,
+    public PouConvertor(final Connection con) throws SQLException {
+        super(Pou.class, Namespaces.VYMENNY_FORMAT_TYPY, "Pou", con, SQL_EXISTS,
                 SQL_INSERT, SQL_UPDATE);
     }
 
@@ -104,14 +109,13 @@ public class PouConvertor extends AbstractSaveConvertor<Pou> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final Pou item, final Writer logFile)
-            throws XMLStreamException {
+            final Pou item, final Writer logFile) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "Geometrie":
-                        Utils.processGeometrie(
-                                reader, con, item, NAMESPACE, logFile);
+                        Utils.processGeometrie(reader, getConnection(), item,
+                                NAMESPACE, logFile);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(

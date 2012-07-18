@@ -53,18 +53,20 @@ public class ZpusobOchranyPozemkuConvertor
     /**
      * Id of parent Parcela.
      */
-    private final long parcelaId;
+    private Long parcelaId;
 
     /**
      * Creates new instance of ZpusobOchranyPozemkuConvertor.
      *
-     * @param parcelaId {@link #parcelaId}
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.I
      */
-    public ZpusobOchranyPozemkuConvertor(final long parcelaId) {
-        super(ZpusobOchranyPozemku.class, NAMESPACE, "ZpusobOchrany", null,
+    public ZpusobOchranyPozemkuConvertor(final Connection con)
+            throws SQLException {
+        super(ZpusobOchranyPozemku.class, NAMESPACE, "ZpusobOchrany", con, null,
                 SQL_INSERT, null);
-
-        this.parcelaId = parcelaId;
     }
 
     @Override
@@ -86,8 +88,8 @@ public class ZpusobOchranyPozemkuConvertor
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final ZpusobOchranyPozemku item,
-            final Writer logFile) throws XMLStreamException {
+            final ZpusobOchranyPozemku item, final Writer logFile)
+            throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
@@ -117,9 +119,26 @@ public class ZpusobOchranyPozemkuConvertor
     }
 
     @Override
-    protected void saveData(final Connection con,
-            final ZpusobOchranyPozemku item, final Writer logFile)
-            throws SQLException {
-        insertItem(con, item);
+    protected void saveData(final ZpusobOchranyPozemku item,
+            final Writer logFile) throws SQLException {
+        insertItem(item);
+    }
+
+    /**
+     * Getter for {@link #parcelaId}.
+     *
+     * @return {@link #parcelaId}
+     */
+    public Long getParcelaId() {
+        return parcelaId;
+    }
+
+    /**
+     * Setter for {@link #parcelaId}.
+     *
+     * @param parcelaId {@link #parcelaId}
+     */
+    public void setParcelaId(final Long parcelaId) {
+        this.parcelaId = parcelaId;
     }
 }

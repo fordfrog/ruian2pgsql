@@ -73,9 +73,14 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
 
     /**
      * Creates new instance of CastObceConvertor.
+     *
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
      */
-    public CastObceConvertor() {
-        super(CastObce.class, Namespaces.VYMENNY_FORMAT_TYPY, "CastObce",
+    public CastObceConvertor(final Connection con) throws SQLException {
+        super(CastObce.class, Namespaces.VYMENNY_FORMAT_TYPY, "CastObce", con,
                 SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
     }
 
@@ -113,14 +118,14 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final CastObce item, final Writer logFile)
+            final CastObce item, final Writer logFile)
             throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "Geometrie":
-                        Utils.processGeometrie(
-                                reader, con, item, NAMESPACE, logFile);
+                        Utils.processGeometrie(reader, getConnection(), item,
+                                NAMESPACE, logFile);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(

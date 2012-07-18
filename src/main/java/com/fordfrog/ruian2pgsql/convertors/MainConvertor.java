@@ -267,8 +267,8 @@ public class MainConvertor {
             case Namespaces.VYMENNY_FORMAT_TYPY:
                 switch (reader.getLocalName()) {
                     case "VymennyFormat":
-                        new ExchangeFormatConvertor().
-                                convert(reader, con, logFile);
+                        new ExchangeFormatConvertor(con).
+                                convert(reader, logFile);
                         break;
                     default:
                         Utils.processUnsupported(reader, logFile);

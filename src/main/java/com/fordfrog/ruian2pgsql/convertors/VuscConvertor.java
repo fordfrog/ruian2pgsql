@@ -69,10 +69,15 @@ public class VuscConvertor extends AbstractSaveConvertor<Vusc> {
 
     /**
      * Creates new instance of VuscConvertor.
+     *
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
      */
-    public VuscConvertor() {
-        super(Vusc.class, Namespaces.VYMENNY_FORMAT_TYPY, "Vusc", SQL_EXISTS,
-                SQL_INSERT, SQL_UPDATE);
+    public VuscConvertor(final Connection con) throws SQLException {
+        super(Vusc.class, Namespaces.VYMENNY_FORMAT_TYPY, "Vusc", con,
+                SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
     }
 
     @Override
@@ -104,14 +109,13 @@ public class VuscConvertor extends AbstractSaveConvertor<Vusc> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final Vusc item, final Writer logFile)
-            throws XMLStreamException {
+            final Vusc item, final Writer logFile) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "Geometrie":
-                        Utils.processGeometrie(
-                                reader, con, item, NAMESPACE, logFile);
+                        Utils.processGeometrie(reader, getConnection(), item,
+                                NAMESPACE, logFile);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(

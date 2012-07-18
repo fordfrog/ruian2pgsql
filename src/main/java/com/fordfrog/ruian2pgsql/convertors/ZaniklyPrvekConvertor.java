@@ -42,9 +42,113 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
      * Namespace of the element.
      */
     private static final String NAMESPACE = Namespaces.VYMENNY_FORMAT_TYPY;
+    /**
+     * SQL statement for marking AdresniMisto as deleted.
+     */
+    private static final String SQL_UPDATE_ADRESNI_MISTO =
+            "UPDATE rn_adresni_misto SET deleted = true, "
+            + "item_timestamp = timezone('utc', now()), id_trans_ruian = ? "
+            + "WHERE kod = ? AND id_trans_ruian < ?";
+    /**
+     * SQL statement for marking BonitDilyParcel as deleted.
+     */
+    private static final String SQL_UPDATE_BONIT_DILY_PARCEL =
+            "UPDATE rn_bonit_dily_parcel SET deleted = true, "
+            + "item_timestamp = timezone('utc', now()) WHERE parcela_id = ?";
+    /**
+     * SQL statement for marking DetailniTEA as deleted.
+     */
+    private static final String SQL_UPDATE_DETAILNI_TEA =
+            "UPDATE rn_detailni_tea SET deleted = true, "
+            + "item_timestamp = timezone('utc', now()) WHERE stavobj_id = ?";
+    /**
+     * SQL statement for marking Parcela as deleted.
+     */
+    private static final String SQL_UPDATE_PARCELA = "UPDATE rn_parcela "
+            + "SET deleted = true, item_timestamp = timezone('utc', now()), "
+            + "id_trans_ruian = ? WHERE id = ? AND id_trans_ruian < ?";
+    /**
+     * SQL statement for marking StavebniObjekt as deleted.
+     */
+    private static final String SQL_UPDATE_STAVEBNI_OBJEKT =
+            "UPDATE rn_stavebni_objekt SET deleted = true, "
+            + "item_timestamp = timezone('utc', now()), id_trans_ruian = ? "
+            + "WHERE kod = ? AND id_trans_ruian < ?";
+    /**
+     * SQL statement for marking Ulice as deleted.
+     */
+    private static final String SQL_UPDATE_ULICE = "UPDATE rn_ulice "
+            + "SET deleted = true, item_timestamp = timezone('utc', now()), "
+            + "id_trans_ruian = ? WHERE kod = ? AND id_trans_ruian < ?";
+    /**
+     * SQL statement for marking ZpusobOchranyObjektu as deleted.
+     */
+    private static final String SQL_UPDATE_ZPUSOB_OCHRANY_OBJEKTU =
+            "UPDATE rn_zpusob_ochrany_objektu SET deleted = true, "
+            + "item_timestamp = timezone('utc', now()) WHERE stavobj_id = ?";
+    /**
+     * SQL statement for marking ZpusobOchranyPozemku as deleted.
+     */
+    private static final String SQL_UPDATE_ZPUSOB_OCHRANY_POZEMKU =
+            "UPDATE rn_zpusob_ochrany_pozemku SET deleted = true, "
+            + "item_timestamp = timezone('utc', now()) WHERE parcela_id = ?";
+    /**
+     * Prepared statement for marking AdresniMisto as deleted.
+     */
+    private final PreparedStatement pstmUpdateAdresniMisto;
+    /**
+     * Prepared statement for marking BonitDilyParcel as deleted.
+     */
+    private final PreparedStatement pstmUpdateBonitDilyParcel;
+    /**
+     * Prepared statement for marking DetailniTEA as deleted.
+     */
+    private final PreparedStatement pstmUpdateDetailniTea;
+    /**
+     * Prepared statement for marking Parcela as deleted.
+     */
+    private final PreparedStatement pstmUpdateParcela;
+    /**
+     * Prepared statement for marking StavebniObjekt as deleted.
+     */
+    private final PreparedStatement pstmUpdateStavebniObjekt;
+    /**
+     * Prepared statement for marking Ulice as deleted.
+     */
+    private final PreparedStatement pstmUpdateUlice;
+    /**
+     * Prepared statement for marking ZpusobOchranyObjektu as deleted.
+     */
+    private final PreparedStatement pstmUpdateZpusobOchranyObjektu;
+    /**
+     * Prepared statement for marking ZpusobOchranyPozemku as deleted.
+     */
+    private final PreparedStatement pstmUpdateZpusobOchranyPozemku;
 
-    public ZaniklyPrvekConvertor() {
-        super(ZaniklyPrvek.class, NAMESPACE, "ZaniklyPrvek", null, null, null);
+    /**
+     * Creates new instance of ZaniklyPrvekConvertor.
+     *
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
+     */
+    public ZaniklyPrvekConvertor(final Connection con) throws SQLException {
+        super(ZaniklyPrvek.class, NAMESPACE, "ZaniklyPrvek", con, null, null,
+                null);
+
+        pstmUpdateAdresniMisto = con.prepareStatement(SQL_UPDATE_ADRESNI_MISTO);
+        pstmUpdateBonitDilyParcel =
+                con.prepareStatement(SQL_UPDATE_BONIT_DILY_PARCEL);
+        pstmUpdateDetailniTea = con.prepareStatement(SQL_UPDATE_DETAILNI_TEA);
+        pstmUpdateParcela = con.prepareStatement(SQL_UPDATE_PARCELA);
+        pstmUpdateStavebniObjekt =
+                con.prepareStatement(SQL_UPDATE_STAVEBNI_OBJEKT);
+        pstmUpdateUlice = con.prepareStatement(SQL_UPDATE_ULICE);
+        pstmUpdateZpusobOchranyObjektu =
+                con.prepareStatement(SQL_UPDATE_ZPUSOB_OCHRANY_OBJEKTU);
+        pstmUpdateZpusobOchranyPozemku =
+                con.prepareStatement(SQL_UPDATE_ZPUSOB_OCHRANY_POZEMKU);
     }
 
     @Override
@@ -61,7 +165,7 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final ZaniklyPrvek item, final Writer logFile)
+            final ZaniklyPrvek item, final Writer logFile)
             throws XMLStreamException, SQLException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
@@ -90,27 +194,26 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
     /**
      * Instead of saving data, it removes specified item from database.
      *
-     * @param con  database connection
      * @param item item
      *
      * @throws SQLException Thrown if problem occurred while communicating with
      *                      database.
      */
     @Override
-    protected void saveData(final Connection con, final ZaniklyPrvek item,
-            final Writer logFile) throws SQLException {
+    protected void saveData(final ZaniklyPrvek item, final Writer logFile)
+            throws SQLException {
         switch (item.getTypPrvkuKod()) {
             case "AD": // AdresniMisto
-                deleteAdresniMisto(con, item);
+                deleteAdresniMisto(item);
                 break;
             case "SO": // StavebniObjekt
-                deleteStavebniObjekt(con, item);
+                deleteStavebniObjekt(item);
                 break;
             case "PA": // Parcela
-                deleteParcela(con, item);
+                deleteParcela(item);
                 break;
             case "UL": // Ulice
-                deleteUlice(con, item);
+                deleteUlice(item);
                 break;
             default:
                 Utils.printToLog(logFile, "Ignoring unsupported TypPrvkuKod '"
@@ -121,124 +224,82 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
     /**
      * Deletes AdresniMisto item.
      *
-     * @param con  database connection
      * @param item item
      *
      * @throws SQLException Thrown if problem occurred while communicating with
      *                      database.
      */
-    private void deleteAdresniMisto(final Connection con,
-            final ZaniklyPrvek item) throws SQLException {
-        try (final PreparedStatement pstm = con.prepareStatement(
-                        "UPDATE rn_adresni_misto SET deleted = true, "
-                        + "item_timestamp = timezone('utc', now()), "
-                        + "id_trans_ruian = ? WHERE kod = ? "
-                        + "AND id_trans_ruian < ?")) {
-            pstm.setLong(1, item.getIdTransakce());
-            pstm.setInt(2, item.getPrvekId().intValue());
-            pstm.setLong(3, item.getIdTransakce());
-            pstm.execute();
-        }
+    private void deleteAdresniMisto(final ZaniklyPrvek item)
+            throws SQLException {
+        pstmUpdateAdresniMisto.clearParameters();
+        pstmUpdateAdresniMisto.setLong(1, item.getIdTransakce());
+        pstmUpdateAdresniMisto.setInt(2, item.getPrvekId().intValue());
+        pstmUpdateAdresniMisto.setLong(3, item.getIdTransakce());
+        pstmUpdateAdresniMisto.execute();
     }
 
     /**
      * Deletes StavebniObjekt item.
      *
-     * @param con  database connection
      * @param item item
      *
      * @throws SQLException Thrown if problem occurred while communicating with
      *                      database.
      */
-    private void deleteStavebniObjekt(final Connection con,
-            final ZaniklyPrvek item) throws SQLException {
-        try (final PreparedStatement pstm = con.prepareStatement(
-                        "UPDATE rn_stavebni_objekt SET deleted = true, "
-                        + "item_timestamp = timezone('utc', now()), "
-                        + "id_trans_ruian = ? WHERE kod = ? "
-                        + "AND id_trans_ruian < ?")) {
-            pstm.setLong(1, item.getIdTransakce());
-            pstm.setInt(2, item.getPrvekId().intValue());
-            pstm.setLong(3, item.getIdTransakce());
-            pstm.execute();
-        }
+    private void deleteStavebniObjekt(final ZaniklyPrvek item)
+            throws SQLException {
+        pstmUpdateStavebniObjekt.clearParameters();
+        pstmUpdateStavebniObjekt.setLong(1, item.getIdTransakce());
+        pstmUpdateStavebniObjekt.setInt(2, item.getPrvekId().intValue());
+        pstmUpdateStavebniObjekt.setLong(3, item.getIdTransakce());
+        pstmUpdateStavebniObjekt.execute();
 
-        try (final PreparedStatement pstm = con.prepareStatement(
-                        "UPDATE rn_detailni_tea SET deleted = true, "
-                        + "item_timestamp = timezone('utc', now()) "
-                        + "WHERE stavobj_id = ?")) {
-            pstm.setInt(1, item.getPrvekId().intValue());
-            pstm.execute();
-        }
+        pstmUpdateDetailniTea.clearParameters();
+        pstmUpdateDetailniTea.setInt(1, item.getPrvekId().intValue());
+        pstmUpdateDetailniTea.execute();
 
-        try (final PreparedStatement pstm = con.prepareStatement(
-                        "UPDATE rn_zpusob_ochrany_pozemku SET deleted = true, "
-                        + "item_timestamp = timezone('utc', now()) "
-                        + "WHERE stavobj_id = ?")) {
-            pstm.setInt(1, item.getPrvekId().intValue());
-            pstm.execute();
-        }
+        pstmUpdateZpusobOchranyObjektu.clearParameters();
+        pstmUpdateZpusobOchranyObjektu.setInt(1, item.getPrvekId().intValue());
+        pstmUpdateZpusobOchranyObjektu.execute();
     }
 
     /**
      * Deletes Parcela item.
      *
-     * @param con  database connection
      * @param item item
      *
      * @throws SQLException Thrown if problem occurred while communicating with
      *                      database.
      */
-    private void deleteParcela(final Connection con, final ZaniklyPrvek item)
-            throws SQLException {
-        try (final PreparedStatement pstm = con.prepareStatement(
-                        "UPDATE rn_parcela SET deleted = true, "
-                        + "item_timestamp = timezone('utc', now()), "
-                        + "id_trans_ruian = ? WHERE id = ? "
-                        + "AND id_trans_ruian < ?")) {
-            pstm.setLong(1, item.getIdTransakce());
-            pstm.setInt(2, item.getPrvekId().intValue());
-            pstm.setLong(3, item.getIdTransakce());
-            pstm.execute();
-        }
+    private void deleteParcela(final ZaniklyPrvek item) throws SQLException {
+        pstmUpdateParcela.clearParameters();
+        pstmUpdateParcela.setLong(1, item.getIdTransakce());
+        pstmUpdateParcela.setInt(2, item.getPrvekId().intValue());
+        pstmUpdateParcela.setLong(3, item.getIdTransakce());
+        pstmUpdateParcela.execute();
 
-        try (final PreparedStatement pstm = con.prepareStatement(
-                        "UPDATE rn_zpusob_ochrany_pozemku SET deleted = true, "
-                        + "item_timestamp = timezone('utc', now()) "
-                        + "WHERE parcela_id = ?")) {
-            pstm.setLong(1, item.getPrvekId());
-            pstm.execute();
-        }
+        pstmUpdateZpusobOchranyPozemku.clearParameters();
+        pstmUpdateZpusobOchranyPozemku.setLong(1, item.getPrvekId());
+        pstmUpdateZpusobOchranyPozemku.execute();
 
-        try (final PreparedStatement pstm = con.prepareStatement(
-                        "UPDATE rn_bonit_dily_parcel SET deleted = true, "
-                        + "item_timestamp = timezone('utc', now()) "
-                        + "WHERE parcela_id = ?")) {
-            pstm.setLong(1, item.getPrvekId());
-            pstm.execute();
-        }
+        pstmUpdateBonitDilyParcel.clearParameters();
+        pstmUpdateBonitDilyParcel.setLong(1, item.getPrvekId());
+        pstmUpdateBonitDilyParcel.execute();
     }
 
     /**
      * Deletes Ulice item.
      *
-     * @param con  database connection
      * @param item item
      *
      * @throws SQLException Thrown if problem occurred while communicating with
      *                      database.
      */
-    private void deleteUlice(final Connection con, final ZaniklyPrvek item)
-            throws SQLException {
-        try (final PreparedStatement pstm = con.prepareStatement(
-                        "UPDATE rn_ulice SET deleted = true, "
-                        + "item_timestamp = timezone('utc', now()), "
-                        + "id_trans_ruian = ? WHERE kod = ? "
-                        + "AND id_trans_ruian < ?")) {
-            pstm.setLong(1, item.getIdTransakce());
-            pstm.setInt(2, item.getPrvekId().intValue());
-            pstm.setLong(3, item.getIdTransakce());
-            pstm.execute();
-        }
+    private void deleteUlice(final ZaniklyPrvek item) throws SQLException {
+        pstmUpdateUlice.clearParameters();
+        pstmUpdateUlice.setLong(1, item.getIdTransakce());
+        pstmUpdateUlice.setInt(2, item.getPrvekId().intValue());
+        pstmUpdateUlice.setLong(3, item.getIdTransakce());
+        pstmUpdateUlice.execute();
     }
 }

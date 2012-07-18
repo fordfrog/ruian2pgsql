@@ -53,18 +53,20 @@ public class ZpusobOchranyObjektuConvertor
     /**
      * Id of parent StavebniObjekt.
      */
-    private final int stavebniObjektId;
+    private Integer stavebniObjektId;
 
     /**
      * Creates new instance of ZpusobOchranyObjektuConvertor.
      *
-     * @param stavebniObjektId {@link #stavebniObjektId}
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.I
      */
-    public ZpusobOchranyObjektuConvertor(final int stavebniObjektId) {
-        super(ZpusobOchranyObjektu.class, NAMESPACE, "ZpusobOchrany", null,
+    public ZpusobOchranyObjektuConvertor(final Connection con)
+            throws SQLException {
+        super(ZpusobOchranyObjektu.class, NAMESPACE, "ZpusobOchrany", con, null,
                 SQL_INSERT, null);
-
-        this.stavebniObjektId = stavebniObjektId;
     }
 
     @Override
@@ -86,8 +88,8 @@ public class ZpusobOchranyObjektuConvertor
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final ZpusobOchranyObjektu item,
-            final Writer logFile) throws XMLStreamException {
+            final ZpusobOchranyObjektu item, final Writer logFile)
+            throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
@@ -117,9 +119,26 @@ public class ZpusobOchranyObjektuConvertor
     }
 
     @Override
-    protected void saveData(final Connection con,
-            final ZpusobOchranyObjektu item, final Writer logFile)
-            throws SQLException {
-        insertItem(con, item);
+    protected void saveData(final ZpusobOchranyObjektu item,
+            final Writer logFile) throws SQLException {
+        insertItem(item);
+    }
+
+    /**
+     * Getter for {@link #stavebniObjektId}.
+     *
+     * @return {@link #stavebniObjektId}
+     */
+    public Integer getStavebniObjektId() {
+        return stavebniObjektId;
+    }
+
+    /**
+     * Setter for {@link #stavebniObjektId}.
+     *
+     * @param stavebniObjektId {@link #stavebniObjektId}
+     */
+    public void setStavebniObjektId(final Integer stavebniObjektId) {
+        this.stavebniObjektId = stavebniObjektId;
     }
 }

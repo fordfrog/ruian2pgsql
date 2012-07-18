@@ -52,18 +52,19 @@ public class BonitovanyDilConvertor
     /**
      * Id of parent Parcela.
      */
-    private final long parcelaId;
+    private Long parcelaId;
 
     /**
      * Creates new instance of BonitovanyDilConvertor.
      *
-     * @param parcelaId {@link #parcelaId}
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.I
      */
-    public BonitovanyDilConvertor(final long parcelaId) {
-        super(BonitovanyDil.class, NAMESPACE, "BonitovanyDil", null, SQL_INSERT,
-                null);
-
-        this.parcelaId = parcelaId;
+    public BonitovanyDilConvertor(final Connection con) throws SQLException {
+        super(BonitovanyDil.class, NAMESPACE, "BonitovanyDil", con, null,
+                SQL_INSERT, null);
     }
 
     @Override
@@ -84,8 +85,8 @@ public class BonitovanyDilConvertor
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final BonitovanyDil item,
-            final Writer logFile) throws XMLStreamException {
+            final BonitovanyDil item, final Writer logFile)
+            throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
@@ -117,8 +118,26 @@ public class BonitovanyDilConvertor
     }
 
     @Override
-    protected void saveData(final Connection con, final BonitovanyDil item,
-            final Writer logFile) throws SQLException {
-        insertItem(con, item);
+    protected void saveData(final BonitovanyDil item, final Writer logFile)
+            throws SQLException {
+        insertItem(item);
+    }
+
+    /**
+     * Getter for {@link #parcelaId}.
+     *
+     * @return {@link #parcelaId}
+     */
+    public Long getParcelaId() {
+        return parcelaId;
+    }
+
+    /**
+     * Setter for {@link #parcelaId}.
+     *
+     * @param parcelaId {@link #parcelaId}
+     */
+    public void setParcelaId(final Long parcelaId) {
+        this.parcelaId = parcelaId;
     }
 }

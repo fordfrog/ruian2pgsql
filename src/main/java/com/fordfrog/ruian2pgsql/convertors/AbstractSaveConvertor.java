@@ -52,18 +52,21 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
      */
     private final String localName;
     /**
-     * SQL statement for testing whether item exists. If item does not exist, it
-     * must return no row.
+     * Database connection.
      */
-    private final String sqlExists;
+    private final Connection connection;
     /**
-     * SQL statement for insertion of item to database.
+     * Prepared statement for checking whether item exists.
      */
-    private final String sqlInsert;
+    private final PreparedStatement pstmExists;
     /**
-     * SQL statement for updating of item in database.
+     * Prepared statement for insertion of new item.
      */
-    private final String sqlUpdate;
+    private final PreparedStatement pstmInsert;
+    /**
+     * Prepared statement for update of existing item.
+     */
+    private final PreparedStatement pstmUpdate;
 
     /**
      * Creates new instance of AbstractSaveConvertor.
@@ -71,19 +74,38 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
      * @param clazz     {@link #clazz}
      * @param namespace {@link #namespace}
      * @param localName {@link #localName}
-     * @param sqlExists {@link #sqlExists}
-     * @param sqlInsert {@link #sqlInsert}
-     * @param sqlUpdate {@link #sqlUpdate}
+     * @param con       database connection
+     * @param sqlExists SQL statement for testing whether item exists, if item
+     *                  does not exist, it must return no row
+     * @param sqlInsert SQL statement for insertion of item to database
+     * @param sqlUpdate SQL statement for updating of item in database
+     *
+     * @throws SQLException Thrown if problem occurred while preparing
+     *                      statements.
      */
     public AbstractSaveConvertor(Class<T> clazz, final String namespace,
-            final String localName, final String sqlExists,
-            final String sqlInsert, final String sqlUpdate) {
+            final String localName, final Connection con,
+            final String sqlExists, final String sqlInsert,
+            final String sqlUpdate) throws SQLException {
         this.clazz = clazz;
         this.namespace = namespace;
         this.localName = localName;
-        this.sqlExists = sqlExists;
-        this.sqlInsert = sqlInsert;
-        this.sqlUpdate = sqlUpdate;
+        this.connection = con;
+        this.pstmExists =
+                sqlExists == null ? null : con.prepareStatement(sqlExists);
+        this.pstmInsert =
+                sqlInsert == null ? null : con.prepareStatement(sqlInsert);
+        this.pstmUpdate =
+                sqlUpdate == null ? null : con.prepareStatement(sqlUpdate);
+    }
+
+    /**
+     * Getter for {@link #connection}.
+     *
+     * @return {@link #connection}
+     */
+    public Connection getConnection() {
+        return connection;
     }
 
     /**
@@ -93,7 +115,6 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
      * {@link #saveData(java.sql.Connection, java.lang.Object)} is called.
      *
      * @param reader  XML stream reader
-     * @param con     database connection
      * @param logFile log file writer
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
@@ -102,8 +123,8 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
      *                            with database.
      */
     @Override
-    public void convert(final XMLStreamReader reader, final Connection con,
-            final Writer logFile) throws XMLStreamException, SQLException {
+    public void convert(final XMLStreamReader reader, final Writer logFile)
+            throws XMLStreamException, SQLException {
         final T item;
 
         try {
@@ -118,11 +139,11 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
 
             switch (event) {
                 case XMLStreamReader.START_ELEMENT:
-                    processElement(reader, con, item, logFile);
+                    processElement(reader, item, logFile);
                     break;
                 case XMLStreamReader.END_ELEMENT:
                     if (Utils.isEndElement(namespace, localName, reader)) {
-                        saveData(con, item, logFile);
+                        saveData(item, logFile);
 
                         return;
                     }
@@ -139,19 +160,18 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
      * called. Testing for whether item exists is performed via
      * {@link #exists(java.sql.Connection, java.lang.Object)}.
      *
-     * @param con     database connection
      * @param item    item to be saved
      * @param logFile log file writer
      *
      * @throws SQLException Thrown if problem occurred while saving item into
      *                      database.
      */
-    protected void saveData(final Connection con, final T item,
-            final Writer logFile) throws SQLException {
-        if (exists(con, item)) {
-            updateItem(con, item);
+    protected void saveData(final T item, final Writer logFile)
+            throws SQLException {
+        if (exists(item)) {
+            updateItem(item);
         } else {
-            insertItem(con, item);
+            insertItem(item);
         }
     }
 
@@ -160,7 +180,6 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
      * {@link #fillExists(java.sql.PreparedStatement, java.lang.Object)} is
      * called to get the prepared statement parameter(s) filled.
      *
-     * @param con  database connection
      * @param item item to be checked
      *
      * @return true if item exists, otherwise false
@@ -168,14 +187,12 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
      * @throws SQLException Thrown if problem occurred while communicating with
      *                      database.
      */
-    protected boolean exists(final Connection con, final T item)
-            throws SQLException {
-        try (final PreparedStatement pstm = con.prepareStatement(sqlExists)) {
-            fillExists(pstm, item);
+    protected boolean exists(final T item) throws SQLException {
+        pstmExists.clearParameters();
+        fillExists(pstmExists, item);
 
-            try (final ResultSet rs = pstm.executeQuery()) {
-                return rs.next();
-            }
+        try (final ResultSet rs = pstmExists.executeQuery()) {
+            return rs.next();
         }
     }
 
@@ -184,18 +201,15 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
      * {@link #fill(java.sql.PreparedStatement, java.lang.Object, boolean)} is
      * called to get prepared statement parameters filled.
      *
-     * @param con  database connection
      * @param item item to be saved
      *
      * @throws SQLException Thrown if problem occurred while communicating with
      *                      database.
      */
-    protected void insertItem(final Connection con, final T item)
-            throws SQLException {
-        try (final PreparedStatement pstm = con.prepareStatement(sqlInsert)) {
-            fill(pstm, item, false);
-            pstm.execute();
-        }
+    protected void insertItem(final T item) throws SQLException {
+        pstmInsert.clearParameters();
+        fill(pstmInsert, item, false);
+        pstmInsert.execute();
     }
 
     /**
@@ -203,24 +217,20 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
      * {@link #fill(java.sql.PreparedStatement, java.lang.Object, boolean)} is
      * called to get prepared statement parameters filled.
      *
-     * @param con  database connection
      * @param item item to be saved
      *
      * @throws SQLException
      */
-    protected void updateItem(final Connection con, final T item)
-            throws SQLException {
-        try (final PreparedStatement pstm = con.prepareStatement(sqlUpdate)) {
-            fill(pstm, item, true);
-            pstm.execute();
-        }
+    protected void updateItem(final T item) throws SQLException {
+        pstmUpdate.clearParameters();
+        fill(pstmUpdate, item, true);
+        pstmUpdate.execute();
     }
 
     /**
      * Processes elements of the main element.
      *
      * @param reader  XML stream reader
-     * @param con     database connection
      * @param item    item of the main element
      * @param logFile log file writer
      *
@@ -230,8 +240,7 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
      *                            with database.
      */
     protected abstract void processElement(XMLStreamReader reader,
-            Connection con, T item, Writer logFile)
-            throws XMLStreamException, SQLException;
+            T item, Writer logFile) throws XMLStreamException, SQLException;
 
     /**
      * Fills prepared statement parameters for testing whether item already

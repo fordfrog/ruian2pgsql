@@ -76,10 +76,15 @@ public class MomcConvertor extends AbstractSaveConvertor<Momc> {
 
     /**
      * Creates new instance of MomcConvertor.
+     *
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
      */
-    public MomcConvertor() {
-        super(Momc.class, Namespaces.VYMENNY_FORMAT_TYPY, "Momc", SQL_EXISTS,
-                SQL_INSERT, SQL_UPDATE);
+    public MomcConvertor(final Connection con) throws SQLException {
+        super(Momc.class, Namespaces.VYMENNY_FORMAT_TYPY, "Momc", con,
+                SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
     }
 
     @Override
@@ -122,14 +127,13 @@ public class MomcConvertor extends AbstractSaveConvertor<Momc> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final Momc item, final Writer logFile)
-            throws XMLStreamException {
+            final Momc item, final Writer logFile) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "Geometrie":
-                        Utils.processGeometrie(
-                                reader, con, item, NAMESPACE, logFile);
+                        Utils.processGeometrie(reader, getConnection(), item,
+                                NAMESPACE, logFile);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(

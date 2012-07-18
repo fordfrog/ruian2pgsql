@@ -79,13 +79,68 @@ public class StavebniObjektConvertor
             + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
+    /**
+     * SQL statement for deleting of DetainiTEA.
+     */
+    private static final String SQL_DELETE_DETAILNI_TEA =
+            "DELETE FROM rn_detailni_tea WHERE stavobj_kod = ?";
+    /**
+     * SQL statement for deleting of ZpusobyOchranyObjektu.
+     */
+    private static final String SQL_DELETE_ZPUSOBY_OCHRANY_OBJEKTU =
+            "DELETE FROM rn_zpusob_ochrany_objektu WHERE stavobj_kod = ?";
+    /**
+     * Prepared statement for deleting of DetainiTEA.
+     */
+    private final PreparedStatement pstmDeleteDetailniTEA;
+    /**
+     * Prepared statement for deleting of ZpusobyOchranyObjektu.
+     */
+    private final PreparedStatement pstmDeleteZpusobyOchranyObjektu;
+    /**
+     * Convertor for DetailniTEA.
+     */
+    private final Convertor convertorDetailniTEA;
+    /**
+     * Convertor for ZpusobyOchranyObjektu.
+     */
+    private final Convertor convertorZpusobyOchranyObjektu;
+    /**
+     * Convertor for DetailniTEA.
+     */
+    private final DetailniTEAConvertor detailniTEAConvertor;
+    /**
+     * Convertor for ZpusobOchranyObjektu.
+     */
+    private final ZpusobOchranyObjektuConvertor zpusobOchranyObjektuConvertor;
 
     /**
      * Creates new instance of StavebniObjektConvertor.
+     *
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
      */
-    public StavebniObjektConvertor() {
+    public StavebniObjektConvertor(final Connection con) throws SQLException {
         super(StavebniObjekt.class, Namespaces.VYMENNY_FORMAT_TYPY,
-                "StavebniObjekt", SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
+                "StavebniObjekt", con, SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
+
+        pstmDeleteDetailniTEA = con.prepareStatement(SQL_DELETE_DETAILNI_TEA);
+        pstmDeleteZpusobyOchranyObjektu =
+                con.prepareStatement(SQL_DELETE_ZPUSOBY_OCHRANY_OBJEKTU);
+
+        detailniTEAConvertor = new DetailniTEAConvertor(con);
+        zpusobOchranyObjektuConvertor = new ZpusobOchranyObjektuConvertor(con);
+
+        convertorDetailniTEA = new CollectionConvertor(
+                Namespaces.STAV_OBJ_INT_TYPY, "DetailniTEA",
+                Namespaces.STAV_OBJ_INT_TYPY, "DetailniTEA",
+                detailniTEAConvertor);
+        convertorZpusobyOchranyObjektu = new CollectionConvertor(
+                Namespaces.STAV_OBJ_INT_TYPY, "ZpusobyOchrany",
+                Namespaces.COMMON_TYPY, "ZpusobOchrany",
+                zpusobOchranyObjektuConvertor);
     }
 
     @Override
@@ -135,8 +190,8 @@ public class StavebniObjektConvertor
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final StavebniObjekt item,
-            final Writer logFile) throws XMLStreamException, SQLException {
+            final StavebniObjekt item, final Writer logFile)
+            throws XMLStreamException, SQLException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
@@ -148,11 +203,8 @@ public class StavebniObjektConvertor
                         processCislaDomovni(reader, item, logFile);
                         break;
                     case "DetailniTEA":
-                        new CollectionConvertor(Namespaces.STAV_OBJ_INT_TYPY,
-                                "DetailniTEA", Namespaces.STAV_OBJ_INT_TYPY,
-                                "DetailniTEA",
-                                new DetailniTEAConvertor(item.getKod())).
-                                convert(reader, con, logFile);
+                        detailniTEAConvertor.setStavebniObjektId(item.getKod());
+                        convertorDetailniTEA.convert(reader, logFile);
                         break;
                     case "Dokonceni":
                         item.setDokonceni(
@@ -163,8 +215,8 @@ public class StavebniObjektConvertor
                                 Integer.parseInt(reader.getElementText()));
                         break;
                     case "Geometrie":
-                        Utils.processGeometrie(
-                                reader, con, item, NAMESPACE, logFile);
+                        Utils.processGeometrie(reader, getConnection(), item,
+                                NAMESPACE, logFile);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(
@@ -186,8 +238,8 @@ public class StavebniObjektConvertor
                     case "Kod":
                         item.setKod(
                                 Integer.parseInt(reader.getElementText()));
-                        deleteDetailniTEA(con, item.getKod());
-                        deleteZpusobyOchranyObjektu(con, item.getKod());
+                        deleteDetailniTEA(item.getKod());
+                        deleteZpusobyOchranyObjektu(item.getKod());
                         break;
                     case "Momc":
                         item.setMomcKod(
@@ -250,11 +302,9 @@ public class StavebniObjektConvertor
                                 Integer.parseInt(reader.getElementText()));
                         break;
                     case "ZpusobyOchrany":
-                        new CollectionConvertor(Namespaces.STAV_OBJ_INT_TYPY,
-                                "ZpusobyOchrany", Namespaces.COMMON_TYPY,
-                                "ZpusobOchrany",
-                                new ZpusobOchranyObjektuConvertor(item.getKod())).
-                                convert(reader, con, logFile);
+                        zpusobOchranyObjektuConvertor.setStavebniObjektId(
+                                item.getKod());
+                        convertorZpusobyOchranyObjektu.convert(reader, logFile);
                         break;
                     default:
                         Utils.processUnsupported(reader, logFile);
@@ -326,35 +376,28 @@ public class StavebniObjektConvertor
     /**
      * Deletes DetailniTEA that belong to this StavebniObjekt.
      *
-     * @param con              database connection
      * @param stavebniObjektId StavebniObjekt id
      *
      * @throws SQLException Thrown if problem occurred while deleting the items.
      */
-    private void deleteDetailniTEA(final Connection con,
-            final Integer stavebniObjektId) throws SQLException {
-        try (final PreparedStatement pstm = con.prepareStatement(
-                        "DELETE FROM rn_detailni_tea WHERE stavobj_kod = ?")) {
-            pstm.setInt(1, stavebniObjektId);
-            pstm.execute();
-        }
+    private void deleteDetailniTEA(final Integer stavebniObjektId)
+            throws SQLException {
+        pstmDeleteDetailniTEA.clearParameters();
+        pstmDeleteDetailniTEA.setInt(1, stavebniObjektId);
+        pstmDeleteDetailniTEA.execute();
     }
 
     /**
      * Deletes ZpusobyOchranyObjektu that belong to this StavebniObjekt.
      *
-     * @param con              database connection
      * @param stavebniObjektId StavebniObjekt id
      *
      * @throws SQLException Thrown if problem occurred while deleting the items.
      */
-    private void deleteZpusobyOchranyObjektu(final Connection con,
-            final Integer stavebniObjektId) throws SQLException {
-        try (final PreparedStatement pstm = con.prepareStatement(
-                        "DELETE FROM rn_zpusob_ochrany_objektu "
-                        + "WHERE stavobj_kod = ?")) {
-            pstm.setInt(1, stavebniObjektId);
-            pstm.execute();
-        }
+    private void deleteZpusobyOchranyObjektu(final Integer stavebniObjektId)
+            throws SQLException {
+        pstmDeleteZpusobyOchranyObjektu.clearParameters();
+        pstmDeleteZpusobyOchranyObjektu.setInt(1, stavebniObjektId);
+        pstmDeleteZpusobyOchranyObjektu.execute();
     }
 }

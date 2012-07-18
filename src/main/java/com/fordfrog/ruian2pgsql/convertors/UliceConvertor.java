@@ -39,13 +39,25 @@ import javax.xml.stream.XMLStreamReader;
  */
 public class UliceConvertor extends AbstractSaveConvertor<Ulice> {
 
+    /**
+     * Namespace of the element.
+     */
     private static final String NAMESPACE = Namespaces.ULICE_INT_TYPY;
+    /**
+     * SQL statement for checking whether the item already exists.
+     */
     private static final String SQL_EXISTS =
             "SELECT 1 FROM rn_ulice WHERE kod = ?";
+    /**
+     * SQL statement for insertion of new item.
+     */
     private static final String SQL_INSERT = "INSERT INTO rn_ulice "
             + "(nazev, nespravny, obec_kod, id_trans_ruian, plati_od, "
             + "nz_id_globalni, zmena_grafiky, definicni_cara, kod) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ST_GeomFromGML(?), ?)";
+    /**
+     * SQL statement for update of existing item.
+     */
     private static final String SQL_UPDATE = "UPDATE rn_ulice "
             + "SET nazev = ?, nespravny = ?, obec_kod = ?, id_trans_ruian = ?, "
             + "plati_od = ?, nz_id_globalni = ?, zmena_grafiky = ?, "
@@ -53,9 +65,17 @@ public class UliceConvertor extends AbstractSaveConvertor<Ulice> {
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
 
-    public UliceConvertor() {
-        super(Ulice.class, Namespaces.VYMENNY_FORMAT_TYPY, "Ulice", SQL_EXISTS,
-                SQL_INSERT, SQL_UPDATE);
+    /**
+     * Creates new instance of UliceMistoConvertor.
+     *
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
+     */
+    public UliceConvertor(final Connection con) throws SQLException {
+        super(Ulice.class, Namespaces.VYMENNY_FORMAT_TYPY, "Ulice", con,
+                SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
     }
 
     @Override
@@ -85,14 +105,13 @@ public class UliceConvertor extends AbstractSaveConvertor<Ulice> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final Ulice item, final Writer logFile)
-            throws XMLStreamException {
+            final Ulice item, final Writer logFile) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "Geometrie":
-                        Utils.processGeometrie(
-                                reader, con, item, NAMESPACE, logFile);
+                        Utils.processGeometrie(reader, getConnection(), item,
+                                NAMESPACE, logFile);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(

@@ -68,9 +68,14 @@ public class MopConvertor extends AbstractSaveConvertor<Mop> {
 
     /**
      * Creates new instance of MopConvertor.
+     *
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
      */
-    public MopConvertor() {
-        super(Mop.class, Namespaces.VYMENNY_FORMAT_TYPY, "Mop", SQL_EXISTS,
+    public MopConvertor(final Connection con) throws SQLException {
+        super(Mop.class, Namespaces.VYMENNY_FORMAT_TYPY, "Mop", con, SQL_EXISTS,
                 SQL_INSERT, SQL_UPDATE);
     }
 
@@ -102,14 +107,13 @@ public class MopConvertor extends AbstractSaveConvertor<Mop> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final Mop item, final Writer logFile)
-            throws XMLStreamException {
+            final Mop item, final Writer logFile) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "Geometrie":
-                        Utils.processGeometrie(
-                                reader, con, item, NAMESPACE, logFile);
+                        Utils.processGeometrie(reader, getConnection(), item,
+                                NAMESPACE, logFile);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(

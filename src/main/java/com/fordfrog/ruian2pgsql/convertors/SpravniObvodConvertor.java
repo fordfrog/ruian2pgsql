@@ -69,10 +69,15 @@ public class SpravniObvodConvertor extends AbstractSaveConvertor<SpravniObvod> {
 
     /**
      * Creates new instance of SpravniObvodConvertor.
+     *
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
      */
-    public SpravniObvodConvertor() {
+    public SpravniObvodConvertor(final Connection con) throws SQLException {
         super(SpravniObvod.class, Namespaces.VYMENNY_FORMAT_TYPY,
-                "SpravniObvod", SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
+                "SpravniObvod", con, SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
     }
 
     @Override
@@ -104,14 +109,14 @@ public class SpravniObvodConvertor extends AbstractSaveConvertor<SpravniObvod> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final SpravniObvod item, final Writer logFile)
+            final SpravniObvod item, final Writer logFile)
             throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "Geometrie":
-                        Utils.processGeometrie(
-                                reader, con, item, NAMESPACE, logFile);
+                        Utils.processGeometrie(reader, getConnection(), item,
+                                NAMESPACE, logFile);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(

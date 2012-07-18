@@ -55,18 +55,19 @@ public class DetailniTEAConvertor extends AbstractSaveConvertor<DetailniTEA> {
     /**
      * Id of parent StavebniObjekt.
      */
-    private final int stavebniObjektId;
+    private Integer stavebniObjektId;
 
     /**
      * Creates new instance of ZpusobOchranyObjektuConvertor.
      *
-     * @param stavebniObjektId {@link #stavebniObjektId}
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.I
      */
-    public DetailniTEAConvertor(final int stavebniObjektId) {
-        super(DetailniTEA.class, NAMESPACE, "DetailniTEA", null, SQL_INSERT,
-                null);
-
-        this.stavebniObjektId = stavebniObjektId;
+    public DetailniTEAConvertor(final Connection con) throws SQLException {
+        super(DetailniTEA.class, NAMESPACE, "DetailniTEA", con, null,
+                SQL_INSERT, null);
     }
 
     @Override
@@ -98,7 +99,7 @@ public class DetailniTEAConvertor extends AbstractSaveConvertor<DetailniTEA> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final DetailniTEA item, final Writer logFile)
+            final DetailniTEA item, final Writer logFile)
             throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
@@ -165,8 +166,26 @@ public class DetailniTEAConvertor extends AbstractSaveConvertor<DetailniTEA> {
     }
 
     @Override
-    protected void saveData(final Connection con, final DetailniTEA item,
-            final Writer logFile) throws SQLException {
-        insertItem(con, item);
+    protected void saveData(final DetailniTEA item, final Writer logFile)
+            throws SQLException {
+        insertItem(item);
+    }
+
+    /**
+     * Getter for {@link #stavebniObjektId}.
+     *
+     * @return {@link #stavebniObjektId}
+     */
+    public Integer getStavebniObjektId() {
+        return stavebniObjektId;
+    }
+
+    /**
+     * Setter for {@link #stavebniObjektId}.
+     *
+     * @param stavebniObjektId {@link #stavebniObjektId}
+     */
+    public void setStavebniObjektId(final Integer stavebniObjektId) {
+        this.stavebniObjektId = stavebniObjektId;
     }
 }

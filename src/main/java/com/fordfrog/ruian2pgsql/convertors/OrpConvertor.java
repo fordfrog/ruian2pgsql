@@ -69,9 +69,14 @@ public class OrpConvertor extends AbstractSaveConvertor<Orp> {
 
     /**
      * Creates new instance of OrpConvertor.
+     *
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
      */
-    public OrpConvertor() {
-        super(Orp.class, Namespaces.VYMENNY_FORMAT_TYPY, "Orp", SQL_EXISTS,
+    public OrpConvertor(final Connection con) throws SQLException {
+        super(Orp.class, Namespaces.VYMENNY_FORMAT_TYPY, "Orp", con, SQL_EXISTS,
                 SQL_INSERT, SQL_UPDATE);
     }
 
@@ -104,14 +109,13 @@ public class OrpConvertor extends AbstractSaveConvertor<Orp> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final Orp item, final Writer logFile)
-            throws XMLStreamException {
+            final Orp item, final Writer logFile) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "Geometrie":
-                        Utils.processGeometrie(
-                                reader, con, item, NAMESPACE, logFile);
+                        Utils.processGeometrie(reader, getConnection(), item,
+                                NAMESPACE, logFile);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(

@@ -68,13 +68,69 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
             + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE id = ? AND id_trans_ruian < ?";
+    /**
+     * SQL statement for deletion of BonitovaneDily.
+     */
+    private static final String SQL_DELETE_BONITOVANE_DILY =
+            "DELETE FROM rn_bonit_dily_parcel WHERE parcela_id = ?";
+    /**
+     * SQL statement for deletion of ZpusobyOchranyPozemku.
+     */
+    private static final String SQL_DELETE_ZPUSOBY_OCHRANY_POZEMKU =
+            "DELETE FROM rn_zpusob_ochrany_pozemku WHERE parcela_id = ?";
+    /**
+     * Prepared statement for deletion of BonitovaneDily.
+     */
+    private final PreparedStatement pstmDeleteBonitovaneDily;
+    /**
+     * Prepared statement for deletion of ZpusobyOchranyPozemku.
+     */
+    private final PreparedStatement pstmDeleteZpusobyOchranyPozemku;
+    /**
+     * Convertor for BonitovaneDily.
+     */
+    private final Convertor convertorBonitovaneDily;
+    /**
+     * Convertor for ZpusobyOchranyPozemku.
+     */
+    private final Convertor convertorZpusobyOchranyPozemku;
+    /**
+     * Convertor for BonitovanyDil.
+     */
+    private final BonitovanyDilConvertor bonitovanyDilConvertor;
+    /**
+     * Convertor for ZpusobOchranyPozemku.
+     */
+    private final ZpusobOchranyPozemkuConvertor zpusobOchranyPozemkuConvertor;
 
     /**
      * Creates new instance of ParcelaConvertor.
+     *
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
      */
-    public ParcelaConvertor() {
-        super(Parcela.class, Namespaces.VYMENNY_FORMAT_TYPY, "Parcela",
+    public ParcelaConvertor(final Connection con) throws SQLException {
+        super(Parcela.class, Namespaces.VYMENNY_FORMAT_TYPY, "Parcela", con,
                 SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
+
+        pstmDeleteBonitovaneDily =
+                con.prepareStatement(SQL_DELETE_BONITOVANE_DILY);
+        pstmDeleteZpusobyOchranyPozemku =
+                con.prepareStatement(SQL_DELETE_ZPUSOBY_OCHRANY_POZEMKU);
+
+        bonitovanyDilConvertor = new BonitovanyDilConvertor(con);
+        zpusobOchranyPozemkuConvertor = new ZpusobOchranyPozemkuConvertor(con);
+
+        convertorBonitovaneDily = new CollectionConvertor(
+                Namespaces.PARCELA_INT_TYPY, "BonitovaneDily",
+                Namespaces.COMMON_TYPY, "BonitovanyDil",
+                bonitovanyDilConvertor);
+        convertorZpusobyOchranyPozemku = new CollectionConvertor(
+                Namespaces.PARCELA_INT_TYPY, "ZpusobyOchranyPozemku",
+                Namespaces.COMMON_TYPY, "ZpusobOchrany",
+                zpusobOchranyPozemkuConvertor);
     }
 
     @Override
@@ -109,17 +165,14 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final Parcela item, final Writer logFile)
-            throws XMLStreamException, SQLException {
+            final Parcela item, final Writer logFile) throws XMLStreamException,
+            SQLException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "BonitovaneDily":
-                        new CollectionConvertor(Namespaces.PARCELA_INT_TYPY,
-                                "BonitovaneDily", Namespaces.COMMON_TYPY,
-                                "BonitovanyDil",
-                                new BonitovanyDilConvertor(item.getId())).
-                                convert(reader, con, logFile);
+                        bonitovanyDilConvertor.setParcelaId(item.getId());
+                        convertorBonitovaneDily.convert(reader, logFile);
                         break;
                     case "DruhCislovaniKod":
                         item.setDruhCislovaniKod(
@@ -130,13 +183,13 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
                                 Integer.parseInt(reader.getElementText()));
                         break;
                     case "Geometrie":
-                        Utils.processGeometrie(
-                                reader, con, item, NAMESPACE, logFile);
+                        Utils.processGeometrie(reader, getConnection(), item,
+                                NAMESPACE, logFile);
                         break;
                     case "Id":
                         item.setId(Long.parseLong(reader.getElementText()));
-                        deleteBonitovateDily(con, item.getId());
-                        deleteZpusobyOchranyPozemku(con, item.getId());
+                        deleteBonitovateDily(item.getId());
+                        deleteZpusobyOchranyPozemku(item.getId());
                         break;
                     case "IdTransakce":
                         item.setIdTransRuian(
@@ -171,11 +224,9 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
                                 Long.parseLong(reader.getElementText()));
                         break;
                     case "ZpusobyOchranyPozemku":
-                        new CollectionConvertor(Namespaces.PARCELA_INT_TYPY,
-                                "ZpusobyOchranyPozemku", Namespaces.COMMON_TYPY,
-                                "ZpusobOchrany",
-                                new ZpusobOchranyPozemkuConvertor(item.getId())).
-                                convert(reader, con, logFile);
+                        zpusobOchranyPozemkuConvertor.setParcelaId(
+                                item.getId());
+                        convertorZpusobyOchranyPozemku.convert(reader, logFile);
                         break;
                     case "ZpusobyVyuzitiPozemku":
                         item.setZpusobVyuPozKod(
@@ -194,36 +245,28 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
     /**
      * Deletes BonitovaneDily that belong to this Parcela.
      *
-     * @param con       database connection
      * @param parcelaId Parcela id
      *
      * @throws SQLException Thrown if problem occurred while deleting the items.
      */
-    private void deleteBonitovateDily(final Connection con,
-            final Long parcelaId) throws SQLException {
-        try (final PreparedStatement pstm = con.prepareStatement(
-                        "DELETE FROM rn_bonit_dily_parcel "
-                        + "WHERE parcela_id = ?")) {
-            pstm.setLong(1, parcelaId);
-            pstm.execute();
-        }
+    private void deleteBonitovateDily(final Long parcelaId)
+            throws SQLException {
+        pstmDeleteBonitovaneDily.clearParameters();
+        pstmDeleteBonitovaneDily.setLong(1, parcelaId);
+        pstmDeleteBonitovaneDily.execute();
     }
 
     /**
      * Deletes ZpusobyOchranyPozemku that belong to this Parcela.
      *
-     * @param con       database connection
      * @param parcelaId Parcela id
      *
      * @throws SQLException Thrown if problem occurred while deleting the items.
      */
-    private void deleteZpusobyOchranyPozemku(final Connection con,
-            final Long parcelaId) throws SQLException {
-        try (final PreparedStatement pstm = con.prepareStatement(
-                        "DELETE FROM rn_zpusob_ochrany_pozemku "
-                        + "WHERE parcela_id = ?")) {
-            pstm.setLong(1, parcelaId);
-            pstm.execute();
-        }
+    private void deleteZpusobyOchranyPozemku(final Long parcelaId)
+            throws SQLException {
+        pstmDeleteZpusobyOchranyPozemku.clearParameters();
+        pstmDeleteZpusobyOchranyPozemku.setLong(1, parcelaId);
+        pstmDeleteZpusobyOchranyPozemku.execute();
     }
 }

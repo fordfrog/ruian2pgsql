@@ -74,10 +74,15 @@ public class KatastralniUzemiConvertor
 
     /**
      * Creates new instance of KatastralniUzemiConvertor.
+     *
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
      */
-    public KatastralniUzemiConvertor() {
+    public KatastralniUzemiConvertor(final Connection con) throws SQLException {
         super(KatastralniUzemi.class, Namespaces.VYMENNY_FORMAT_TYPY,
-                "KatastralniUzemi", SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
+                "KatastralniUzemi", con, SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
     }
 
     @Override
@@ -116,8 +121,8 @@ public class KatastralniUzemiConvertor
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final KatastralniUzemi item,
-            final Writer logFile) throws XMLStreamException {
+            final KatastralniUzemi item, final Writer logFile)
+            throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
@@ -125,8 +130,8 @@ public class KatastralniUzemiConvertor
                         item.setMaDkm("A".equals(reader.getElementText()));
                         break;
                     case "Geometrie":
-                        Utils.processGeometrie(
-                                reader, con, item, NAMESPACE, logFile);
+                        Utils.processGeometrie(reader, getConnection(), item,
+                                NAMESPACE, logFile);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(

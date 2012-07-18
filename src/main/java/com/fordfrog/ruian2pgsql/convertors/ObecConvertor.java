@@ -79,10 +79,15 @@ public class ObecConvertor extends AbstractSaveConvertor<Obec> {
 
     /**
      * Creates new instance of ObecConvertor.
+     *
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
      */
-    public ObecConvertor() {
-        super(Obec.class, Namespaces.VYMENNY_FORMAT_TYPY, "Obec", SQL_EXISTS,
-                SQL_INSERT, SQL_UPDATE);
+    public ObecConvertor(final Connection con) throws SQLException {
+        super(Obec.class, Namespaces.VYMENNY_FORMAT_TYPY, "Obec", con,
+                SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
     }
 
     @Override
@@ -128,8 +133,7 @@ public class ObecConvertor extends AbstractSaveConvertor<Obec> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final Obec item, final Writer logFile)
-            throws XMLStreamException {
+            final Obec item, final Writer logFile) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
@@ -142,8 +146,8 @@ public class ObecConvertor extends AbstractSaveConvertor<Obec> {
                                 Integer.parseInt(reader.getElementText()));
                         break;
                     case "Geometrie":
-                        Utils.processGeometrie(
-                                reader, con, item, NAMESPACE, logFile);
+                        Utils.processGeometrie(reader, getConnection(), item,
+                                NAMESPACE, logFile);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(

@@ -69,9 +69,14 @@ public class OkresConvertor extends AbstractSaveConvertor<Okres> {
 
     /**
      * Creates new instance of OkresConvertor.
+     *
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
      */
-    public OkresConvertor() {
-        super(Okres.class, Namespaces.VYMENNY_FORMAT_TYPY, "Okres",
+    public OkresConvertor(final Connection con) throws SQLException {
+        super(Okres.class, Namespaces.VYMENNY_FORMAT_TYPY, "Okres", con,
                 SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
     }
 
@@ -105,14 +110,13 @@ public class OkresConvertor extends AbstractSaveConvertor<Okres> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final Okres item, final Writer logFile)
-            throws XMLStreamException {
+            final Okres item, final Writer logFile) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "Geometrie":
-                        Utils.processGeometrie(
-                                reader, con, item, NAMESPACE, logFile);
+                        Utils.processGeometrie(reader, getConnection(), item,
+                                NAMESPACE, logFile);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(

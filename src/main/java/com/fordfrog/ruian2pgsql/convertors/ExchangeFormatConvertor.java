@@ -40,26 +40,34 @@ public class ExchangeFormatConvertor extends AbstractConvertor {
      * Namespace of VymennyFormat and its sub-elements.
      */
     private static final String NAMESPACE = Namespaces.VYMENNY_FORMAT_TYPY;
+    /**
+     * Database connection.
+     */
+    private final Connection connection;
 
     /**
      * Creates new instance of ExchangeFormatConvertor.
+     *
+     * @param con {@link #connection}
      */
-    public ExchangeFormatConvertor() {
+    public ExchangeFormatConvertor(final Connection con) {
         super(NAMESPACE, "VymennyFormat");
+
+        this.connection = con;
     }
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final Writer logFile)
-            throws XMLStreamException, SQLException {
+            final Writer logFile) throws XMLStreamException, SQLException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "Data":
-                        new DataConvertor().convert(reader, con, logFile);
+                        new DataConvertor(connection).convert(reader, logFile);
                         break;
                     case "Hlavicka":
-                        new HlavickaConvertor().convert(reader, con, logFile);
+                        new HlavickaConvertor(connection).convert(
+                                reader, logFile);
                         break;
                     default:
                         Utils.processUnsupported(reader, logFile);

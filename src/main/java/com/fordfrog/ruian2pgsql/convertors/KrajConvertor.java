@@ -68,10 +68,15 @@ public class KrajConvertor extends AbstractSaveConvertor<Kraj> {
 
     /**
      * Creates new instance of KrajConvertor.
+     *
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
      */
-    public KrajConvertor() {
-        super(Kraj.class, Namespaces.VYMENNY_FORMAT_TYPY, "Kraj", SQL_EXISTS,
-                SQL_INSERT, SQL_UPDATE);
+    public KrajConvertor(final Connection con) throws SQLException {
+        super(Kraj.class, Namespaces.VYMENNY_FORMAT_TYPY, "Kraj", con,
+                SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
     }
 
     @Override
@@ -102,8 +107,7 @@ public class KrajConvertor extends AbstractSaveConvertor<Kraj> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final Kraj item, final Writer logFile)
-            throws XMLStreamException {
+            final Kraj item, final Writer logFile) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {

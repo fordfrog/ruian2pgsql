@@ -68,10 +68,15 @@ public class StatConvertor extends AbstractSaveConvertor<Stat> {
 
     /**
      * Creates new instance of StatConvertor.
+     *
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
      */
-    public StatConvertor() {
-        super(Stat.class, Namespaces.VYMENNY_FORMAT_TYPY, "Stat", SQL_EXISTS,
-                SQL_INSERT, SQL_UPDATE);
+    public StatConvertor(final Connection con) throws SQLException {
+        super(Stat.class, Namespaces.VYMENNY_FORMAT_TYPY, "Stat", con,
+                SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
     }
 
     @Override
@@ -102,14 +107,13 @@ public class StatConvertor extends AbstractSaveConvertor<Stat> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final Stat item, final Writer logFile)
-            throws XMLStreamException {
+            final Stat item, final Writer logFile) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "Geometrie":
-                        Utils.processGeometrie(
-                                reader, con, item, NAMESPACE, logFile);
+                        Utils.processGeometrie(reader, getConnection(), item,
+                                NAMESPACE, logFile);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(

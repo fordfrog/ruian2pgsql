@@ -59,9 +59,17 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
 
-    public AdresniMistoConvertor() {
+    /**
+     * Creates new instance of AdresniMistoConvertor.
+     *
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
+     */
+    public AdresniMistoConvertor(final Connection con) throws SQLException {
         super(AdresniMisto.class, Namespaces.VYMENNY_FORMAT_TYPY,
-                "AdresniMisto", SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
+                "AdresniMisto", con, SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
     }
 
     @Override
@@ -97,7 +105,7 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final AdresniMisto item, final Writer logFile)
+            final AdresniMisto item, final Writer logFile)
             throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
@@ -114,8 +122,8 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
                         item.setCisloOrientacniPismeno(reader.getElementText());
                         break;
                     case "Geometrie":
-                        Utils.processGeometrie(
-                                reader, con, item, NAMESPACE, logFile);
+                        Utils.processGeometrie(reader, getConnection(), item,
+                                NAMESPACE, logFile);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(

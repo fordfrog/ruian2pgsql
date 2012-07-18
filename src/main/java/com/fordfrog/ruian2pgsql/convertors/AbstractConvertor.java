@@ -23,7 +23,6 @@ package com.fordfrog.ruian2pgsql.convertors;
 
 import com.fordfrog.ruian2pgsql.utils.Utils;
 import java.io.Writer;
-import java.sql.Connection;
 import java.sql.SQLException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -57,11 +56,10 @@ public abstract class AbstractConvertor implements Convertor {
 
     /**
      * Processes current elements and its sub-elements. On each element
-     * {@link #processElement(javax.xml.stream.XMLStreamReader, java.sql.Connection, java.io.Writer)}
+     * {@link #processElement(javax.xml.stream.XMLStreamReader, java.io.Writer)}
      * is called.
      *
      * @param reader  XML stream reader
-     * @param con     database connection
      * @param logFile log file writer
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
@@ -70,14 +68,14 @@ public abstract class AbstractConvertor implements Convertor {
      *                            with database.
      */
     @Override
-    public void convert(final XMLStreamReader reader, final Connection con,
-            final Writer logFile) throws XMLStreamException, SQLException {
+    public void convert(final XMLStreamReader reader, final Writer logFile)
+            throws XMLStreamException, SQLException {
         while (reader.hasNext()) {
             final int event = reader.next();
 
             switch (event) {
                 case XMLStreamReader.START_ELEMENT:
-                    processElement(reader, con, logFile);
+                    processElement(reader, logFile);
                     break;
                 case XMLStreamReader.END_ELEMENT:
                     if (Utils.isEndElement(namespace, localName, reader)) {
@@ -93,7 +91,6 @@ public abstract class AbstractConvertor implements Convertor {
      * Processes current XML element.
      *
      * @param reader  XML stream reader
-     * @param con     database connection
      * @param logFile log file writer
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
@@ -102,6 +99,5 @@ public abstract class AbstractConvertor implements Convertor {
      *                            with database.
      */
     protected abstract void processElement(final XMLStreamReader reader,
-            final Connection con, final Writer logFile)
-            throws XMLStreamException, SQLException;
+            final Writer logFile) throws XMLStreamException, SQLException;
 }

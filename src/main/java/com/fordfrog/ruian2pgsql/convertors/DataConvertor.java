@@ -40,108 +40,200 @@ public class DataConvertor extends AbstractConvertor {
      * Namespace of the Data element and its sub-elements.
      */
     private static final String NAMESPACE = Namespaces.VYMENNY_FORMAT_TYPY;
+    /**
+     * Convertor for AdresniMista.
+     */
+    private final Convertor convertorAdresniMista;
+    /**
+     * Convertor for CastiObci.
+     */
+    private final Convertor convertorCastiObci;
+    /**
+     * Convertor for KatastralniUzemi.
+     */
+    private final Convertor convertorKatastralniUzemi;
+    /**
+     * Convertor for Kraje.
+     */
+    private final Convertor convertorKraje;
+    /**
+     * Convertor for Momc.
+     */
+    private final Convertor convertorMomc;
+    /**
+     * Convertor for Mop.
+     */
+    private final Convertor convertorMop;
+    /**
+     * Convertor for Obce.
+     */
+    private final Convertor convertorObce;
+    /**
+     * Convertor for Okresy.
+     */
+    private final Convertor convertorOkresy;
+    /**
+     * Convertor for Orp.
+     */
+    private final Convertor convertorOrp;
+    /**
+     * Convertor for Parcely.
+     */
+    private final Convertor convertorParcely;
+    /**
+     * Convertor for Pou.
+     */
+    private final Convertor convertorPou;
+    /**
+     * Convertor for RegionySoudrznosti.
+     */
+    private final Convertor convertorRegionySoudrznosti;
+    /**
+     * Convertor for SpravniObvody.
+     */
+    private final Convertor convertorSpravniObvody;
+    /**
+     * Convertor for StavebniObjekty.
+     */
+    private final Convertor convertorStavebniObjekty;
+    /**
+     * Convertor for Staty.
+     */
+    private final Convertor convertorStaty;
+    /**
+     * Convertor for Ulice.
+     */
+    private final Convertor convertorUlice;
+    /**
+     * Convertor for Vusc.
+     */
+    private final Convertor convertorVusc;
+    /**
+     * Convertor for ZaniklePrvky.
+     */
+    private final Convertor convertorZaniklePrvky;
+    /**
+     * Convertor for Zsj.
+     */
+    private final Convertor convertorZsj;
 
     /**
      * Creates new instance of DataConvertor.
+     *
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
      */
-    public DataConvertor() {
+    public DataConvertor(final Connection con) throws SQLException {
         super(NAMESPACE, "Data");
+
+        convertorAdresniMista = new CollectionConvertor(
+                "AdresniMista", "AdresniMisto", new AdresniMistoConvertor(con));
+        convertorCastiObci = new CollectionConvertor(
+                "CastiObci", "CastObce", new CastObceConvertor(con));
+        convertorKatastralniUzemi = new CollectionConvertor("KatastralniUzemi",
+                "KatastralniUzemi", new KatastralniUzemiConvertor(con));
+        convertorKraje = new CollectionConvertor(
+                "Kraje", "Kraj", new KrajConvertor(con));
+        convertorMomc =
+                new CollectionConvertor("Momc", "Momc", new MomcConvertor(con));
+        convertorMop =
+                new CollectionConvertor("Mop", "Mop", new MopConvertor(con));
+        convertorObce =
+                new CollectionConvertor("Obce", "Obec", new ObecConvertor(con));
+        convertorOkresy = new CollectionConvertor(
+                "Okresy", "Okres", new OkresConvertor(con));
+        convertorOrp =
+                new CollectionConvertor("Orp", "Orp", new OrpConvertor(con));
+        convertorParcely = new CollectionConvertor(
+                "Parcely", "Parcela", new ParcelaConvertor(con));
+        convertorPou =
+                new CollectionConvertor("Pou", "Pou", new PouConvertor(con));
+        convertorRegionySoudrznosti = new CollectionConvertor(
+                "RegionySoudrznosti", "RegionSoudrznosti",
+                new RegionSoudrznostiConvertor(con));
+        convertorSpravniObvody = new CollectionConvertor("SpravniObvody",
+                "SpravniObvod", new SpravniObvodConvertor(con));
+        convertorStavebniObjekty = new CollectionConvertor("StavebniObjekty",
+                "StavebniObjekt", new StavebniObjektConvertor(con));
+        convertorStaty = new CollectionConvertor(
+                "Staty", "Stat", new StatConvertor(con));
+        convertorUlice = new CollectionConvertor(
+                "Ulice", "Ulice", new UliceConvertor(con));
+        convertorVusc =
+                new CollectionConvertor("Vusc", "Vusc", new VuscConvertor(con));
+        convertorZaniklePrvky = new CollectionConvertor(
+                "ZaniklePrvky", "ZaniklyPrvek", new ZaniklyPrvekConvertor(con));
+        convertorZsj =
+                new CollectionConvertor("Zsj", "Zsj", new ZsjConvertor(con));
     }
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final Writer logFile)
-            throws XMLStreamException, SQLException {
+            final Writer logFile) throws XMLStreamException, SQLException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
-                Convertor convertor = null;
-
                 switch (reader.getLocalName()) {
                     case "AdresniMista":
-                        convertor = new CollectionConvertor("AdresniMista",
-                                "AdresniMisto", new AdresniMistoConvertor());
+                        convertorAdresniMista.convert(reader, logFile);
                         break;
                     case "CastiObci":
-                        convertor = new CollectionConvertor("CastiObci",
-                                "CastObce", new CastObceConvertor());
+                        convertorCastiObci.convert(reader, logFile);
                         break;
                     case "KatastralniUzemi":
-                        convertor = new CollectionConvertor("KatastralniUzemi",
-                                "KatastralniUzemi",
-                                new KatastralniUzemiConvertor());
+                        convertorKatastralniUzemi.convert(reader, logFile);
                         break;
                     case "Kraje":
-                        convertor = new CollectionConvertor(
-                                "Kraje", "Kraj", new KrajConvertor());
+                        convertorKraje.convert(reader, logFile);
                         break;
                     case "Momc":
-                        convertor = new CollectionConvertor(
-                                "Momc", "Momc", new MomcConvertor());
+                        convertorMomc.convert(reader, logFile);
                         break;
                     case "Mop":
-                        convertor = new CollectionConvertor(
-                                "Mop", "Mop", new MopConvertor());
+                        convertorMop.convert(reader, logFile);
                         break;
                     case "Obce":
-                        convertor = new CollectionConvertor(
-                                "Obce", "Obec", new ObecConvertor());
+                        convertorObce.convert(reader, logFile);
                         break;
                     case "Okresy":
-                        convertor = new CollectionConvertor(
-                                "Okresy", "Okres", new OkresConvertor());
+                        convertorOkresy.convert(reader, logFile);
                         break;
                     case "Orp":
-                        convertor = new CollectionConvertor(
-                                "Orp", "Orp", new OrpConvertor());
+                        convertorOrp.convert(reader, logFile);
                         break;
                     case "Parcely":
-                        convertor = new CollectionConvertor(
-                                "Parcely", "Parcela", new ParcelaConvertor());
+                        convertorParcely.convert(reader, logFile);
                         break;
                     case "Pou":
-                        convertor = new CollectionConvertor(
-                                "Pou", "Pou", new PouConvertor());
+                        convertorPou.convert(reader, logFile);
                         break;
                     case "RegionySoudrznosti":
-                        convertor = new CollectionConvertor(
-                                "RegionySoudrznosti", "RegionSoudrznosti",
-                                new RegionSoudrznostiConvertor());
+                        convertorRegionySoudrznosti.convert(reader, logFile);
                         break;
                     case "SpravniObvody":
-                        convertor = new CollectionConvertor("SpravniObvody",
-                                "SpravniObvod", new SpravniObvodConvertor());
-                        break;
-                    case "StavebniObjekty":
-                        convertor = new CollectionConvertor("StavebniObjekty",
-                                "StavebniObjekt",
-                                new StavebniObjektConvertor());
+                        convertorSpravniObvody.convert(reader, logFile);
                         break;
                     case "Staty":
-                        convertor = new CollectionConvertor(
-                                "Staty", "Stat", new StatConvertor());
+                        convertorStaty.convert(reader, logFile);
+                        break;
+                    case "StavebniObjekty":
+                        convertorStavebniObjekty.convert(reader, logFile);
                         break;
                     case "Ulice":
-                        convertor = new CollectionConvertor(
-                                "Ulice", "Ulice", new UliceConvertor());
+                        convertorUlice.convert(reader, logFile);
                         break;
                     case "Vusc":
-                        convertor = new CollectionConvertor(
-                                "Vusc", "Vusc", new VuscConvertor());
+                        convertorVusc.convert(reader, logFile);
                         break;
                     case "ZaniklePrvky":
-                        convertor = new CollectionConvertor("ZaniklePrvky",
-                                "ZaniklyPrvek", new ZaniklyPrvekConvertor());
+                        convertorZaniklePrvky.convert(reader, logFile);
                         break;
                     case "Zsj":
-                        convertor = new CollectionConvertor(
-                                "Zsj", "Zsj", new ZsjConvertor());
+                        convertorZsj.convert(reader, logFile);
                         break;
                     default:
                         Utils.processUnsupported(reader, logFile);
-                }
-
-                if (convertor != null) {
-                    convertor.convert(reader, con, logFile);
                 }
 
                 break;

@@ -61,10 +61,15 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
 
     /**
      * Creates new instance of HlavickaConvertor.
+     *
+     * @param con database connection
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
      */
-    public HlavickaConvertor() {
-        super(Hlavicka.class, NAMESPACE, "Hlavicka", SQL_EXISTS, SQL_INSERT,
-                null);
+    public HlavickaConvertor(final Connection con) throws SQLException {
+        super(Hlavicka.class, NAMESPACE, "Hlavicka", con, SQL_EXISTS,
+                SQL_INSERT, null);
     }
 
     @Override
@@ -93,7 +98,7 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Connection con, final Hlavicka item, final Writer logFile)
+            final Hlavicka item, final Writer logFile)
             throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
