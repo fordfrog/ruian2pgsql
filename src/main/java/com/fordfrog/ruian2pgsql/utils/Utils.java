@@ -789,6 +789,11 @@ public class Utils {
                 final ItemWithHranice itemHranice = (ItemWithHranice) item;
                 itemHranice.setHranice(
                         processGML(reader, con, namespace, localName, logFile));
+            } else if ("GeneralizovaneHranice3".equals(localName)
+                    && item instanceof ItemWithHranice) {
+                final ItemWithHranice itemHranice = (ItemWithHranice) item;
+                itemHranice.setHranice(
+                        processGML(reader, con, namespace, localName, logFile));
             } else {
                 processUnsupported(reader, logFile);
             }
