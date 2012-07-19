@@ -50,6 +50,13 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
             + "item_timestamp = timezone('utc', now()), id_trans_ruian = ? "
             + "WHERE kod = ? AND id_trans_ruian < ?";
     /**
+     * SQL statement for marking CastObce as deleted.
+     */
+    private static final String SQL_UPDATE_CAST_OBCE =
+            "UPDATE rn_cast_obce SET deleted = true, "
+            + "item_timestamp = timezone('utc', now()), id_trans_ruian = ? "
+            + "WHERE kod = ? AND id_trans_ruian < ?";
+    /**
      * SQL statement for marking BonitDilyParcel as deleted.
      */
     private static final String SQL_UPDATE_BONIT_DILY_PARCEL =
@@ -100,6 +107,10 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
      */
     private final PreparedStatement pstmUpdateBonitDilyParcel;
     /**
+     * Prepared statement for marking CastObce as deleted.
+     */
+    private final PreparedStatement pstmUpdateCastObce;
+    /**
      * Prepared statement for marking DetailniTEA as deleted.
      */
     private final PreparedStatement pstmUpdateDetailniTea;
@@ -139,6 +150,7 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
         pstmUpdateAdresniMisto = con.prepareStatement(SQL_UPDATE_ADRESNI_MISTO);
         pstmUpdateBonitDilyParcel =
                 con.prepareStatement(SQL_UPDATE_BONIT_DILY_PARCEL);
+        pstmUpdateCastObce = con.prepareStatement(SQL_UPDATE_CAST_OBCE);
         pstmUpdateDetailniTea = con.prepareStatement(SQL_UPDATE_DETAILNI_TEA);
         pstmUpdateParcela = con.prepareStatement(SQL_UPDATE_PARCELA);
         pstmUpdateStavebniObjekt =
@@ -205,6 +217,9 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
             case "AD": // AdresniMisto
                 deleteAdresniMisto(item);
                 break;
+            case "CO": // CastObce
+                deleteCastObce(item);
+                break;
             case "SO": // StavebniObjekt
                 deleteStavebniObjekt(item);
                 break;
@@ -235,6 +250,23 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
         pstmUpdateAdresniMisto.setInt(2, item.getPrvekId().intValue());
         pstmUpdateAdresniMisto.setLong(3, item.getIdTransakce());
         pstmUpdateAdresniMisto.execute();
+    }
+
+    /**
+     * Deletes CastObce item.
+     *
+     * @param item item
+     *
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
+     */
+    private void deleteCastObce(final ZaniklyPrvek item)
+            throws SQLException {
+        pstmUpdateCastObce.clearParameters();
+        pstmUpdateCastObce.setLong(1, item.getIdTransakce());
+        pstmUpdateCastObce.setInt(2, item.getPrvekId().intValue());
+        pstmUpdateCastObce.setLong(3, item.getIdTransakce());
+        pstmUpdateCastObce.execute();
     }
 
     /**
