@@ -59,7 +59,7 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
      * SQL statement for marking DetailniTEA as deleted.
      */
     private static final String SQL_UPDATE_DETAILNI_TEA =
-            "UPDATE rn_detailni_tea SET deleted = true WHERE stavobj_id = ?";
+            "UPDATE rn_detailni_tea SET deleted = true WHERE stavobj_kod = ?";
     /**
      * SQL statement for marking Parcela as deleted.
      */
@@ -84,7 +84,7 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
      */
     private static final String SQL_UPDATE_ZPUSOB_OCHRANY_OBJEKTU =
             "UPDATE rn_zpusob_ochrany_objektu SET deleted = true "
-            + "WHERE stavobj_id = ?";
+            + "WHERE stavobj_kod = ?";
     /**
      * SQL statement for marking ZpusobOchranyPozemku as deleted.
      */
