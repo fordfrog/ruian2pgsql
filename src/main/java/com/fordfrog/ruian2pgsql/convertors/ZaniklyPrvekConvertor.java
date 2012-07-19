@@ -53,14 +53,13 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
      * SQL statement for marking BonitDilyParcel as deleted.
      */
     private static final String SQL_UPDATE_BONIT_DILY_PARCEL =
-            "UPDATE rn_bonit_dily_parcel SET deleted = true, "
-            + "item_timestamp = timezone('utc', now()) WHERE parcela_id = ?";
+            "UPDATE rn_bonit_dily_parcel SET deleted = true "
+            + "WHERE parcela_id = ?";
     /**
      * SQL statement for marking DetailniTEA as deleted.
      */
     private static final String SQL_UPDATE_DETAILNI_TEA =
-            "UPDATE rn_detailni_tea SET deleted = true, "
-            + "item_timestamp = timezone('utc', now()) WHERE stavobj_id = ?";
+            "UPDATE rn_detailni_tea SET deleted = true WHERE stavobj_id = ?";
     /**
      * SQL statement for marking Parcela as deleted.
      */
@@ -84,14 +83,14 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
      * SQL statement for marking ZpusobOchranyObjektu as deleted.
      */
     private static final String SQL_UPDATE_ZPUSOB_OCHRANY_OBJEKTU =
-            "UPDATE rn_zpusob_ochrany_objektu SET deleted = true, "
-            + "item_timestamp = timezone('utc', now()) WHERE stavobj_id = ?";
+            "UPDATE rn_zpusob_ochrany_objektu SET deleted = true "
+            + "WHERE stavobj_id = ?";
     /**
      * SQL statement for marking ZpusobOchranyPozemku as deleted.
      */
     private static final String SQL_UPDATE_ZPUSOB_OCHRANY_POZEMKU =
-            "UPDATE rn_zpusob_ochrany_pozemku SET deleted = true, "
-            + "item_timestamp = timezone('utc', now()) WHERE parcela_id = ?";
+            "UPDATE rn_zpusob_ochrany_pozemku SET deleted = true "
+            + "WHERE parcela_id = ?";
     /**
      * Prepared statement for marking AdresniMisto as deleted.
      */
