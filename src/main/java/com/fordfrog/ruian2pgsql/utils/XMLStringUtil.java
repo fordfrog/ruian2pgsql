@@ -85,7 +85,7 @@ public class XMLStringUtil {
             final Connection con) throws XMLStreamException {
         final XMLOutputFactory xMLOutputFactory =
                 XMLOutputFactory.newInstance();
-        final StringWriter stringWriter = new StringWriter(1024);
+        final StringWriter stringWriter = new StringWriter(1_024);
         final XMLStreamWriter writer =
                 xMLOutputFactory.createXMLStreamWriter(stringWriter);
 
