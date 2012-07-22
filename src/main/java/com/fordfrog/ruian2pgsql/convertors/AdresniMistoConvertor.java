@@ -39,9 +39,18 @@ import javax.xml.stream.XMLStreamReader;
  */
 public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
 
+    /**
+     * Namespace of the element.
+     */
     private static final String NAMESPACE = Namespaces.ADR_MISTO_INT_TYPY;
+    /**
+     * SQL statement for checking whether the item exists.
+     */
     private static final String SQL_EXISTS =
             "SELECT 1 FROM rn_adresni_misto WHERE kod = ?";
+    /**
+     * SQL statement for insertion of new item.
+     */
     private static final String SQL_INSERT = "INSERT INTO rn_adresni_misto "
             + "(nespravny, adrp_psc, ulice_kod, stavobj_kod, cislo_domovni, "
             + "cislo_orientacni_hodnota, cislo_orientacni_pismeno, "
@@ -49,6 +58,9 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
             + "definicni_bod, zachranka, hasici, kod) "
             + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_GeomFromGML(?), "
             + "ST_GeomFromGML(?), ST_GeomFromGML(?), ?)";
+    /**
+     * SQL statement for update of existing item.
+     */
     private static final String SQL_UPDATE = "UPDATE rn_adresni_misto "
             + "SET nespravny = ?, adrp_psc = ?, ulice_kod = ?, "
             + "stavobj_kod = ?, cislo_domovni = ?, "
