@@ -125,7 +125,8 @@ public class MainConvertor {
                 line = reader.readLine();
             }
         } catch (final SQLException ex) {
-            throw new RuntimeException("Statement failed: " + sbSQL.toString());
+            throw new RuntimeException(
+                    "Statement failed: " + sbSQL.toString(), ex);
         } catch (final IOException ex) {
             throw new RuntimeException(
                     "Failed to read database schema resource", ex);
