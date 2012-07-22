@@ -115,9 +115,9 @@ public class App {
     @SuppressWarnings("UseOfSystemOutOrSystemErr")
     private static void printUsage() {
         try (final InputStream inputStream =
-                        App.class.getResourceAsStream("/usage.txt")) {
-            final BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(inputStream, "UTF-8"));
+                        App.class.getResourceAsStream("/usage.txt");
+                final BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(inputStream, "UTF-8"))) {
             String line = reader.readLine();
 
             while (line != null) {
