@@ -200,8 +200,6 @@ public class Utils {
     private static void processDefinicniBod(final XMLStreamReader reader,
             final Connection con, final Object item, final String endNamespace,
             final Writer logFile) throws XMLStreamException {
-        String definicniBod = null;
-
         while (reader.hasNext()) {
             final int event = reader.next();
 
