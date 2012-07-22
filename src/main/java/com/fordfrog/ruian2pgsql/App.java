@@ -87,6 +87,9 @@ public class App {
                     i++;
                     logFilePath = Paths.get(args[i]);
                     break;
+                default:
+                    throw new RuntimeException(
+                            "Unsupported command line switch: " + args[i]);
             }
         }
 
