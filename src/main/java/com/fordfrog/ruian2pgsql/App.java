@@ -101,7 +101,7 @@ public class App {
         try (@SuppressWarnings("UseOfSystemOutOrSystemErr")
                 final Writer logFile = new OutputStreamWriter(
                         logFilePath == null ? System.out
-                        : Files.newOutputStream(logFilePath))) {
+                        : Files.newOutputStream(logFilePath), "UTF-8")) {
             MainConvertor.convert(
                     inputDirPath, dbConnectionUrl, createTables, logFile);
         } catch (final IOException ex) {

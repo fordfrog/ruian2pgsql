@@ -103,12 +103,12 @@ public class MainConvertor {
      * @param con database connection
      */
     private static void initDatabase(final Connection con) {
-        final StringBuilder sbSQL = new StringBuilder(10240);
+        final StringBuilder sbSQL = new StringBuilder(10_240);
 
         try (final BufferedReader reader = new BufferedReader(
                         new InputStreamReader(
                         MainConvertor.class.getResourceAsStream(
-                        "/sql/schema.sql")));
+                        "/sql/schema.sql"), "UTF-8"));
                 final Statement stm = con.createStatement()) {
             String line = reader.readLine();
 
