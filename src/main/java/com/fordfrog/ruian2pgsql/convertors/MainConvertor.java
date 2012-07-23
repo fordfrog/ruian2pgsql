@@ -63,10 +63,12 @@ public class MainConvertor {
      * Converts all files with .xml.gz and .xml extensions from specified
      * directory into database.
      *
-     * @param inputDirPath    path to directory that contains input files
-     * @param dbConnectionUrl database connection URL
-     * @param createTables    whether data tables should be (re)created
-     * @param logFile         log file writer
+     * @param inputDirPath        path to directory that contains input files
+     * @param dbConnectionUrl     database connection URL
+     * @param createTables        whether data tables should be (re)created
+     * @param resetTransactionIds reset transaction ids in all tables before the
+     *                            import
+     * @param logFile             log file writer
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
@@ -75,7 +77,8 @@ public class MainConvertor {
      */
     public static void convert(final Path inputDirPath,
             final String dbConnectionUrl, final boolean createTables,
-            final Writer logFile) throws XMLStreamException, SQLException {
+            final boolean resetTransactionIds, final Writer logFile)
+            throws XMLStreamException, SQLException {
         final long startTimestamp = System.currentTimeMillis();
 
         try (final Connection con =
@@ -83,7 +86,13 @@ public class MainConvertor {
             con.setAutoCommit(false);
 
             if (createTables) {
-                initDatabase(con);
+                Utils.printToLog(logFile, "Initializing database schema...");
+                runSQLFromResource(con, "/sql/schema.sql");
+            }
+
+            if (resetTransactionIds) {
+                Utils.printToLog(logFile, "Resetting transaction ids...");
+                runSQLFromResource(con, "/sql/reset_transaction_ids.sql");
             }
 
             for (final Path file : getInputFiles(inputDirPath)) {
@@ -98,17 +107,20 @@ public class MainConvertor {
     }
 
     /**
-     * Initializes database tables.
+     * Runs SQL statements from specified resource.
      *
-     * @param con database connection
+     * @param con          database connection
+     * @param resourceName name of the resource from which to read the SQL
+     *                     statements
      */
-    private static void initDatabase(final Connection con) {
+    private static void runSQLFromResource(final Connection con,
+            final String resourceName) {
         final StringBuilder sbSQL = new StringBuilder(10_240);
 
         try (final BufferedReader reader = new BufferedReader(
                         new InputStreamReader(
                         MainConvertor.class.getResourceAsStream(
-                        "/sql/schema.sql"), "UTF-8"));
+                        resourceName), "UTF-8"));
                 final Statement stm = con.createStatement()) {
             String line = reader.readLine();
 
@@ -129,7 +141,7 @@ public class MainConvertor {
                     "Statement failed: " + sbSQL.toString(), ex);
         } catch (final IOException ex) {
             throw new RuntimeException(
-                    "Failed to read database schema resource", ex);
+                    "Failed to read SQL statements from resource", ex);
         }
     }
 

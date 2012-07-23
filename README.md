@@ -31,7 +31,7 @@ Here is the usage information that ruian2pgsql outputs if run without
 parameters:
 
     Usage: java -jar ruian2pgsql-*-jar-with-dependencies.jar --db-connection-url <value>
-        [--create-tables] --input-dir <value> [--log-file <value>]
+        [--create-tables] [--reset-transaction-ids] --input-dir <value> [--log-file <value>]
 
     Where:
     --create-tables
@@ -53,6 +53,13 @@ parameters:
             the import little bit slower because each GML definition is checked
             twice - once during the check and the other time during saving in
             database)
+    --reset-transaction-ids
+            resets RÚIAN transaction ids so that following data import will update
+            all data (data are updated only if new transaction id is greater than
+            transaction id that is stored in database - this feature is useful in
+            case you want to regenerate your data because of some issue with
+            previous import, without deleting all data and starting with fresh
+            database)
 
 ## To do
 
@@ -62,4 +69,12 @@ List of planned features is at [wiki](https://github.com/fordfrog/ruian2pgsql/wi
 
 ruian2pgsql is distributed under MIT license.
 
-ruian2pgsql is distributed under MIT license.
+## Changelog
+
+## Version 1.1.0
+
+* added command line switch --reset-transaction-ids
+
+## Version 1.0.0
+
+* first release

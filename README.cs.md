@@ -32,7 +32,7 @@ Zde jsou informace o použití programu, které vypisuje ruian2pgsql, pokud ho
 spustíte bez parametrů (výpis je v angličtině, zde je přeložený):
 
     Použití: java -jar ruian2pgsql-*-jar-with-dependencies.jar --db-connection-url <hodnota>
-        [--create-tables] --input-dir <hodnota> [--log-file <hodnota>]
+        [--create-tables] [--reset-transaction-ids] --input-dir <hodnota> [--log-file <hodnota>]
 
     Kde:
     --create-tables
@@ -53,6 +53,13 @@ spustíte bez parametrů (výpis je v angličtině, zde je přeložený):
             tohoto parametru je, že import mírně zpomaluje, protože každá GML
             definice je kontrolovaná dvakrát - jednou při kontrole a podruhé při
             ukládání do databáze)
+    --reset-transaction-ids
+            zresetuje transakční id systému RÚIAN, takže při následujícím
+            importu budou veškerá data přepsána (data jsou aktualizována pouze
+            v případě, že nové id transakce je větší než id transakce uložené
+            v databázi - tato funkce je užitečná pokud potřebujete zregenerovat
+            data z důvodu nějaké chyby při importu, bez nutnosti smazání všech
+            dat a importu do čisté databáze)
 
 ## To do
 
@@ -61,3 +68,13 @@ Seznam plánovaných funkcí je na [wiki](https://github.com/fordfrog/ruian2pgsq
 ## Licence
 
 ruian2pgsql je distribuovaný pod MIT licencí.
+
+## Changelog
+
+### Verze 1.1.0
+
+* přidán přepínač --reset-transaction-ids
+
+### Verze 1.0.0
+
+* první vydaná verze

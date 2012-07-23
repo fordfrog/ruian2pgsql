@@ -65,6 +65,7 @@ public class App {
         Path inputDirPath = null;
         String dbConnectionUrl = null;
         boolean createTables = false;
+        boolean resetTransactionIds = false;
         Path logFilePath = null;
 
         for (int i = 0; i < args.length; i++) {
@@ -87,6 +88,9 @@ public class App {
                     i++;
                     logFilePath = Paths.get(args[i]);
                     break;
+                case "--reset-transaction-ids":
+                    resetTransactionIds = true;
+                    break;
                 default:
                     throw new RuntimeException(
                             "Unsupported command line switch: " + args[i]);
@@ -102,8 +106,8 @@ public class App {
                 final Writer logFile = new OutputStreamWriter(
                         logFilePath == null ? System.out
                         : Files.newOutputStream(logFilePath), "UTF-8")) {
-            MainConvertor.convert(
-                    inputDirPath, dbConnectionUrl, createTables, logFile);
+            MainConvertor.convert(inputDirPath, dbConnectionUrl, createTables,
+                    resetTransactionIds, logFile);
         } catch (final IOException ex) {
             throw new RuntimeException("Failed to create log writer", ex);
         }
