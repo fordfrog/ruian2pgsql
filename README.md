@@ -62,7 +62,7 @@ parameters:
 To do
 -----
 
-the list is currently empty
+List of planned features is at [wiki](https://github.com/fordfrog/ruian2pgsql/wiki).
 
 License
 -------

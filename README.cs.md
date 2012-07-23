@@ -62,7 +62,7 @@ spustíte bez parametrů (výpis je v angličtině, zde je přeložený):
 To do
 -----
 
-seznam je momentálně prázdný
+Seznam plánovaných funkcí je na [wiki](https://github.com/fordfrog/ruian2pgsql/wiki).
 
 Licence
 -------
