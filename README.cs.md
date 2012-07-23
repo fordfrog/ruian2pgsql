@@ -37,22 +37,27 @@ Zde jsou informace o použití programu, které vypisuje ruian2pgsql, pokud ho
 spustíte bez parametrů (výpis je v angličtině, zde je přeložený):
 
     Použití: java -jar ruian2pgsql-*-jar-with-dependencies.jar --db-connection-url <hodnota>
-        --create-tables --input-dir <hodnota> --log-file <hodnota>
+        [--create-tables] --input-dir <hodnota> [--log-file <hodnota>]
 
     Kde:
-    --create-tables      vytvoří databázové tabulky pro data (pokud tabulky se stejným
-                         názvem již existují, tak jsou nejdříve odstraněny)
-    --db-connection-url  je připojovací URL ve formátu JDBC, například:
-                         jdbc:postgresql://localhost/ruian?user=ruian&password=p4ssw0rd
-    --input-dir          je adresář, který obsahuje stažené soubory s příponou .xml.gz
-    --log-file           je volitelná specifikace logovacího souboru (pokud není uveden,
-                         log bude zapsaný na konzoli)
-    --ignore-invalid-gml pokud je GML definice chybná, aplikace ji ignoruje a uloží
-                         objekt bez dané definice (pokud tento parametr není uvedený,
-                         aplikace skončí vyjímkou při pokusu o uložení chybné GML
-                         definice, nevýhodou tohoto parametru je, že import mírně
-                         zpomaluje, protože každá GML definice je kontrolovaná dvakrát -
-                         jednou při kontrole a podruhé při ukládání do databáze)
+    --create-tables
+            vytvoří databázové tabulky pro data (pokud tabulky se stejným názvem
+            již existují, tak jsou nejdříve odstraněny)
+    --db-connection-url
+            je připojovací URL ve formátu JDBC, například:
+            jdbc:postgresql://localhost/ruian?user=ruian&password=p4ssw0rd
+    --input-dir
+            je adresář, který obsahuje stažené soubory s příponou .xml.gz
+    --log-file
+            je volitelná specifikace logovacího souboru (pokud není uveden, log
+            bude zapsaný na konzoli)
+    --ignore-invalid-gml
+            pokud je GML definice chybná, aplikace ji ignoruje a uloží objekt
+            bez dané definice (pokud tento parametr není uvedený, aplikace
+            skončí vyjímkou při pokusu o uložení chybné GML definice, nevýhodou
+            tohoto parametru je, že import mírně zpomaluje, protože každá GML
+            definice je kontrolovaná dvakrát - jednou při kontrole a podruhé při
+            ukládání do databáze)
 
 To do
 -----

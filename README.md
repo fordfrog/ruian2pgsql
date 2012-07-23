@@ -36,24 +36,28 @@ Here is the usage information that ruian2pgsql outputs if run without
 parameters:
 
     Usage: java -jar ruian2pgsql-*-jar-with-dependencies.jar --db-connection-url <value>
-        --create-tables --input-dir <value> --log-file <value>
+        [--create-tables] --input-dir <value> [--log-file <value>]
 
     Where:
-    --create-tables      creates database tables for the data (if tables with the same
-                         name already exists, it is first dropped)
-    --db-connection-url  is JDBC connection URL, for example:
-                         jdbc:postgresql://localhost/ruian?user=ruian&password=p4ssw0rd
-    --input-dir          is directory that contains downloaded .xml.gz files
-    --log-file           is optional specification of log file (if not specified,
-                         log will be output to console)
-    --ignore-invalid-gml if GML definition is not valid, application ignores
-                         the definition and saves the object without the definition
-                         (if this parameter is not specified, application throws
-                         exception and exits while trying to save invalid GML
-                         definition, the drawback of this parameter is that it makes
-                         the import little bit slower because each GML definition is
-                         checked twice - once during the check and the other time
-                         during saving in database)
+    --create-tables
+            creates database tables for the data (if tables with the same name
+            already exists, it is first dropped)
+    --db-connection-url
+            is JDBC connection URL, for example:
+            jdbc:postgresql://localhost/ruian?user=ruian&password=p4ssw0rd
+    --input-dir
+            is directory that contains downloaded .xml.gz files
+    --log-file
+            is optional specification of log file (if not specified, log will be
+            output to console)
+    --ignore-invalid-gml
+            if GML definition is not valid, application ignores the definition and
+            saves the object without the definition (if this parameter is not
+            specified, application throws exception and exits while trying to save
+            invalid GML definition, the drawback of this parameter is that it makes
+            the import little bit slower because each GML definition is checked
+            twice - once during the check and the other time during saving in
+            database)
 
 To do
 -----
