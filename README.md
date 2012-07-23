@@ -73,7 +73,12 @@ ruian2pgsql is distributed under MIT license.
 
 ## Version 1.1.0
 
-* added command line switch --reset-transaction-ids
+* Added workaround for Postgis [bug](http://trac.osgeo.org/postgis/ticket/1928)
+  (it does not parse MultiPoint with pointMembers and instead saves empty
+  multipoint). The workaround is applied automatically if the target database is
+  affected. Original GML is rewritten so that instead of pointMembers element
+  pointMember element is used.
+* Added command line switch --reset-transaction-ids.
 
 ## Version 1.0.0
 

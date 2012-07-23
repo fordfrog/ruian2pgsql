@@ -29,6 +29,9 @@ import com.fordfrog.ruian2pgsql.containers.ItemWithMluvCharPad;
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -873,6 +876,35 @@ public class Utils {
                 break;
             default:
                 processUnsupported(reader, logFile);
+        }
+    }
+
+    /**
+     * Checks whether installed version of Postgis is affected by bug
+     * http://trac.osgeo.org/postgis/ticket/1928.
+     *
+     * @param con database connection
+     *
+     * @return true if it is affected, otherwise false
+     */
+    public static boolean checkMultipointBug(final Connection con) {
+        try (final Statement stm = con.createStatement();
+                final ResultSet rs = stm.executeQuery(
+                        "SELECT st_astext(st_geomfromgml('<gml:MultiPoint "
+                        + "xmlns:gml=\"http://www.opengis.net/gml/3.2\" "
+                        + "gml:id=\"DOB.545058.X\" "
+                        + "srsName=\"urn:ogc:def:crs:EPSG::2065\" "
+                        + "srsDimension=\"2\"><gml:pointMembers>"
+                        + "<gml:Point gml:id=\"DOB.545058.1\">"
+                        + "<gml:pos>496547.00 1139895.00</gml:pos>"
+                        + "</gml:Point></gml:pointMembers>"
+                        + "</gml:MultiPoint>'));")) {
+            rs.next();
+
+            return "MULTIPOINT Z EMPTY".equals(rs.getString(1));
+        } catch (final SQLException ex) {
+            throw new RuntimeException(
+                    "Failed to check multipoint bug presence", ex);
         }
     }
 }

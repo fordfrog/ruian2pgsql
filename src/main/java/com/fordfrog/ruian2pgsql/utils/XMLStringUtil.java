@@ -45,6 +45,10 @@ public class XMLStringUtil {
      * Whether to ignore invalid GML strings.
      */
     private static boolean ignoreInvalidGML;
+    /**
+     * Whether to enable multipoint bug workaround.
+     */
+    private static boolean multipointBugWorkaround;
 
     /**
      * Creates new instance of XMLStringUtil.
@@ -71,6 +75,25 @@ public class XMLStringUtil {
     }
 
     /**
+     * Getter for {@link #multipointBugWorkaround}.
+     *
+     * @return {@link #multipointBugWorkaround}
+     */
+    public static boolean isMultipointBugWorkaround() {
+        return multipointBugWorkaround;
+    }
+
+    /**
+     * Setter for {@link #multipointBugWorkaround}.
+     *
+     * @param multipointBugWorkaround {@link #multipointBugWorkaround}
+     */
+    public static void setMultipointBugWorkaround(
+            final boolean multipointBugWorkaround) {
+        XMLStringUtil.multipointBugWorkaround = multipointBugWorkaround;
+    }
+
+    /**
      * Creates GML string from XML element and its sub-elements.
      *
      * @param reader XML stream reader
@@ -92,7 +115,7 @@ public class XMLStringUtil {
         writer.writeStartDocument();
         writer.setPrefix("gml", Namespaces.GML);
 
-        writeElementTree(reader, writer, true);
+        writeElementTree(reader, writer, true, false);
 
         writer.writeEndDocument();
         writer.close();
@@ -112,17 +135,77 @@ public class XMLStringUtil {
      * @param reader       XML stream reader
      * @param writer       XML stream writer
      * @param setNamespace whether GML namespace should be set on the element
+     * @param isMultipoint whether any of the parents is gml:Multipoint element
      *
      * @throws XMLStreamException Thrown if problem occurred while reading or
      *                            writing XML stream.
      */
     private static void writeElementTree(final XMLStreamReader reader,
-            final XMLStreamWriter writer, final boolean setNamespace)
-            throws XMLStreamException {
+            final XMLStreamWriter writer, final boolean setNamespace,
+            final boolean isMultipoint) throws XMLStreamException {
         final String namespace = reader.getNamespaceURI();
         final String localName = reader.getLocalName();
+        final boolean curIsMultipoint = Namespaces.GML.equals(namespace)
+                && "MultiPoint".equals(localName);
+        final boolean isIgnorePointMembers = multipointBugWorkaround
+                && isMultipoint && Namespaces.GML.equals(namespace)
+                && "pointMembers".equals(localName);
+        final boolean isMultipointPoint = multipointBugWorkaround
+                && isMultipoint && Namespaces.GML.equals(namespace)
+                && "Point".equals(localName);
 
-        writer.writeStartElement(namespace, localName);
+        if (isIgnorePointMembers) {
+            // we do not write pointMembers, instead pointMember is written
+            // along with the Point itself
+        } else if (isMultipointPoint) {
+            writer.writeStartElement(Namespaces.GML, "pointMember");
+            writeStartElement(reader, writer, setNamespace);
+        } else {
+            writeStartElement(reader, writer, setNamespace);
+        }
+
+        while (reader.hasNext()) {
+            final int event = reader.next();
+
+            switch (event) {
+                case XMLStreamReader.START_ELEMENT:
+                    writeElementTree(reader, writer, false,
+                            curIsMultipoint || isMultipoint);
+                    break;
+                case XMLStreamReader.END_ELEMENT:
+                    if (!isIgnorePointMembers) {
+                        writer.writeEndElement();
+                    }
+
+                    if (isMultipointPoint) {
+                        writer.writeEndElement();
+                    }
+                    return;
+                case XMLStreamReader.CHARACTERS:
+                    writer.writeCharacters(reader.getText());
+                    break;
+                default:
+                    throw new RuntimeException(
+                            "Unsupported XML event " + event);
+            }
+        }
+    }
+
+    /**
+     * Writes start element and its attributes.
+     *
+     * @param reader       XML stream reader
+     * @param writer       XML stream writer
+     * @param setNamespace whether GML namespace should be set
+     *
+     * @throws XMLStreamException Thrown if problem occurred while working with
+     *                            XML streams.
+     */
+    private static void writeStartElement(final XMLStreamReader reader,
+            final XMLStreamWriter writer, final boolean setNamespace)
+            throws XMLStreamException {
+        writer.writeStartElement(
+                reader.getNamespaceURI(), reader.getLocalName());
 
         if (setNamespace) {
             writer.writeAttribute("xmlns:gml", Namespaces.GML);
@@ -138,25 +221,6 @@ public class XMLStringUtil {
                 writer.writeAttribute(reader.getAttributeNamespace(i),
                         reader.getAttributeLocalName(i),
                         reader.getAttributeValue(i));
-            }
-        }
-
-        while (reader.hasNext()) {
-            final int event = reader.next();
-
-            switch (event) {
-                case XMLStreamReader.START_ELEMENT:
-                    writeElementTree(reader, writer, false);
-                    break;
-                case XMLStreamReader.END_ELEMENT:
-                    writer.writeEndElement();
-                    return;
-                case XMLStreamReader.CHARACTERS:
-                    writer.writeCharacters(reader.getText());
-                    break;
-                default:
-                    throw new RuntimeException(
-                            "Unsupported XML event " + event);
             }
         }
     }

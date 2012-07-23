@@ -73,7 +73,12 @@ ruian2pgsql je distribuovaný pod MIT licencí.
 
 ### Verze 1.1.0
 
-* přidán přepínač --reset-transaction-ids
+* Přidána úprava, která řeší [chybu](http://trac.osgeo.org/postgis/ticket/1928)
+  v Postgisu (neparsuje MultiPoint s elementem pointMembers a místo toho ukládá
+  prázdný multipoint). Oprava chyby se aplikuje automaticky, pokud cílová
+  databáze chybu obsahuje. Původní GML se přepíše tak, že místo pointMembers se
+  použije element pointMember.
+* Přidán přepínač --reset-transaction-ids.
 
 ### Verze 1.0.0
 

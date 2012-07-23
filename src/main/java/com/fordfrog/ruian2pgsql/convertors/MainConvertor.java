@@ -23,6 +23,7 @@ package com.fordfrog.ruian2pgsql.convertors;
 
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.Utils;
+import com.fordfrog.ruian2pgsql.utils.XMLStringUtil;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -93,6 +94,16 @@ public class MainConvertor {
             if (resetTransactionIds) {
                 Utils.printToLog(logFile, "Resetting transaction ids...");
                 runSQLFromResource(con, "/sql/reset_transaction_ids.sql");
+            }
+
+            final boolean multipointBug = Utils.checkMultipointBug(con);
+
+            if (multipointBug) {
+                Utils.printToLog(logFile, "Installed version of Postgis is "
+                        + "affected by multipoint bug "
+                        + "http://trac.osgeo.org/postgis/ticket/1928, enabling "
+                        + "workaround...");
+                XMLStringUtil.setMultipointBugWorkaround(true);
             }
 
             for (final Path file : getInputFiles(inputDirPath)) {
