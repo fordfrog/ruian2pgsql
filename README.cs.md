@@ -1,10 +1,8 @@
-ruian2pgsql
-===========
+# ruian2pgsql
 
 Převádí data z RÚIAN výměnného formátu do PostgreSQL databáze.
 
-Co přesně dělá?
----------------
+## Co přesně dělá?
 
 ruian2pgsql je aplikace pro příkazový řádek. Čte data z XML souborů RÚIAN a
 ukládá jejich obsah do databáze PostgreSQL. Neukládá historické záznamy, udržuje
@@ -14,15 +12,13 @@ několikrát, nebo se obsah jednoho souboru překrývá s obsahem jiného soubor
 ruian2pgsql naimportuje všechny objekty jen jednou (jsou jednoznačně určeny svým
 unikátním klíčem přiřazeným v RÚIAN).
 
-Požadavky
----------
+## Požadavky
 
 * JRE nebo JDK 7+
 * server PostgreSQL s nainstalovanou knihovnou PostGIS
 * Apache Maven 3+ (pouze v případě, že si chcete sami aplikaci zkompilovat)
 
-Kompilace
----------
+## Kompilace
 
 Není nutné, abyste aplikaci kompilovali sami, nejnovější zkompilovanou verzi si
 můžete stáhnout z https://github.com/fordfrog/ruian2pgsql/downloads. Nicméně
@@ -30,8 +26,7 @@ kompilace ruian2pgsql je snadná. Jakmile nainstalujete Apache Maven, stačí
 spustit příkaz `mvn package` v hlavním adresáři zdrojových souborů, ve kterém je
 umístěný soubor pom.xml.
 
-Spuštění
---------
+## Spuštění
 
 Zde jsou informace o použití programu, které vypisuje ruian2pgsql, pokud ho
 spustíte bez parametrů (výpis je v angličtině, zde je přeložený):
@@ -59,12 +54,10 @@ spustíte bez parametrů (výpis je v angličtině, zde je přeložený):
             definice je kontrolovaná dvakrát - jednou při kontrole a podruhé při
             ukládání do databáze)
 
-To do
------
+## To do
 
 Seznam plánovaných funkcí je na [wiki](https://github.com/fordfrog/ruian2pgsql/wiki).
 
-Licence
--------
+## Licence
 
 ruian2pgsql je distribuovaný pod MIT licencí.
