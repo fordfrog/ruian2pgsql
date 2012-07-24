@@ -97,7 +97,7 @@ public class PouConvertor extends AbstractSaveConvertor<Pou> {
         pstm.setInt(11, item.getKod());
 
         if (update) {
-            pstmEx.setDate(1, item.getPlatiOd());
+            pstmEx.setLong(12, item.getIdTransRuian());
         }
     }
 
