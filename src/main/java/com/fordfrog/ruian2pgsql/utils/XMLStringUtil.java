@@ -266,7 +266,8 @@ public class XMLStringUtil {
                 return false;
             }
         } catch (final SQLException ex) {
-            throw new RuntimeException("Failed to validate GML string", ex);
+            throw new RuntimeException(
+                    "Failed to validate GML string: " + gml, ex);
         }
 
         return true;
