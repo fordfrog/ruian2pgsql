@@ -23,11 +23,13 @@
 package com.fordfrog.ruian2pgsql.utils;
 
 import java.io.StringWriter;
+import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Savepoint;
+import java.text.MessageFormat;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -96,8 +98,9 @@ public class XMLStringUtil {
     /**
      * Creates GML string from XML element and its sub-elements.
      *
-     * @param reader XML stream reader
-     * @param con    database connection
+     * @param reader  XML stream reader
+     * @param con     database connection
+     * @param logFile log file writer
      *
      * @return element tree as string
      *
@@ -105,7 +108,8 @@ public class XMLStringUtil {
      *                            writing XML stream.
      */
     public static String createGMLString(final XMLStreamReader reader,
-            final Connection con) throws XMLStreamException {
+            final Connection con, final Writer logFile)
+            throws XMLStreamException {
         final XMLOutputFactory xMLOutputFactory =
                 XMLOutputFactory.newInstance();
         final StringWriter stringWriter = new StringWriter(1_024);
@@ -123,7 +127,7 @@ public class XMLStringUtil {
         final String result = stripDeclaration(stringWriter.toString());
 
         if (ignoreInvalidGML) {
-            return isValidGML(con, result) ? result : null;
+            return isValidGML(con, result, logFile) ? result : null;
         } else {
             return result;
         }
@@ -246,12 +250,14 @@ public class XMLStringUtil {
      * Checks whether specified GML string is valid for ST_GeomFromGML()
      * function.
      *
-     * @param con database connection
-     * @param gml GML string
+     * @param con     database connection
+     * @param gml     GML string
+     * @param logFile log file writer
      *
      * @return true if GML string is valid, otherwise false
      */
-    private static boolean isValidGML(final Connection con, final String gml) {
+    private static boolean isValidGML(final Connection con, final String gml,
+            final Writer logFile) {
         try (final PreparedStatement pstm = con.prepareStatement(
                         "SELECT st_geomfromgml(?)")) {
             final Savepoint savepoint = con.setSavepoint("gml_check");
@@ -261,6 +267,8 @@ public class XMLStringUtil {
             try (final ResultSet rs = pstm.executeQuery()) {
                 con.releaseSavepoint(savepoint);
             } catch (final SQLException ex) {
+                Utils.printToLog(
+                        logFile, MessageFormat.format("Invalid GML: {0}", gml));
                 con.rollback(savepoint);
 
                 return false;

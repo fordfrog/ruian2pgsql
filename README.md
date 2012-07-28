@@ -71,6 +71,11 @@ ruian2pgsql is distributed under MIT license.
 
 ## Changelog
 
+## Version 1.2.0
+
+* When --ignore-invalid-gml is specified, if invalid GML is encountered, it is
+  printed to the log.
+
 ## Version 1.1.0
 
 * Added workaround for Postgis [bug](http://trac.osgeo.org/postgis/ticket/1928)

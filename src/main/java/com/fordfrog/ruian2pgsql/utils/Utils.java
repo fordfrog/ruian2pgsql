@@ -276,7 +276,7 @@ public class Utils {
 
         switch (reader.getNamespaceURI()) {
             case Namespaces.GML:
-                result = XMLStringUtil.createGMLString(reader, con);
+                result = XMLStringUtil.createGMLString(reader, con, logFile);
                 break;
             default:
                 processUnsupported(reader, logFile);
@@ -331,7 +331,7 @@ public class Utils {
             final ItemWithDefinicniBod itemDefinicniBod =
                     (ItemWithDefinicniBod) item;
             itemDefinicniBod.setDefinicniBod(
-                    XMLStringUtil.createGMLString(reader, con));
+                    XMLStringUtil.createGMLString(reader, con, logFile));
         } else {
             processUnsupported(reader, logFile);
         }

@@ -71,6 +71,11 @@ ruian2pgsql je distribuovaný pod MIT licencí.
 
 ## Changelog
 
+## Verze 1.2.0
+
+* Pokud je použitý přepínač --ignore-invalid-gml, tak pokud program narazí na
+  chybný GML řetězec, tak ho vypíše do logu.
+
 ### Verze 1.1.0
 
 * Přidána úprava, která řeší [chybu](http://trac.osgeo.org/postgis/ticket/1928)

@@ -22,6 +22,7 @@
 package com.fordfrog.ruian2pgsql.utils;
 
 import java.io.ByteArrayInputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -155,7 +156,9 @@ public class XMLStringUtilTest {
             event = reader.next();
         } while (event != XMLStreamReader.START_ELEMENT);
 
-        final String result = XMLStringUtil.createGMLString(reader, null);
+        @SuppressWarnings("UseOfSystemOutOrSystemErr")
+        final String result = XMLStringUtil.createGMLString(
+                reader, null, new OutputStreamWriter(System.out));
 
         Assert.assertThat(result, IsEqual.equalTo(expResult));
     }
