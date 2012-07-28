@@ -91,6 +91,9 @@ public class MainConvertor {
                 runSQLFromResource(con, "/sql/schema.sql");
             }
 
+            Utils.printToLog(logFile, "Recreating RÚIAN statistics view...");
+            runSQLFromResource(con, "/sql/ruian_stats.sql");
+
             if (resetTransactionIds) {
                 Utils.printToLog(logFile, "Resetting transaction ids...");
                 runSQLFromResource(con, "/sql/reset_transaction_ids.sql");

@@ -73,6 +73,8 @@ ruian2pgsql je distribuovaný pod MIT licencí.
 
 ## Verze 1.2.0
 
+* Přidán pohled ruian_stats, který zobrazuje statistiky RÚIAN dat a jejich
+  geometrií.
 * Pokud je použitý přepínač --ignore-invalid-gml, tak pokud program narazí na
   chybný GML řetězec, tak ho vypíše do logu.
 

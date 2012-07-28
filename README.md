@@ -73,6 +73,8 @@ ruian2pgsql is distributed under MIT license.
 
 ## Version 1.2.0
 
+* Added ruian_stats view that displays statistics of RÚIAN data and its
+  geometries.
 * When --ignore-invalid-gml is specified, if invalid GML is encountered, it is
   printed to the log.
 
