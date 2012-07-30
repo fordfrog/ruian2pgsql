@@ -1,3 +1,5 @@
+DROP VIEW IF EXISTS ruian_stats;
+
 DROP TABLE IF EXISTS hlavicka;
 DROP TABLE IF EXISTS rn_stat;
 DROP TABLE IF EXISTS rn_region_soudrznosti;
