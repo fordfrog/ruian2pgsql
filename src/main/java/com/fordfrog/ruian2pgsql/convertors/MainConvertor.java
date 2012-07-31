@@ -111,9 +111,8 @@ public class MainConvertor {
 
             for (final Path file : getInputFiles(inputDirPath)) {
                 processFile(con, file, logFile);
+                con.commit();
             }
-
-            con.commit();
 
             Utils.printToLog(logFile, "Total duration: "
                     + (System.currentTimeMillis() - startTimestamp) + " ms");
