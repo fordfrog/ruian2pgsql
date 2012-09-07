@@ -31,7 +31,8 @@ Here is the usage information that ruian2pgsql outputs if run without
 parameters:
 
     Usage: java -jar ruian2pgsql-*-jar-with-dependencies.jar --db-connection-url <value>
-        [--create-tables] [--reset-transaction-ids] --input-dir <value> [--log-file <value>]
+        [--create-tables] [--reset-transaction-ids] [--dry-run] --input-dir <value>
+        [--log-file <value>]
 
     Where:
     --create-tables
@@ -40,6 +41,8 @@ parameters:
     --db-connection-url
             is JDBC connection URL, for example:
             jdbc:postgresql://localhost/ruian?user=ruian&password=p4ssw0rd
+    --dry-run
+            processes all specified files but no data are written to database
     --input-dir
             is directory that contains downloaded .xml.gz files
     --log-file
@@ -75,6 +78,8 @@ ruian2pgsql is distributed under MIT license.
 
 * Changed index creation DDL statements to make it compatible with PostgreSQL
   versions lower than 9.0.
+* Added command line switch --dry-run for running the application without making
+  any modification in database.
 
 ## Version 1.2.0
 

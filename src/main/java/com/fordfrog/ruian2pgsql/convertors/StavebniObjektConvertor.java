@@ -21,6 +21,7 @@
  */
 package com.fordfrog.ruian2pgsql.convertors;
 
+import com.fordfrog.ruian2pgsql.Config;
 import com.fordfrog.ruian2pgsql.containers.StavebniObjekt;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
@@ -382,6 +383,10 @@ public class StavebniObjektConvertor
      */
     private void deleteDetailniTEA(final Integer stavebniObjektId)
             throws SQLException {
+        if (Config.isDryRun()) {
+            return;
+        }
+
         pstmDeleteDetailniTEA.clearParameters();
         pstmDeleteDetailniTEA.setInt(1, stavebniObjektId);
         pstmDeleteDetailniTEA.execute();
@@ -396,6 +401,10 @@ public class StavebniObjektConvertor
      */
     private void deleteZpusobyOchranyObjektu(final Integer stavebniObjektId)
             throws SQLException {
+        if (Config.isDryRun()) {
+            return;
+        }
+
         pstmDeleteZpusobyOchranyObjektu.clearParameters();
         pstmDeleteZpusobyOchranyObjektu.setInt(1, stavebniObjektId);
         pstmDeleteZpusobyOchranyObjektu.execute();

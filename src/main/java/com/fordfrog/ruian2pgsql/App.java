@@ -69,6 +69,9 @@ public class App {
                     i++;
                     Config.setDbConnectionUrl(args[i]);
                     break;
+                case "--dry-run":
+                    Config.setDryRun(true);
+                    break;
                 case "--ignore-invalid-gml":
                     Config.setIgnoreInvalidGML(true);
                     break;

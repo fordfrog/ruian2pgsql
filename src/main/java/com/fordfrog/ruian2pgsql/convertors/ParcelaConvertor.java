@@ -21,6 +21,7 @@
  */
 package com.fordfrog.ruian2pgsql.convertors;
 
+import com.fordfrog.ruian2pgsql.Config;
 import com.fordfrog.ruian2pgsql.containers.Parcela;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
@@ -251,6 +252,10 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
      */
     private void deleteBonitovateDily(final Long parcelaId)
             throws SQLException {
+        if (Config.isDryRun()) {
+            return;
+        }
+
         pstmDeleteBonitovaneDily.clearParameters();
         pstmDeleteBonitovaneDily.setLong(1, parcelaId);
         pstmDeleteBonitovaneDily.execute();
@@ -265,6 +270,10 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
      */
     private void deleteZpusobyOchranyPozemku(final Long parcelaId)
             throws SQLException {
+        if (Config.isDryRun()) {
+            return;
+        }
+
         pstmDeleteZpusobyOchranyPozemku.clearParameters();
         pstmDeleteZpusobyOchranyPozemku.setLong(1, parcelaId);
         pstmDeleteZpusobyOchranyPozemku.execute();

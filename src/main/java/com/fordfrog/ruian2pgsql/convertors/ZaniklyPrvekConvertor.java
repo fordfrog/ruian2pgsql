@@ -21,6 +21,7 @@
  */
 package com.fordfrog.ruian2pgsql.convertors;
 
+import com.fordfrog.ruian2pgsql.Config;
 import com.fordfrog.ruian2pgsql.containers.ZaniklyPrvek;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.Utils;
@@ -245,6 +246,10 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
      */
     private void deleteAdresniMisto(final ZaniklyPrvek item)
             throws SQLException {
+        if (Config.isDryRun()) {
+            return;
+        }
+
         pstmUpdateAdresniMisto.clearParameters();
         pstmUpdateAdresniMisto.setLong(1, item.getIdTransakce());
         pstmUpdateAdresniMisto.setInt(2, item.getPrvekId().intValue());
@@ -262,6 +267,10 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
      */
     private void deleteCastObce(final ZaniklyPrvek item)
             throws SQLException {
+        if (Config.isDryRun()) {
+            return;
+        }
+
         pstmUpdateCastObce.clearParameters();
         pstmUpdateCastObce.setLong(1, item.getIdTransakce());
         pstmUpdateCastObce.setInt(2, item.getPrvekId().intValue());
@@ -279,6 +288,10 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
      */
     private void deleteStavebniObjekt(final ZaniklyPrvek item)
             throws SQLException {
+        if (Config.isDryRun()) {
+            return;
+        }
+
         pstmUpdateStavebniObjekt.clearParameters();
         pstmUpdateStavebniObjekt.setLong(1, item.getIdTransakce());
         pstmUpdateStavebniObjekt.setInt(2, item.getPrvekId().intValue());
@@ -303,6 +316,10 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
      *                      database.
      */
     private void deleteParcela(final ZaniklyPrvek item) throws SQLException {
+        if (Config.isDryRun()) {
+            return;
+        }
+
         pstmUpdateParcela.clearParameters();
         pstmUpdateParcela.setLong(1, item.getIdTransakce());
         pstmUpdateParcela.setInt(2, item.getPrvekId().intValue());
@@ -327,6 +344,10 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
      *                      database.
      */
     private void deleteUlice(final ZaniklyPrvek item) throws SQLException {
+        if (Config.isDryRun()) {
+            return;
+        }
+
         pstmUpdateUlice.clearParameters();
         pstmUpdateUlice.setLong(1, item.getIdTransakce());
         pstmUpdateUlice.setInt(2, item.getPrvekId().intValue());

@@ -122,6 +122,10 @@ public class MainConvertor {
      */
     private static void runSQLFromResource(final Connection con,
             final String resourceName) {
+        if (Config.isDryRun()) {
+            return;
+        }
+
         final StringBuilder sbSQL = new StringBuilder(10_240);
 
         try (final BufferedReader reader = new BufferedReader(

@@ -21,6 +21,7 @@
  */
 package com.fordfrog.ruian2pgsql.convertors;
 
+import com.fordfrog.ruian2pgsql.Config;
 import com.fordfrog.ruian2pgsql.utils.Utils;
 import java.io.Writer;
 import java.sql.Connection;
@@ -168,6 +169,10 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
      */
     protected void saveData(final T item, final Writer logFile)
             throws SQLException {
+        if (Config.isDryRun()) {
+            return;
+        }
+
         if (exists(item)) {
             updateItem(item);
         } else {

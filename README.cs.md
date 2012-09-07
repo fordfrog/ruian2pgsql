@@ -32,7 +32,8 @@ Zde jsou informace o použití programu, které vypisuje ruian2pgsql, pokud ho
 spustíte bez parametrů (výpis je v angličtině, zde je přeložený):
 
     Použití: java -jar ruian2pgsql-*-jar-with-dependencies.jar --db-connection-url <hodnota>
-        [--create-tables] [--reset-transaction-ids] --input-dir <hodnota> [--log-file <hodnota>]
+        [--create-tables] [--reset-transaction-ids] [--dry-run] --input-dir <hodnota>
+        [--log-file <hodnota>]
 
     Kde:
     --create-tables
@@ -41,6 +42,9 @@ spustíte bez parametrů (výpis je v angličtině, zde je přeložený):
     --db-connection-url
             je připojovací URL ve formátu JDBC, například:
             jdbc:postgresql://localhost/ruian?user=ruian&password=p4ssw0rd
+    --dry-run
+            zpracuje všechny uvedené soubory, ale žádná data nezapíše do
+            databáze
     --input-dir
             je adresář, který obsahuje stažené soubory s příponou .xml.gz
     --log-file
@@ -75,6 +79,8 @@ ruian2pgsql je distribuovaný pod MIT licencí.
 
 * Změněny DDL příkazy pro vytváření indexů tak, aby byly kompatibilní i s
   PostgreSQL verzemi menšími než 9.0.
+* Přidán přepínač --dry-run pro spuštění aplikace v režimu, kdy žádná data
+  nejsou zapsána do databáze.
 
 ## Verze 1.2.0
 

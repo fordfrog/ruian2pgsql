@@ -52,6 +52,11 @@ public class Config {
      */
     private static boolean ignoreInvalidGML;
     /**
+     * If set to true, input files are processed but no data is stored in
+     * database.
+     */
+    private static boolean dryRun;
+    /**
      * Path to file where runtime messages should be logged.
      */
     private static Path logFilePath;
@@ -161,8 +166,26 @@ public class Config {
      *
      * @param ignoreInvalidGML {@link #ignoreInvalidGML}
      */
-    public static void setIgnoreInvalidGML(boolean ignoreInvalidGML) {
+    public static void setIgnoreInvalidGML(final boolean ignoreInvalidGML) {
         Config.ignoreInvalidGML = ignoreInvalidGML;
+    }
+
+    /**
+     * Getter for {@link #dryRun}.
+     *
+     * @return {@link #dryRun}
+     */
+    public static boolean isDryRun() {
+        return dryRun;
+    }
+
+    /**
+     * Setter for {@link #dryRun}.
+     *
+     * @param dryRun {@link #dryRun}
+     */
+    public static void setDryRun(final boolean dryRun) {
+        Config.dryRun = dryRun;
     }
 
     /**
