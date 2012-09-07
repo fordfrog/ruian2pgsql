@@ -22,6 +22,7 @@
  */
 package com.fordfrog.ruian2pgsql.utils;
 
+import com.fordfrog.ruian2pgsql.Config;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.sql.Connection;
@@ -44,10 +45,6 @@ import javax.xml.stream.XMLStreamWriter;
 public class XMLStringUtil {
 
     /**
-     * Whether to ignore invalid GML strings.
-     */
-    private static boolean ignoreInvalidGML;
-    /**
      * Whether to enable multipoint bug workaround.
      */
     private static boolean multipointBugWorkaround;
@@ -56,24 +53,6 @@ public class XMLStringUtil {
      * Creates new instance of XMLStringUtil.
      */
     private XMLStringUtil() {
-    }
-
-    /**
-     * Getter for {@link #ignoreInvalidGML}.
-     *
-     * @return {@link #ignoreInvalidGML}
-     */
-    public static boolean isIgnoreInvalidGML() {
-        return ignoreInvalidGML;
-    }
-
-    /**
-     * Setter for {@link #ignoreInvalidGML}.
-     *
-     * @param ignoreInvalidGML {@link #ignoreInvalidGML}
-     */
-    public static void setIgnoreInvalidGML(boolean ignoreInvalidGML) {
-        XMLStringUtil.ignoreInvalidGML = ignoreInvalidGML;
     }
 
     /**
@@ -126,7 +105,7 @@ public class XMLStringUtil {
 
         final String result = stripDeclaration(stringWriter.toString());
 
-        if (ignoreInvalidGML) {
+        if (Config.isIgnoreInvalidGML()) {
             return isValidGML(con, result, logFile) ? result : null;
         } else {
             return result;

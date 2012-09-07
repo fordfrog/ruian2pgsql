@@ -22,7 +22,6 @@
 package com.fordfrog.ruian2pgsql;
 
 import com.fordfrog.ruian2pgsql.convertors.MainConvertor;
-import com.fordfrog.ruian2pgsql.utils.XMLStringUtil;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,7 +29,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.Objects;
@@ -62,34 +60,28 @@ public class App {
             return;
         }
 
-        Path inputDirPath = null;
-        String dbConnectionUrl = null;
-        boolean createTables = false;
-        boolean resetTransactionIds = false;
-        Path logFilePath = null;
-
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
                 case "--create-tables":
-                    createTables = true;
+                    Config.setCreateTables(true);
                     break;
                 case "--db-connection-url":
                     i++;
-                    dbConnectionUrl = args[i];
+                    Config.setDbConnectionUrl(args[i]);
                     break;
                 case "--ignore-invalid-gml":
-                    XMLStringUtil.setIgnoreInvalidGML(true);
+                    Config.setIgnoreInvalidGML(true);
                     break;
                 case "--input-dir":
                     i++;
-                    inputDirPath = Paths.get(args[i]);
+                    Config.setInputDirPath(Paths.get(args[i]));
                     break;
                 case "--log-file":
                     i++;
-                    logFilePath = Paths.get(args[i]);
+                    Config.setLogFilePath(Paths.get(args[i]));
                     break;
                 case "--reset-transaction-ids":
-                    resetTransactionIds = true;
+                    Config.setResetTransactionIds(true);
                     break;
                 default:
                     throw new RuntimeException(
@@ -97,17 +89,19 @@ public class App {
             }
         }
 
-        Objects.requireNonNull(dbConnectionUrl, "--db-connection-url must be "
-                + "set (example: jdbc:postgresql://localhost/ruian?user=ruian"
+        Objects.requireNonNull(Config.getDbConnectionUrl(),
+                "--db-connection-url must be set (example: "
+                + "jdbc:postgresql://localhost/ruian?user=ruian"
                 + "&password=p4ssw0rd)");
-        Objects.requireNonNull(inputDirPath, "--input-dir must be set");
+        Objects.requireNonNull(
+                Config.getInputDirPath(), "--input-dir must be set");
 
         try (@SuppressWarnings("UseOfSystemOutOrSystemErr")
                 final Writer logFile = new OutputStreamWriter(
-                        logFilePath == null ? System.out
-                        : Files.newOutputStream(logFilePath), "UTF-8")) {
-            MainConvertor.convert(inputDirPath, dbConnectionUrl, createTables,
-                    resetTransactionIds, logFile);
+                        Config.getLogFilePath() == null ? System.out
+                        : Files.newOutputStream(Config.getLogFilePath()),
+                        "UTF-8")) {
+            MainConvertor.convert(logFile);
         } catch (final IOException ex) {
             throw new RuntimeException("Failed to create log writer", ex);
         }

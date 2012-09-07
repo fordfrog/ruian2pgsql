@@ -21,6 +21,7 @@
  */
 package com.fordfrog.ruian2pgsql.convertors;
 
+import com.fordfrog.ruian2pgsql.Config;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.Utils;
 import com.fordfrog.ruian2pgsql.utils.XMLStringUtil;
@@ -64,29 +65,22 @@ public class MainConvertor {
      * Converts all files with .xml.gz and .xml extensions from specified
      * directory into database.
      *
-     * @param inputDirPath        path to directory that contains input files
-     * @param dbConnectionUrl     database connection URL
-     * @param createTables        whether data tables should be (re)created
-     * @param resetTransactionIds reset transaction ids in all tables before the
-     *                            import
-     * @param logFile             log file writer
+     * @param logFile log file writer
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      * @throws SQLException       Thrown if problem occurred while communicating
      *                            with database.
      */
-    public static void convert(final Path inputDirPath,
-            final String dbConnectionUrl, final boolean createTables,
-            final boolean resetTransactionIds, final Writer logFile)
+    public static void convert(final Writer logFile)
             throws XMLStreamException, SQLException {
         final long startTimestamp = System.currentTimeMillis();
 
-        try (final Connection con =
-                        DriverManager.getConnection(dbConnectionUrl)) {
+        try (final Connection con = DriverManager.getConnection(
+                        Config.getDbConnectionUrl())) {
             con.setAutoCommit(false);
 
-            if (createTables) {
+            if (Config.isCreateTables()) {
                 Utils.printToLog(logFile, "Initializing database schema...");
                 runSQLFromResource(con, "/sql/schema.sql");
             }
@@ -94,7 +88,7 @@ public class MainConvertor {
             Utils.printToLog(logFile, "Recreating RÚIAN statistics view...");
             runSQLFromResource(con, "/sql/ruian_stats.sql");
 
-            if (resetTransactionIds) {
+            if (Config.isResetTransactionIds()) {
                 Utils.printToLog(logFile, "Resetting transaction ids...");
                 runSQLFromResource(con, "/sql/reset_transaction_ids.sql");
             }
@@ -109,7 +103,7 @@ public class MainConvertor {
                 XMLStringUtil.setMultipointBugWorkaround(true);
             }
 
-            for (final Path file : getInputFiles(inputDirPath)) {
+            for (final Path file : getInputFiles(Config.getInputDirPath())) {
                 processFile(con, file, logFile);
                 con.commit();
             }
