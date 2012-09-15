@@ -52,7 +52,8 @@ public class GMLParserTest {
                     {"multipoint"},
                     {"multipoint2"},
                     {"multisurface"},
-                    {"multisurface_curves"}
+                    {"multisurface_curves"},
+                    {"multicurve"}
                 });
     }
     private String name;
