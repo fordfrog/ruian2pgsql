@@ -1,0 +1,7 @@
+<gml:MultiCurve xmlns:gml="http://www.opengis.net/gml/3.2" gml:id="DUL.115061.X" srsName="urn:ogc:def:crs:EPSG::2065" srsDimension="2">
+    <gml:curveMember>
+        <gml:LineString gml:id="DUL.115061">
+            <gml:posList>655192.15 1091946.30 655201.78 1091959.87 655213.30 1091977.51 655224.82 1091993.72 655230.80 1092005.10 655235.29 1092014.91</gml:posList>
+        </gml:LineString>
+    </gml:curveMember>
+</gml:MultiCurve>
