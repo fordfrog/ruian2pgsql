@@ -74,7 +74,7 @@ ruian2pgsql is distributed under MIT license.
 
 ## Changelog
 
-## Version 1.2.1
+## Version 1.3.0
 
 * Changed index creation DDL statements to make it compatible with PostgreSQL
   versions lower than 9.0.
