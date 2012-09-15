@@ -99,6 +99,8 @@ public class GMLParser {
                 return parseMultiPoint(reader);
             case "MultiSurface":
                 return parseMultiSurface(reader);
+            case "MultiCurve":
+                return parseMultiCurve(reader);
             case "Point":
                 return parsePoint(reader);
             case "Polygon":
@@ -187,6 +189,47 @@ public class GMLParser {
         }
 
         return multiPolygon;
+    }
+
+    /**
+     * Parses multicurve.
+     *
+     * @param reader XML stream reader
+     *
+     * @return parsed multicurve
+     *
+     * @throws XMLStreamException Thrown if problem occurred while reading XML
+     *                            stream.
+     */
+    private static MultiCurve parseMultiCurve(final XMLStreamReader reader)
+            throws XMLStreamException {
+        final MultiCurve multiCurve = new MultiCurve();
+        multiCurve.setSrid(getSrid(reader));
+
+        while (reader.hasNext()) {
+            final int event = reader.next();
+
+            switch (event) {
+                case XMLStreamReader.START_ELEMENT:
+                    if (XMLUtils.isSameElement(
+                            Namespaces.GML, "curveMember", reader)) {
+                        multiCurve.addSegment(parseCurveMember(reader));
+                    } else {
+                        throwUnsupportedElement(reader);
+                    }
+
+                    break;
+                case XMLStreamReader.END_ELEMENT:
+                    if (XMLUtils.isSameElement(
+                            Namespaces.GML, "MultiCurve", reader)) {
+                        return multiCurve;
+                    } else {
+                        throwUnexpectedElement(reader);
+                    }
+            }
+        }
+
+        return multiCurve;
     }
 
     /**
