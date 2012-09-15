@@ -23,7 +23,6 @@ package com.fordfrog.ruian2pgsql.convertors;
 
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.xml.stream.XMLStreamException;
@@ -57,25 +56,24 @@ public class ExchangeFormatConvertor extends AbstractConvertor {
     }
 
     @Override
-    protected void processElement(final XMLStreamReader reader,
-            final Writer logFile) throws XMLStreamException, SQLException {
+    protected void processElement(final XMLStreamReader reader)
+            throws XMLStreamException, SQLException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "Data":
-                        new DataConvertor(connection).convert(reader, logFile);
+                        new DataConvertor(connection).convert(reader);
                         break;
                     case "Hlavicka":
-                        new HlavickaConvertor(connection).convert(
-                                reader, logFile);
+                        new HlavickaConvertor(connection).convert(reader);
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
 
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 }

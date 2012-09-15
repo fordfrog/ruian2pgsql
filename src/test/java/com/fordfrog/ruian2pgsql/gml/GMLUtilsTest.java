@@ -21,6 +21,7 @@
  */
 package com.fordfrog.ruian2pgsql.gml;
 
+import com.fordfrog.ruian2pgsql.utils.Log;
 import java.io.ByteArrayInputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
@@ -140,6 +141,7 @@ public class GMLUtilsTest {
      *                                      supported.
      * @throws XMLStreamException           Thrown if problem occurred while
      */
+    @SuppressWarnings("UseOfSystemOutOrSystemErr")
     private void testGML(final String input, final String expResult,
             final boolean multipointBugWorkaround)
             throws UnsupportedEncodingException, XMLStreamException {
@@ -156,9 +158,9 @@ public class GMLUtilsTest {
             event = reader.next();
         } while (event != XMLStreamReader.START_ELEMENT);
 
-        @SuppressWarnings("UseOfSystemOutOrSystemErr")
-        final String result = GMLUtils.createGMLString(
-                reader, null, new OutputStreamWriter(System.out));
+        Log.setLogWriter(new OutputStreamWriter(System.out));
+
+        final String result = GMLUtils.createGMLString(reader, null);
 
         Assert.assertThat(result, IsEqual.equalTo(expResult));
     }

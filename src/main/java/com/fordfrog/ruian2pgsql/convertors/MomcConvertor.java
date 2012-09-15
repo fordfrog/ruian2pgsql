@@ -26,7 +26,6 @@ import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
 import com.fordfrog.ruian2pgsql.utils.Utils;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -127,14 +126,14 @@ public class MomcConvertor extends AbstractSaveConvertor<Momc> {
     }
 
     @Override
-    protected void processElement(final XMLStreamReader reader,
-            final Momc item, final Writer logFile) throws XMLStreamException {
+    protected void processElement(final XMLStreamReader reader, final Momc item)
+            throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "Geometrie":
-                        Utils.processGeometrie(reader, getConnection(), item,
-                                NAMESPACE, logFile);
+                        Utils.processGeometrie(
+                                reader, getConnection(), item, NAMESPACE);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(
@@ -150,11 +149,10 @@ public class MomcConvertor extends AbstractSaveConvertor<Momc> {
                         break;
                     case "MluvnickeCharakteristiky":
                         Utils.processMluvnickeCharakteristiky(
-                                reader, item, NAMESPACE, logFile);
+                                reader, item, NAMESPACE);
                         break;
                     case "Mop":
-                        item.setMopKod(
-                                Utils.getMopKod(reader, NAMESPACE, logFile));
+                        item.setMopKod(Utils.getMopKod(reader, NAMESPACE));
                         break;
                     case "Nazev":
                         item.setNazev(reader.getElementText());
@@ -164,16 +162,15 @@ public class MomcConvertor extends AbstractSaveConvertor<Momc> {
                                 Boolean.valueOf(reader.getElementText()));
                         break;
                     case "Obec":
-                        item.setObecKod(
-                                Utils.getObecKod(reader, NAMESPACE, logFile));
+                        item.setObecKod(Utils.getObecKod(reader, NAMESPACE));
                         break;
                     case "PlatiOd":
                         item.setPlatiOd(
                                 Utils.parseTimestamp(reader.getElementText()));
                         break;
                     case "SpravniObvod":
-                        item.setSpravobvKod(Utils.getSpravniObvodKod(
-                                reader, NAMESPACE, logFile));
+                        item.setSpravobvKod(
+                                Utils.getSpravniObvodKod(reader, NAMESPACE));
                         break;
                     case "VlajkaText":
                         item.setVlajkaText(reader.getElementText());
@@ -182,12 +179,12 @@ public class MomcConvertor extends AbstractSaveConvertor<Momc> {
                         item.setZnakText(reader.getElementText());
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
 
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 }

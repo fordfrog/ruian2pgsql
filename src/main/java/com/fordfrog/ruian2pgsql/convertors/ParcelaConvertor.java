@@ -27,7 +27,6 @@ import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
 import com.fordfrog.ruian2pgsql.utils.Utils;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -167,14 +166,14 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Parcela item, final Writer logFile) throws XMLStreamException,
+            final Parcela item) throws XMLStreamException,
             SQLException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "BonitovaneDily":
                         bonitovanyDilConvertor.setParcelaId(item.getId());
-                        convertorBonitovaneDily.convert(reader, logFile);
+                        convertorBonitovaneDily.convert(reader);
                         break;
                     case "DruhCislovaniKod":
                         item.setDruhCislovaniKod(
@@ -185,8 +184,8 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
                                 Integer.parseInt(reader.getElementText()));
                         break;
                     case "Geometrie":
-                        Utils.processGeometrie(reader, getConnection(), item,
-                                NAMESPACE, logFile);
+                        Utils.processGeometrie(
+                                reader, getConnection(), item, NAMESPACE);
                         break;
                     case "Id":
                         item.setId(Long.parseLong(reader.getElementText()));
@@ -199,7 +198,7 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
                         break;
                     case "KatastralniUzemi":
                         item.setKatuzKod(Utils.getKatastralniUzemiKod(
-                                reader, NAMESPACE, logFile));
+                                reader, NAMESPACE));
                         break;
                     case "KmenoveCislo":
                         item.setKmenoveCislo(
@@ -228,19 +227,19 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
                     case "ZpusobyOchranyPozemku":
                         zpusobOchranyPozemkuConvertor.setParcelaId(
                                 item.getId());
-                        convertorZpusobyOchranyPozemku.convert(reader, logFile);
+                        convertorZpusobyOchranyPozemku.convert(reader);
                         break;
                     case "ZpusobyVyuzitiPozemku":
                         item.setZpusobVyuPozKod(
                                 Integer.parseInt(reader.getElementText()));
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
 
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 

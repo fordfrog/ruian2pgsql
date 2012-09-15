@@ -59,8 +59,7 @@ public abstract class AbstractConvertor implements Convertor {
      * {@link #processElement(javax.xml.stream.XMLStreamReader, java.io.Writer)}
      * is called.
      *
-     * @param reader  XML stream reader
-     * @param logFile log file writer
+     * @param reader XML stream reader
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
@@ -68,14 +67,14 @@ public abstract class AbstractConvertor implements Convertor {
      *                            with database.
      */
     @Override
-    public void convert(final XMLStreamReader reader, final Writer logFile)
-            throws XMLStreamException, SQLException {
+    public void convert(final XMLStreamReader reader) throws XMLStreamException,
+            SQLException {
         while (reader.hasNext()) {
             final int event = reader.next();
 
             switch (event) {
                 case XMLStreamReader.START_ELEMENT:
-                    processElement(reader, logFile);
+                    processElement(reader);
                     break;
                 case XMLStreamReader.END_ELEMENT:
                     if (XMLUtils.isEndElement(namespace, localName, reader)) {
@@ -90,14 +89,13 @@ public abstract class AbstractConvertor implements Convertor {
     /**
      * Processes current XML element.
      *
-     * @param reader  XML stream reader
-     * @param logFile log file writer
+     * @param reader XML stream reader
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      * @throws SQLException       Thrown if problem occurred while communicating
      *                            with database.
      */
-    protected abstract void processElement(final XMLStreamReader reader,
-            final Writer logFile) throws XMLStreamException, SQLException;
+    protected abstract void processElement(final XMLStreamReader reader)
+            throws XMLStreamException, SQLException;
 }

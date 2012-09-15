@@ -23,10 +23,9 @@ package com.fordfrog.ruian2pgsql.convertors;
 
 import com.fordfrog.ruian2pgsql.Config;
 import com.fordfrog.ruian2pgsql.containers.ZaniklyPrvek;
+import com.fordfrog.ruian2pgsql.utils.Log;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
-import com.fordfrog.ruian2pgsql.utils.Utils;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -178,8 +177,7 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final ZaniklyPrvek item, final Writer logFile)
-            throws XMLStreamException, SQLException {
+            final ZaniklyPrvek item) throws XMLStreamException, SQLException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
@@ -195,12 +193,12 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
                         item.setTypPrvkuKod(reader.getElementText());
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
 
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 
@@ -213,8 +211,7 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
      *                      database.
      */
     @Override
-    protected void saveData(final ZaniklyPrvek item, final Writer logFile)
-            throws SQLException {
+    protected void saveData(final ZaniklyPrvek item) throws SQLException {
         switch (item.getTypPrvkuKod()) {
             case "AD": // AdresniMisto
                 deleteAdresniMisto(item);
@@ -232,7 +229,7 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
                 deleteUlice(item);
                 break;
             default:
-                Utils.printToLog(logFile, "Ignoring unsupported TypPrvkuKod '"
+                Log.write("Ignoring unsupported TypPrvkuKod '"
                         + item.getTypPrvkuKod() + " 'of ZaniklyPrvek");
         }
     }

@@ -24,7 +24,6 @@ package com.fordfrog.ruian2pgsql.convertors;
 import com.fordfrog.ruian2pgsql.containers.ZpusobOchranyPozemku;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -88,8 +87,7 @@ public class ZpusobOchranyPozemkuConvertor
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final ZpusobOchranyPozemku item, final Writer logFile)
-            throws XMLStreamException {
+            final ZpusobOchranyPozemku item) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
@@ -109,18 +107,18 @@ public class ZpusobOchranyPozemkuConvertor
                                 Long.parseLong(reader.getElementText()));
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
 
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 
     @Override
-    protected void saveData(final ZpusobOchranyPozemku item,
-            final Writer logFile) throws SQLException {
+    protected void saveData(final ZpusobOchranyPozemku item)
+            throws SQLException {
         insertItem(item);
     }
 

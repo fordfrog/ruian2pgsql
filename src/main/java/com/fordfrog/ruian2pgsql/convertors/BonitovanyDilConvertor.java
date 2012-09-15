@@ -24,7 +24,6 @@ package com.fordfrog.ruian2pgsql.convertors;
 import com.fordfrog.ruian2pgsql.containers.BonitovanyDil;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -85,8 +84,7 @@ public class BonitovanyDilConvertor
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final BonitovanyDil item, final Writer logFile)
-            throws XMLStreamException {
+            final BonitovanyDil item) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
@@ -108,18 +106,17 @@ public class BonitovanyDilConvertor
                                 Integer.parseInt(reader.getElementText()));
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
 
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 
     @Override
-    protected void saveData(final BonitovanyDil item, final Writer logFile)
-            throws SQLException {
+    protected void saveData(final BonitovanyDil item) throws SQLException {
         insertItem(item);
     }
 

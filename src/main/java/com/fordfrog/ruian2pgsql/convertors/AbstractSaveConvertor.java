@@ -115,8 +115,7 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
      * is called. After the element is processed,
      * {@link #saveData(java.sql.Connection, java.lang.Object)} is called.
      *
-     * @param reader  XML stream reader
-     * @param logFile log file writer
+     * @param reader XML stream reader
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
@@ -124,8 +123,8 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
      *                            with database.
      */
     @Override
-    public void convert(final XMLStreamReader reader, final Writer logFile)
-            throws XMLStreamException, SQLException {
+    public void convert(final XMLStreamReader reader) throws XMLStreamException,
+            SQLException {
         final T item;
 
         try {
@@ -140,11 +139,11 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
 
             switch (event) {
                 case XMLStreamReader.START_ELEMENT:
-                    processElement(reader, item, logFile);
+                    processElement(reader, item);
                     break;
                 case XMLStreamReader.END_ELEMENT:
                     if (XMLUtils.isEndElement(namespace, localName, reader)) {
-                        saveData(item, logFile);
+                        saveData(item);
 
                         return;
                     }
@@ -162,13 +161,11 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
      * {@link #exists(java.sql.Connection, java.lang.Object)}.
      *
      * @param item    item to be saved
-     * @param logFile log file writer
      *
      * @throws SQLException Thrown if problem occurred while saving item into
      *                      database.
      */
-    protected void saveData(final T item, final Writer logFile)
-            throws SQLException {
+    protected void saveData(final T item) throws SQLException {
         if (Config.isDryRun()) {
             return;
         }
@@ -237,15 +234,14 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
      *
      * @param reader  XML stream reader
      * @param item    item of the main element
-     * @param logFile log file writer
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      * @throws SQLException       Thrown if problem occurred while communicating
      *                            with database.
      */
-    protected abstract void processElement(XMLStreamReader reader,
-            T item, Writer logFile) throws XMLStreamException, SQLException;
+    protected abstract void processElement(XMLStreamReader reader, T item)
+            throws XMLStreamException, SQLException;
 
     /**
      * Fills prepared statement parameters for testing whether item already

@@ -26,7 +26,6 @@ import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
 import com.fordfrog.ruian2pgsql.utils.Utils;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -118,8 +117,7 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final AdresniMisto item, final Writer logFile)
-            throws XMLStreamException {
+            final AdresniMisto item) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
@@ -135,8 +133,8 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
                         item.setCisloOrientacniPismeno(reader.getElementText());
                         break;
                     case "Geometrie":
-                        Utils.processGeometrie(reader, getConnection(), item,
-                                NAMESPACE, logFile);
+                        Utils.processGeometrie(
+                                reader, getConnection(), item, NAMESPACE);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(
@@ -162,20 +160,19 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
                                 Integer.parseInt(reader.getElementText()));
                         break;
                     case "StavebniObjekt":
-                        item.setStavobjKod(Utils.getStavebniObjektKod(
-                                reader, NAMESPACE, logFile));
+                        item.setStavobjKod(
+                                Utils.getStavebniObjektKod(reader, NAMESPACE));
                         break;
                     case "Ulice":
-                        item.setUliceKod(
-                                Utils.getUliceKod(reader, NAMESPACE, logFile));
+                        item.setUliceKod(Utils.getUliceKod(reader, NAMESPACE));
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
 
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 }

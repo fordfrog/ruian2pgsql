@@ -26,7 +26,6 @@ import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
 import com.fordfrog.ruian2pgsql.utils.Utils;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -111,13 +110,13 @@ public class OkresConvertor extends AbstractSaveConvertor<Okres> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Okres item, final Writer logFile) throws XMLStreamException {
+            final Okres item) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "Geometrie":
-                        Utils.processGeometrie(reader, getConnection(), item,
-                                NAMESPACE, logFile);
+                        Utils.processGeometrie(
+                                reader, getConnection(), item, NAMESPACE);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(
@@ -132,7 +131,7 @@ public class OkresConvertor extends AbstractSaveConvertor<Okres> {
                         break;
                     case "Kraj":
                         item.setKraj1960Kod(
-                                Utils.getKrajKod(reader, NAMESPACE, logFile));
+                                Utils.getKrajKod(reader, NAMESPACE));
                         break;
                     case "Nazev":
                         item.setNazev(reader.getElementText());
@@ -149,16 +148,15 @@ public class OkresConvertor extends AbstractSaveConvertor<Okres> {
                                 Utils.parseTimestamp(reader.getElementText()));
                         break;
                     case "Vusc":
-                        item.setVuscKod(
-                                Utils.getVuscKod(reader, NAMESPACE, logFile));
+                        item.setVuscKod(Utils.getVuscKod(reader, NAMESPACE));
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
 
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 }

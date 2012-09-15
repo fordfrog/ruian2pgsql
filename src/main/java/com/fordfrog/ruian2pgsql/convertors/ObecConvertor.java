@@ -26,7 +26,6 @@ import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
 import com.fordfrog.ruian2pgsql.utils.Utils;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -133,8 +132,8 @@ public class ObecConvertor extends AbstractSaveConvertor<Obec> {
     }
 
     @Override
-    protected void processElement(final XMLStreamReader reader,
-            final Obec item, final Writer logFile) throws XMLStreamException {
+    protected void processElement(final XMLStreamReader reader, final Obec item)
+            throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
@@ -147,8 +146,8 @@ public class ObecConvertor extends AbstractSaveConvertor<Obec> {
                                 Integer.parseInt(reader.getElementText()));
                         break;
                     case "Geometrie":
-                        Utils.processGeometrie(reader, getConnection(), item,
-                                NAMESPACE, logFile);
+                        Utils.processGeometrie(
+                                reader, getConnection(), item, NAMESPACE);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(
@@ -164,7 +163,7 @@ public class ObecConvertor extends AbstractSaveConvertor<Obec> {
                         break;
                     case "MluvnickeCharakteristiky":
                         Utils.processMluvnickeCharakteristiky(
-                                reader, item, NAMESPACE, logFile);
+                                reader, item, NAMESPACE);
                         break;
                     case "Nazev":
                         item.setNazev(reader.getElementText());
@@ -177,16 +176,14 @@ public class ObecConvertor extends AbstractSaveConvertor<Obec> {
                         item.setNutsLau(reader.getElementText());
                         break;
                     case "Okres":
-                        item.setOkresKod(
-                                Utils.getOkresKod(reader, NAMESPACE, logFile));
+                        item.setOkresKod(Utils.getOkresKod(reader, NAMESPACE));
                         break;
                     case "PlatiOd":
                         item.setPlatiOd(
                                 Utils.parseTimestamp(reader.getElementText()));
                         break;
                     case "Pou":
-                        item.setPouKod(
-                                Utils.getPouKod(reader, NAMESPACE, logFile));
+                        item.setPouKod(Utils.getPouKod(reader, NAMESPACE));
                         break;
                     case "StatusKod":
                         item.setStatusKod(
@@ -199,12 +196,12 @@ public class ObecConvertor extends AbstractSaveConvertor<Obec> {
                         item.setZnakText(reader.getElementText());
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
 
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 }

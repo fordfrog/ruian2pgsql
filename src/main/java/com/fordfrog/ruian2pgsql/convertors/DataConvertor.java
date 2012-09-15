@@ -23,7 +23,6 @@ package com.fordfrog.ruian2pgsql.convertors;
 
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.xml.stream.XMLStreamException;
@@ -170,75 +169,75 @@ public class DataConvertor extends AbstractConvertor {
     }
 
     @Override
-    protected void processElement(final XMLStreamReader reader,
-            final Writer logFile) throws XMLStreamException, SQLException {
+    protected void processElement(final XMLStreamReader reader)
+            throws XMLStreamException, SQLException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "AdresniMista":
-                        convertorAdresniMista.convert(reader, logFile);
+                        convertorAdresniMista.convert(reader);
                         break;
                     case "CastiObci":
-                        convertorCastiObci.convert(reader, logFile);
+                        convertorCastiObci.convert(reader);
                         break;
                     case "KatastralniUzemi":
-                        convertorKatastralniUzemi.convert(reader, logFile);
+                        convertorKatastralniUzemi.convert(reader);
                         break;
                     case "Kraje":
-                        convertorKraje.convert(reader, logFile);
+                        convertorKraje.convert(reader);
                         break;
                     case "Momc":
-                        convertorMomc.convert(reader, logFile);
+                        convertorMomc.convert(reader);
                         break;
                     case "Mop":
-                        convertorMop.convert(reader, logFile);
+                        convertorMop.convert(reader);
                         break;
                     case "Obce":
-                        convertorObce.convert(reader, logFile);
+                        convertorObce.convert(reader);
                         break;
                     case "Okresy":
-                        convertorOkresy.convert(reader, logFile);
+                        convertorOkresy.convert(reader);
                         break;
                     case "Orp":
-                        convertorOrp.convert(reader, logFile);
+                        convertorOrp.convert(reader);
                         break;
                     case "Parcely":
-                        convertorParcely.convert(reader, logFile);
+                        convertorParcely.convert(reader);
                         break;
                     case "Pou":
-                        convertorPou.convert(reader, logFile);
+                        convertorPou.convert(reader);
                         break;
                     case "RegionySoudrznosti":
-                        convertorRegionySoudrznosti.convert(reader, logFile);
+                        convertorRegionySoudrznosti.convert(reader);
                         break;
                     case "SpravniObvody":
-                        convertorSpravniObvody.convert(reader, logFile);
+                        convertorSpravniObvody.convert(reader);
                         break;
                     case "Staty":
-                        convertorStaty.convert(reader, logFile);
+                        convertorStaty.convert(reader);
                         break;
                     case "StavebniObjekty":
-                        convertorStavebniObjekty.convert(reader, logFile);
+                        convertorStavebniObjekty.convert(reader);
                         break;
                     case "Ulice":
-                        convertorUlice.convert(reader, logFile);
+                        convertorUlice.convert(reader);
                         break;
                     case "Vusc":
-                        convertorVusc.convert(reader, logFile);
+                        convertorVusc.convert(reader);
                         break;
                     case "ZaniklePrvky":
-                        convertorZaniklePrvky.convert(reader, logFile);
+                        convertorZaniklePrvky.convert(reader);
                         break;
                     case "Zsj":
-                        convertorZsj.convert(reader, logFile);
+                        convertorZsj.convert(reader);
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
 
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 }

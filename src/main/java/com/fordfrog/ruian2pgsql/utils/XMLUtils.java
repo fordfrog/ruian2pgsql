@@ -21,7 +21,6 @@
  */
 package com.fordfrog.ruian2pgsql.utils;
 
-import java.io.Writer;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -51,15 +50,14 @@ public class XMLUtils {
     /**
      * Processes unsupported element and its subelements.
      *
-     * @param reader  XML stream reader
-     * @param logFile log file writer
+     * @param reader XML stream reader
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
-    public static void processUnsupported(final XMLStreamReader reader,
-            final Writer logFile) throws XMLStreamException {
-        processUnsupported(reader, 0, logFile);
+    public static void processUnsupported(final XMLStreamReader reader)
+            throws XMLStreamException {
+        processUnsupported(reader, 0);
     }
 
     /**
@@ -82,15 +80,14 @@ public class XMLUtils {
     /**
      * Processes unsupported element and its subelements.
      *
-     * @param reader  XML stream reader
-     * @param indent  indentation count
-     * @param logFile log file writer
+     * @param reader XML stream reader
+     * @param indent indentation count
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
     private static void processUnsupported(final XMLStreamReader reader,
-            final int indent, final Writer logFile) throws XMLStreamException {
+            final int indent) throws XMLStreamException {
         final String namespace = reader.getNamespaceURI();
         final String localName = reader.getLocalName();
         final StringBuilder sbString = new StringBuilder(namespace.length()
@@ -105,14 +102,14 @@ public class XMLUtils {
         sbString.append(' ');
         sbString.append(localName);
 
-        Utils.printToLog(logFile, sbString.toString());
+        Log.write(sbString.toString());
 
         while (reader.hasNext()) {
             final int event = reader.next();
 
             switch (event) {
                 case XMLStreamReader.START_ELEMENT:
-                    processUnsupported(reader, indent + 1, logFile);
+                    processUnsupported(reader, indent + 1);
                     break;
                 case XMLStreamReader.END_ELEMENT:
                     if (XMLUtils.isEndElement(

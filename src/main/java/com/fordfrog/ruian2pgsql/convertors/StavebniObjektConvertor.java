@@ -27,7 +27,6 @@ import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
 import com.fordfrog.ruian2pgsql.utils.Utils;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -192,21 +191,20 @@ public class StavebniObjektConvertor
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final StavebniObjekt item, final Writer logFile)
-            throws XMLStreamException, SQLException {
+            final StavebniObjekt item) throws XMLStreamException, SQLException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "CastObce":
-                        item.setCobceKod(Utils.getCastObceKod(
-                                reader, NAMESPACE, logFile));
+                        item.setCobceKod(
+                                Utils.getCastObceKod(reader, NAMESPACE));
                         break;
                     case "CislaDomovni":
-                        processCislaDomovni(reader, item, logFile);
+                        processCislaDomovni(reader, item);
                         break;
                     case "DetailniTEA":
                         detailniTEAConvertor.setStavebniObjektId(item.getKod());
-                        convertorDetailniTEA.convert(reader, logFile);
+                        convertorDetailniTEA.convert(reader);
                         break;
                     case "Dokonceni":
                         item.setDokonceni(
@@ -217,8 +215,8 @@ public class StavebniObjektConvertor
                                 Integer.parseInt(reader.getElementText()));
                         break;
                     case "Geometrie":
-                        Utils.processGeometrie(reader, getConnection(), item,
-                                NAMESPACE, logFile);
+                        Utils.processGeometrie(
+                                reader, getConnection(), item, NAMESPACE);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(
@@ -227,7 +225,7 @@ public class StavebniObjektConvertor
                     case "IdentifikacniParcela":
                         item.setIdentifikacniParcelaId(
                                 Utils.getIdentifikacniParcelaId(
-                                reader, NAMESPACE, logFile));
+                                reader, NAMESPACE));
                         break;
                     case "IdTransakce":
                         item.setIdTransRuian(
@@ -244,8 +242,7 @@ public class StavebniObjektConvertor
                         deleteZpusobyOchranyObjektu(item.getKod());
                         break;
                     case "Momc":
-                        item.setMomcKod(
-                                Utils.getMomcKod(reader, NAMESPACE, logFile));
+                        item.setMomcKod(Utils.getMomcKod(reader, NAMESPACE));
                         break;
                     case "Nespravny":
                         item.setNespravny(
@@ -306,37 +303,35 @@ public class StavebniObjektConvertor
                     case "ZpusobyOchrany":
                         zpusobOchranyObjektuConvertor.setStavebniObjektId(
                                 item.getKod());
-                        convertorZpusobyOchranyObjektu.convert(reader, logFile);
+                        convertorZpusobyOchranyObjektu.convert(reader);
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
 
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 
     /**
      * Processes CislaDomovni element.
      *
-     * @param reader  XML stream reader
-     * @param item    item
-     * @param logFile log file writer
+     * @param reader XML stream reader
+     * @param item   item
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
     private void processCislaDomovni(final XMLStreamReader reader,
-            final StavebniObjekt item, final Writer logFile)
-            throws XMLStreamException {
+            final StavebniObjekt item) throws XMLStreamException {
         while (reader.hasNext()) {
             final int event = reader.next();
 
             switch (event) {
                 case XMLStreamReader.START_ELEMENT:
-                    processCislaDomovniElement(reader, item, logFile);
+                    processCislaDomovniElement(reader, item);
                     break;
                 case XMLStreamReader.END_ELEMENT:
                     if (XMLUtils.isEndElement(
@@ -350,16 +345,14 @@ public class StavebniObjektConvertor
     /**
      * Processes sub-elements of CislaDomovni element.
      *
-     * @param reader  XML stream reader
-     * @param item    item
-     * @param logFile log file writer
+     * @param reader XML stream reader
+     * @param item   item
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
     private void processCislaDomovniElement(final XMLStreamReader reader,
-            final StavebniObjekt item, final Writer logFile)
-            throws XMLStreamException {
+            final StavebniObjekt item) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case Namespaces.COMMON_TYPY:
                 switch (reader.getLocalName()) {
@@ -368,11 +361,11 @@ public class StavebniObjektConvertor
                                 Integer.parseInt(reader.getElementText()));
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 

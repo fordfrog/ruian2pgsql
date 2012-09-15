@@ -26,7 +26,6 @@ import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
 import com.fordfrog.ruian2pgsql.utils.Utils;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -100,14 +99,13 @@ public class DetailniTEAConvertor extends AbstractSaveConvertor<DetailniTEA> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final DetailniTEA item, final Writer logFile)
-            throws XMLStreamException {
+            final DetailniTEA item) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "AdresniMistoKod":
-                        item.setAdresniMistoKod(Utils.getAdresniMistoKod(
-                                reader, NAMESPACE, logFile));
+                        item.setAdresniMistoKod(
+                                Utils.getAdresniMistoKod(reader, NAMESPACE));
                         break;
                     case "DruhKonstrukceKod":
                         item.setDruhKonstrukceKod(
@@ -157,18 +155,17 @@ public class DetailniTEAConvertor extends AbstractSaveConvertor<DetailniTEA> {
                                 Integer.parseInt(reader.getElementText()));
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
 
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 
     @Override
-    protected void saveData(final DetailniTEA item, final Writer logFile)
-            throws SQLException {
+    protected void saveData(final DetailniTEA item) throws SQLException {
         insertItem(item);
     }
 

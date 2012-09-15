@@ -23,7 +23,6 @@ package com.fordfrog.ruian2pgsql.gml;
 
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
-import java.io.Writer;
 import java.sql.Connection;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -42,7 +41,6 @@ public class GMLReader {
      * @param con          database connection
      * @param endNamespace namespace of DefinicniBod element
      * @param endLocalName local name of DefinicniBod element
-     * @param logFile      log file writer
      *
      * @return GML geometry as string
      *
@@ -51,8 +49,7 @@ public class GMLReader {
      */
     public static String readGML(final XMLStreamReader reader,
             final Connection con, final String endNamespace,
-            final String endLocalName, final Writer logFile)
-            throws XMLStreamException {
+            final String endLocalName) throws XMLStreamException {
         String definicniBod = null;
 
         while (reader.hasNext()) {
@@ -60,8 +57,7 @@ public class GMLReader {
 
             switch (event) {
                 case XMLStreamReader.START_ELEMENT:
-                    definicniBod =
-                            readGMLElement(reader, con, logFile);
+                    definicniBod = readGMLElement(reader, con);
                     break;
                 case XMLStreamReader.END_ELEMENT:
                     if (XMLUtils.isEndElement(
@@ -77,9 +73,8 @@ public class GMLReader {
     /**
      * Processes sub-elements of an element containing GML.
      *
-     * @param reader  XML stream reader
-     * @param con     database connection
-     * @param logFile log file writer
+     * @param reader XML stream reader
+     * @param con    database connection
      *
      * @return GML geometry as string
      *
@@ -87,16 +82,15 @@ public class GMLReader {
      *                            stream.
      */
     private static String readGMLElement(final XMLStreamReader reader,
-            final Connection con, final Writer logFile)
-            throws XMLStreamException {
+            final Connection con) throws XMLStreamException {
         String result = null;
 
         switch (reader.getNamespaceURI()) {
             case Namespaces.GML:
-                result = GMLUtils.createGMLString(reader, con, logFile);
+                result = GMLUtils.createGMLString(reader, con);
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
 
         return result;

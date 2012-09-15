@@ -26,7 +26,6 @@ import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
 import com.fordfrog.ruian2pgsql.utils.Utils;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -122,8 +121,8 @@ public class ZsjConvertor extends AbstractSaveConvertor<Zsj> {
     }
 
     @Override
-    protected void processElement(final XMLStreamReader reader,
-            final Zsj item, final Writer logFile) throws XMLStreamException {
+    protected void processElement(final XMLStreamReader reader, final Zsj item)
+            throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
@@ -132,8 +131,8 @@ public class ZsjConvertor extends AbstractSaveConvertor<Zsj> {
                                 Integer.parseInt(reader.getElementText()));
                         break;
                     case "Geometrie":
-                        Utils.processGeometrie(reader, getConnection(), item,
-                                NAMESPACE, logFile);
+                        Utils.processGeometrie(
+                                reader, getConnection(), item, NAMESPACE);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(
@@ -145,14 +144,14 @@ public class ZsjConvertor extends AbstractSaveConvertor<Zsj> {
                         break;
                     case "KatastralniUzemi":
                         item.setKatuzKod(Utils.getKatastralniUzemiKod(
-                                reader, NAMESPACE, logFile));
+                                reader, NAMESPACE));
                         break;
                     case "Kod":
                         item.setKod(Integer.parseInt(reader.getElementText()));
                         break;
                     case "MluvnickeCharakteristiky":
                         Utils.processMluvnickeCharakteristiky(
-                                reader, item, NAMESPACE, logFile);
+                                reader, item, NAMESPACE);
                         break;
                     case "Nazev":
                         item.setNazev(reader.getElementText());
@@ -169,12 +168,12 @@ public class ZsjConvertor extends AbstractSaveConvertor<Zsj> {
                         item.setVymera(Long.parseLong(reader.getElementText()));
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
 
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 }

@@ -23,15 +23,14 @@ package com.fordfrog.ruian2pgsql.convertors;
 
 import com.fordfrog.ruian2pgsql.Config;
 import com.fordfrog.ruian2pgsql.gml.GMLUtils;
+import com.fordfrog.ruian2pgsql.utils.Log;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
-import com.fordfrog.ruian2pgsql.utils.Utils;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -66,14 +65,12 @@ public class MainConvertor {
      * Converts all files with .xml.gz and .xml extensions from specified
      * directory into database.
      *
-     * @param logFile log file writer
-     *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      * @throws SQLException       Thrown if problem occurred while communicating
      *                            with database.
      */
-    public static void convert(final Writer logFile)
+    public static void convert()
             throws XMLStreamException, SQLException {
         final long startTimestamp = System.currentTimeMillis();
 
@@ -82,34 +79,34 @@ public class MainConvertor {
             con.setAutoCommit(false);
 
             if (Config.isCreateTables()) {
-                Utils.printToLog(logFile, "Initializing database schema...");
+                Log.write("Initializing database schema...");
                 runSQLFromResource(con, "/sql/schema.sql");
             }
 
-            Utils.printToLog(logFile, "Recreating RÚIAN statistics view...");
+            Log.write("Recreating RÚIAN statistics view...");
             runSQLFromResource(con, "/sql/ruian_stats.sql");
 
             if (Config.isResetTransactionIds()) {
-                Utils.printToLog(logFile, "Resetting transaction ids...");
+                Log.write("Resetting transaction ids...");
                 runSQLFromResource(con, "/sql/reset_transaction_ids.sql");
             }
 
             final boolean multipointBug = GMLUtils.checkMultipointBug(con);
 
             if (multipointBug) {
-                Utils.printToLog(logFile, "Installed version of Postgis is "
-                        + "affected by multipoint bug "
+                Log.write("Installed version of Postgis is affected by "
+                        + "multipoint bug "
                         + "http://trac.osgeo.org/postgis/ticket/1928, enabling "
                         + "workaround...");
                 GMLUtils.setMultipointBugWorkaround(true);
             }
 
             for (final Path file : getInputFiles(Config.getInputDirPath())) {
-                processFile(con, file, logFile);
+                processFile(con, file);
                 con.commit();
             }
 
-            Utils.printToLog(logFile, "Total duration: "
+            Log.write("Total duration: "
                     + (System.currentTimeMillis() - startTimestamp) + " ms");
         }
     }
@@ -197,9 +194,8 @@ public class MainConvertor {
     /**
      * Processes single input file.
      *
-     * @param con     database connection
-     * @param file    file path
-     * @param logFile log file writer
+     * @param con  database connection
+     * @param file file path
      *
      * @throws UnsupportedEncodingException Thrown if UTF-8 encoding is not
      *                                      supported.
@@ -208,33 +204,31 @@ public class MainConvertor {
      * @throws SQLException                 Thrown if problem occurred while
      *                                      communicating with database.
      */
-    private static void processFile(final Connection con, final Path file,
-            final Writer logFile) throws XMLStreamException, SQLException {
+    private static void processFile(final Connection con, final Path file)
+            throws XMLStreamException, SQLException {
         final String fileName = file.toString();
 
         if (fileName.endsWith(".xml.gz") || fileName.endsWith(".xml")) {
             final long startTimestamp = System.currentTimeMillis();
 
-            Utils.printToLog(logFile, "Processing file " + file);
-            Utils.flushLog(logFile);
+            Log.write("Processing file " + file);
+            Log.flush();
 
             try (final InputStream inputStream = Files.newInputStream(file)) {
                 if (fileName.endsWith(".gz")) {
-                    readInputStream(
-                            con, new GZIPInputStream(inputStream), logFile);
+                    readInputStream(con, new GZIPInputStream(inputStream));
                 } else {
-                    readInputStream(con, inputStream, logFile);
+                    readInputStream(con, inputStream);
                 }
             } catch (final IOException ex) {
                 throw new RuntimeException("Failed to read input file", ex);
             }
 
-            Utils.printToLog(logFile, "File processed in "
+            Log.write("File processed in "
                     + (System.currentTimeMillis() - startTimestamp) + " ms");
-            Utils.flushLog(logFile);
+            Log.flush();
         } else {
-            Utils.printToLog(logFile,
-                    "Unsupported file extension, ignoring file " + file);
+            Log.write("Unsupported file extension, ignoring file " + file);
         }
     }
 
@@ -243,7 +237,6 @@ public class MainConvertor {
      *
      * @param con         database connection
      * @param inputStream input stream containing XML data
-     * @param logFile     log file writer
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
@@ -251,8 +244,8 @@ public class MainConvertor {
      *                            with database.
      */
     private static void readInputStream(final Connection con,
-            final InputStream inputStream, final Writer logFile)
-            throws XMLStreamException, SQLException {
+            final InputStream inputStream) throws XMLStreamException,
+            SQLException {
         final XMLInputFactory xMLInputFactory = XMLInputFactory.newInstance();
 
         final XMLStreamReader reader;
@@ -268,7 +261,7 @@ public class MainConvertor {
             final int event = reader.next();
 
             if (event == XMLStreamReader.START_ELEMENT) {
-                processElement(reader, con, logFile);
+                processElement(reader, con);
             }
         }
     }
@@ -276,9 +269,8 @@ public class MainConvertor {
     /**
      * Processes elements and its sub-elements.
      *
-     * @param reader  XML stream reader
-     * @param con     database connection
-     * @param logFile log file writer
+     * @param reader XML stream reader
+     * @param con    database connection
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
@@ -286,21 +278,19 @@ public class MainConvertor {
      *                            with database.
      */
     private static void processElement(final XMLStreamReader reader,
-            final Connection con, final Writer logFile)
-            throws XMLStreamException, SQLException {
+            final Connection con) throws XMLStreamException, SQLException {
         switch (reader.getNamespaceURI()) {
             case Namespaces.VYMENNY_FORMAT_TYPY:
                 switch (reader.getLocalName()) {
                     case "VymennyFormat":
-                        new ExchangeFormatConvertor(con).
-                                convert(reader, logFile);
+                        new ExchangeFormatConvertor(con).convert(reader);
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 }

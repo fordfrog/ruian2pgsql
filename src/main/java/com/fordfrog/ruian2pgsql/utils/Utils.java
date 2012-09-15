@@ -28,8 +28,6 @@ import com.fordfrog.ruian2pgsql.containers.ItemWithHranice;
 import com.fordfrog.ruian2pgsql.containers.ItemWithMluvCharPad;
 import com.fordfrog.ruian2pgsql.gml.GMLReader;
 import com.fordfrog.ruian2pgsql.gml.GMLUtils;
-import java.io.IOException;
-import java.io.Writer;
 import java.sql.Connection;
 import java.util.Calendar;
 import java.util.Date;
@@ -87,55 +85,26 @@ public class Utils {
     }
 
     /**
-     * Prints text to log writer.
-     *
-     * @param logFile log file writer
-     * @param text    text
-     */
-    public static void printToLog(final Writer logFile, final String text) {
-        try {
-            logFile.write(text);
-            logFile.write('\n');
-        } catch (final IOException ex) {
-            throw new RuntimeException("Failed to write to log file", ex);
-        }
-    }
-
-    /**
-     * Flushes log buffer.
-     *
-     * @param logFile log file writer
-     */
-    public static void flushLog(final Writer logFile) {
-        try {
-            logFile.flush();
-        } catch (final IOException ex) {
-            throw new RuntimeException("Failed to flush log", ex);
-        }
-    }
-
-    /**
      * Processes DefinicniBod element.
      *
      * @param reader       XML stream reader
      * @param con          database connection
      * @param item         item
      * @param endNamespace namespace of DefinicniBod element
-     * @param logFile      log file writer
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
     private static void processDefinicniBod(final XMLStreamReader reader,
-            final Connection con, final Object item, final String endNamespace,
-            final Writer logFile) throws XMLStreamException {
+            final Connection con, final Object item, final String endNamespace)
+            throws XMLStreamException {
         while (reader.hasNext()) {
             final int event = reader.next();
 
             switch (event) {
                 case XMLStreamReader.START_ELEMENT:
                     processDefinicniBodElement(
-                            reader, con, item, endNamespace, logFile);
+                            reader, con, item, endNamespace);
                     break;
                 case XMLStreamReader.END_ELEMENT:
                     if (XMLUtils.isEndElement(
@@ -153,14 +122,13 @@ public class Utils {
      * @param con       database connection
      * @param item      item
      * @param namespace namespace
-     * @param logFile   log file writer
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
     private static void processDefinicniBodElement(final XMLStreamReader reader,
-            final Connection con, final Object item, final String namespace,
-            final Writer logFile) throws XMLStreamException {
+            final Connection con, final Object item, final String namespace)
+            throws XMLStreamException {
         final String curNamespace = reader.getNamespaceURI();
 
         if (namespace.equals(curNamespace)) {
@@ -170,31 +138,31 @@ public class Utils {
                     && item instanceof ItemWithDefinicniBod) {
                 final ItemWithDefinicniBod itemDefinicniBod =
                         (ItemWithDefinicniBod) item;
-                itemDefinicniBod.setDefinicniBod(GMLReader.readGML(reader, con,
-                        namespace, "AdresniBod", logFile));
+                itemDefinicniBod.setDefinicniBod(GMLReader.readGML(
+                        reader, con, namespace, "AdresniBod"));
             } else if ("Hasici".equals(localName)
                     && item instanceof ItemWithEmergency) {
                 final ItemWithEmergency itemEmergency =
                         (ItemWithEmergency) item;
-                itemEmergency.setHasici(GMLReader.readGML(
-                        reader, con, namespace, "Hasici", logFile));
+                itemEmergency.setHasici(
+                        GMLReader.readGML(reader, con, namespace, "Hasici"));
             } else if ("Zachranka".equals(localName)
                     && item instanceof ItemWithEmergency) {
                 final ItemWithEmergency itemEmergency =
                         (ItemWithEmergency) item;
-                itemEmergency.setZachranka(GMLReader.readGML(
-                        reader, con, namespace, "Zachranka", logFile));
+                itemEmergency.setZachranka(
+                        GMLReader.readGML(reader, con, namespace, "Zachranka"));
             } else {
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
             }
         } else if (Namespaces.GML.equals(curNamespace)
                 && item instanceof ItemWithDefinicniBod) {
             final ItemWithDefinicniBod itemDefinicniBod =
                     (ItemWithDefinicniBod) item;
             itemDefinicniBod.setDefinicniBod(
-                    GMLUtils.createGMLString(reader, con, logFile));
+                    GMLUtils.createGMLString(reader, con));
         } else {
-            XMLUtils.processUnsupported(reader, logFile);
+            XMLUtils.processUnsupported(reader);
         }
     }
 
@@ -203,7 +171,6 @@ public class Utils {
      *
      * @param reader       XML stream reader
      * @param endNamespace end namespace of current element
-     * @param logFile      log file writer
      *
      * @return Kod value
      *
@@ -211,10 +178,9 @@ public class Utils {
      *                            stream.
      */
     public static Integer getAdresniMistoKod(final XMLStreamReader reader,
-            final String endNamespace, final Writer logFile)
-            throws XMLStreamException {
+            final String endNamespace) throws XMLStreamException {
         return getElementValue(reader, Namespaces.BASE_TYPY, "Kod",
-                endNamespace, "AdresniMistoKod", logFile).intValue();
+                endNamespace, "AdresniMistoKod").intValue();
     }
 
     /**
@@ -222,7 +188,6 @@ public class Utils {
      *
      * @param reader       XML stream reader
      * @param endNamespace end namespace of current element
-     * @param logFile      log file writer
      *
      * @return Kod value
      *
@@ -230,10 +195,9 @@ public class Utils {
      *                            stream.
      */
     public static Integer getCastObceKod(final XMLStreamReader reader,
-            final String endNamespace, final Writer logFile)
-            throws XMLStreamException {
+            final String endNamespace) throws XMLStreamException {
         return getElementValue(reader, Namespaces.CAST_OBCE_INT_TYPY, "Kod",
-                endNamespace, "CastObce", logFile).intValue();
+                endNamespace, "CastObce").intValue();
     }
 
     /**
@@ -241,18 +205,16 @@ public class Utils {
      *
      * @param reader       XML stream reader
      * @param endNamespace end namespace of current element
-     * @param logFile      log file writer
      *
      * @return Kod value
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
-    public static Long getIdentifikacniParcelaId(
-            final XMLStreamReader reader, final String endNamespace,
-            final Writer logFile) throws XMLStreamException {
+    public static Long getIdentifikacniParcelaId(final XMLStreamReader reader,
+            final String endNamespace) throws XMLStreamException {
         return getElementValue(reader, Namespaces.PARCELA_INT_TYPY, "Id",
-                endNamespace, "IdentifikacniParcela", logFile);
+                endNamespace, "IdentifikacniParcela");
     }
 
     /**
@@ -260,7 +222,6 @@ public class Utils {
      *
      * @param reader       XML stream reader
      * @param endNamespace end namespace of current element
-     * @param logFile      log file writer
      *
      * @return Kod value
      *
@@ -268,10 +229,9 @@ public class Utils {
      *                            stream.
      */
     public static Integer getKatastralniUzemiKod(final XMLStreamReader reader,
-            final String endNamespace, final Writer logFile)
-            throws XMLStreamException {
+            final String endNamespace) throws XMLStreamException {
         return getElementValue(reader, Namespaces.KAT_UZ_INT_TYPY, "Kod",
-                endNamespace, "KatastralniUzemi", logFile).intValue();
+                endNamespace, "KatastralniUzemi").intValue();
     }
 
     /**
@@ -279,7 +239,6 @@ public class Utils {
      *
      * @param reader       XML stream reader
      * @param endNamespace end namespace of current element
-     * @param logFile      log file writer
      *
      * @return Kod value
      *
@@ -287,10 +246,9 @@ public class Utils {
      *                            stream.
      */
     public static Integer getKrajKod(final XMLStreamReader reader,
-            final String endNamespace, final Writer logFile)
-            throws XMLStreamException {
+            final String endNamespace) throws XMLStreamException {
         return getElementValue(reader, Namespaces.KRAJ_INT_TYPY, "Kod",
-                endNamespace, "Kraj", logFile).intValue();
+                endNamespace, "Kraj").intValue();
     }
 
     /**
@@ -298,7 +256,6 @@ public class Utils {
      *
      * @param reader       XML stream reader
      * @param endNamespace end namespace of current element
-     * @param logFile      log file writer
      *
      * @return Kod value
      *
@@ -306,10 +263,9 @@ public class Utils {
      *                            stream.
      */
     public static Integer getMomcKod(final XMLStreamReader reader,
-            final String endNamespace, final Writer logFile)
-            throws XMLStreamException {
+            final String endNamespace) throws XMLStreamException {
         return getElementValue(reader, Namespaces.MOMC_INT_TYPY, "Kod",
-                endNamespace, "Momc", logFile).intValue();
+                endNamespace, "Momc").intValue();
     }
 
     /**
@@ -317,7 +273,6 @@ public class Utils {
      *
      * @param reader       XML stream reader
      * @param endNamespace end namespace of current element
-     * @param logFile      log file writer
      *
      * @return Kod value
      *
@@ -325,10 +280,9 @@ public class Utils {
      *                            stream.
      */
     public static Integer getMopKod(final XMLStreamReader reader,
-            final String endNamespace, final Writer logFile)
-            throws XMLStreamException {
+            final String endNamespace) throws XMLStreamException {
         return getElementValue(reader, Namespaces.MOP_INT_TYPY, "Kod",
-                endNamespace, "Mop", logFile).intValue();
+                endNamespace, "Mop").intValue();
     }
 
     /**
@@ -336,7 +290,6 @@ public class Utils {
      *
      * @param reader       XML stream reader
      * @param endNamespace end namespace of current element
-     * @param logFile      log file writer
      *
      * @return Kod value
      *
@@ -344,10 +297,9 @@ public class Utils {
      *                            stream.
      */
     public static Integer getObecKod(final XMLStreamReader reader,
-            final String endNamespace, final Writer logFile)
-            throws XMLStreamException {
+            final String endNamespace) throws XMLStreamException {
         return getElementValue(reader, Namespaces.OBEC_INT_TYPY, "Kod",
-                endNamespace, "Obec", logFile).intValue();
+                endNamespace, "Obec").intValue();
     }
 
     /**
@@ -355,7 +307,6 @@ public class Utils {
      *
      * @param reader       XML stream reader
      * @param endNamespace end namespace of current element
-     * @param logFile      log file writer
      *
      * @return Kod value
      *
@@ -363,10 +314,9 @@ public class Utils {
      *                            stream.
      */
     public static Integer getOkresKod(final XMLStreamReader reader,
-            final String endNamespace, final Writer logFile)
-            throws XMLStreamException {
+            final String endNamespace) throws XMLStreamException {
         return getElementValue(reader, Namespaces.OKRES_INT_TYPY, "Kod",
-                endNamespace, "Okres", logFile).intValue();
+                endNamespace, "Okres").intValue();
     }
 
     /**
@@ -374,7 +324,6 @@ public class Utils {
      *
      * @param reader       XML stream reader
      * @param endNamespace end namespace of current element
-     * @param logFile      log file writer
      *
      * @return Kod value
      *
@@ -382,10 +331,9 @@ public class Utils {
      *                            stream.
      */
     public static Integer getOrpKod(final XMLStreamReader reader,
-            final String endNamespace, final Writer logFile)
-            throws XMLStreamException {
+            final String endNamespace) throws XMLStreamException {
         return getElementValue(reader, Namespaces.ORP_INT_TYPY, "Kod",
-                endNamespace, "Orp", logFile).intValue();
+                endNamespace, "Orp").intValue();
     }
 
     /**
@@ -393,7 +341,6 @@ public class Utils {
      *
      * @param reader       XML stream reader
      * @param endNamespace end namespace of current element
-     * @param logFile      log file writer
      *
      * @return Kod value
      *
@@ -401,10 +348,9 @@ public class Utils {
      *                            stream.
      */
     public static Integer getPouKod(final XMLStreamReader reader,
-            final String endNamespace, final Writer logFile)
-            throws XMLStreamException {
+            final String endNamespace) throws XMLStreamException {
         return getElementValue(reader, Namespaces.POU_INT_TYPY, "Kod",
-                endNamespace, "Pou", logFile).intValue();
+                endNamespace, "Pou").intValue();
     }
 
     /**
@@ -412,7 +358,6 @@ public class Utils {
      *
      * @param reader       XML stream reader
      * @param endNamespace end namespace of current element
-     * @param logFile      log file writer
      *
      * @return Kod value
      *
@@ -420,10 +365,9 @@ public class Utils {
      *                            stream.
      */
     public static Integer getRegionSoudrznostiKod(final XMLStreamReader reader,
-            final String endNamespace, final Writer logFile)
-            throws XMLStreamException {
+            final String endNamespace) throws XMLStreamException {
         return getElementValue(reader, Namespaces.REG_SOU_INTI_TYPY, "Kod",
-                endNamespace, "RegionSoudrznosti", logFile).intValue();
+                endNamespace, "RegionSoudrznosti").intValue();
     }
 
     /**
@@ -431,7 +375,6 @@ public class Utils {
      *
      * @param reader       XML stream reader
      * @param endNamespace end namespace of current element
-     * @param logFile      log file writer
      *
      * @return Kod value
      *
@@ -439,10 +382,9 @@ public class Utils {
      *                            stream.
      */
     public static Integer getSpravniObvodKod(final XMLStreamReader reader,
-            final String endNamespace, final Writer logFile)
-            throws XMLStreamException {
+            final String endNamespace) throws XMLStreamException {
         return getElementValue(reader, Namespaces.SPRAV_OBV_INT_TYPY, "Kod",
-                endNamespace, "SpravniObvod", logFile).intValue();
+                endNamespace, "SpravniObvod").intValue();
     }
 
     /**
@@ -450,7 +392,6 @@ public class Utils {
      *
      * @param reader       XML stream reader
      * @param endNamespace end namespace of current element
-     * @param logFile      log file writer
      *
      * @return Kod value
      *
@@ -458,10 +399,9 @@ public class Utils {
      *                            stream.
      */
     public static Integer getStatKod(final XMLStreamReader reader,
-            final String endNamespace, final Writer logFile)
-            throws XMLStreamException {
+            final String endNamespace) throws XMLStreamException {
         return getElementValue(reader, Namespaces.STAT_INT_TYPY, "Kod",
-                endNamespace, "Stat", logFile).intValue();
+                endNamespace, "Stat").intValue();
     }
 
     /**
@@ -469,7 +409,6 @@ public class Utils {
      *
      * @param reader       XML stream reader
      * @param endNamespace end namespace of current element
-     * @param logFile      log file writer
      *
      * @return Kod value
      *
@@ -477,10 +416,9 @@ public class Utils {
      *                            stream.
      */
     public static Integer getStavebniObjektKod(final XMLStreamReader reader,
-            final String endNamespace, final Writer logFile)
-            throws XMLStreamException {
+            final String endNamespace) throws XMLStreamException {
         return getElementValue(reader, Namespaces.STAV_OBJ_INT_TYPY, "Kod",
-                endNamespace, "StavebniObjekt", logFile).intValue();
+                endNamespace, "StavebniObjekt").intValue();
     }
 
     /**
@@ -488,7 +426,6 @@ public class Utils {
      *
      * @param reader       XML stream reader
      * @param endNamespace end namespace of current element
-     * @param logFile      log file writer
      *
      * @return Kod value
      *
@@ -496,10 +433,9 @@ public class Utils {
      *                            stream.
      */
     public static Integer getUliceKod(final XMLStreamReader reader,
-            final String endNamespace, final Writer logFile)
-            throws XMLStreamException {
+            final String endNamespace) throws XMLStreamException {
         return getElementValue(reader, Namespaces.ULICE_INT_TYPY, "Kod",
-                endNamespace, "Ulice", logFile).intValue();
+                endNamespace, "Ulice").intValue();
     }
 
     /**
@@ -507,7 +443,6 @@ public class Utils {
      *
      * @param reader       XML stream reader
      * @param endNamespace end namespace of current element
-     * @param logFile      log file writer
      *
      * @return Kod value
      *
@@ -515,10 +450,9 @@ public class Utils {
      *                            stream.
      */
     public static Integer getVuscKod(final XMLStreamReader reader,
-            final String endNamespace, final Writer logFile)
-            throws XMLStreamException {
+            final String endNamespace) throws XMLStreamException {
         return getElementValue(reader, Namespaces.VUSC_INT_TYPY, "Kod",
-                endNamespace, "Vusc", logFile).intValue();
+                endNamespace, "Vusc").intValue();
     }
 
     /**
@@ -529,7 +463,6 @@ public class Utils {
      * @param valueLocalName local name of the value element
      * @param endNamespace   end namespace of current element
      * @param endElement     local name of current element
-     * @param logFile        log file writer
      *
      * @return Kod value
      *
@@ -538,8 +471,8 @@ public class Utils {
      */
     private static Long getElementValue(final XMLStreamReader reader,
             final String valueNamespace, final String valueLocalName,
-            final String endNamespace, final String endElement,
-            final Writer logFile) throws XMLStreamException {
+            final String endNamespace, final String endElement)
+            throws XMLStreamException {
         Long kod = null;
 
         while (reader.hasNext()) {
@@ -548,7 +481,7 @@ public class Utils {
             switch (event) {
                 case XMLStreamReader.START_ELEMENT:
                     kod = getElementValueFromElement(
-                            reader, valueNamespace, valueLocalName, logFile);
+                            reader, valueNamespace, valueLocalName);
                     break;
                 case XMLStreamReader.END_ELEMENT:
                     if (XMLUtils.isEndElement(
@@ -567,22 +500,20 @@ public class Utils {
      * @param reader    XML stream reader
      * @param namespace namespace of the value element
      * @param localName local name of the value element
-     * @param logFile   log file writer
      *
      * @return Kod value
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
-    private static Long getElementValueFromElement(
-            final XMLStreamReader reader, final String namespace,
-            final String localName, final Writer logFile)
+    private static Long getElementValueFromElement(final XMLStreamReader reader,
+            final String namespace, final String localName)
             throws XMLStreamException {
         if (namespace.equals(reader.getNamespaceURI())
                 && localName.equals(reader.getLocalName())) {
             return Long.valueOf(reader.getElementText());
         } else {
-            XMLUtils.processUnsupported(reader, logFile);
+            XMLUtils.processUnsupported(reader);
         }
 
         return null;
@@ -597,21 +528,19 @@ public class Utils {
      * @param con       database connection
      * @param item      item
      * @param namespace namespace of Geometrie element
-     * @param logFile   log file writer
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
     public static void processGeometrie(final XMLStreamReader reader,
-            final Connection con, final Object item, final String namespace,
-            final Writer logFile) throws XMLStreamException {
+            final Connection con, final Object item, final String namespace)
+            throws XMLStreamException {
         while (reader.hasNext()) {
             final int event = reader.next();
 
             switch (event) {
                 case XMLStreamReader.START_ELEMENT:
-                    processGeometrieElement(
-                            reader, con, item, namespace, logFile);
+                    processGeometrieElement(reader, con, item, namespace);
                     break;
                 case XMLStreamReader.END_ELEMENT:
                     if (XMLUtils.isEndElement(
@@ -629,40 +558,39 @@ public class Utils {
      * @param con       database connection
      * @param item      item
      * @param namespace namespace of Geometrie elements
-     * @param logFile   log file writer
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
     private static void processGeometrieElement(final XMLStreamReader reader,
-            final Connection con, final Object item, final String namespace,
-            final Writer logFile) throws XMLStreamException {
+            final Connection con, final Object item, final String namespace)
+            throws XMLStreamException {
         if (namespace.equals(reader.getNamespaceURI())) {
             final String localName = reader.getLocalName();
 
             if ("DefinicniBod".equals(localName)) {
-                processDefinicniBod(reader, con, item, namespace, logFile);
+                processDefinicniBod(reader, con, item, namespace);
             } else if ("DefinicniCara".equals(localName)
                     && item instanceof ItemWithDefinicniCara) {
                 final ItemWithDefinicniCara itemDefinicniCara =
                         (ItemWithDefinicniCara) item;
                 itemDefinicniCara.setDefinicniCara(GMLReader.readGML(
-                        reader, con, namespace, localName, logFile));
+                        reader, con, namespace, localName));
             } else if ("OriginalniHranice".equals(localName)
                     && item instanceof ItemWithHranice) {
                 final ItemWithHranice itemHranice = (ItemWithHranice) item;
                 itemHranice.setHranice(GMLReader.readGML(
-                        reader, con, namespace, localName, logFile));
+                        reader, con, namespace, localName));
             } else if ("GeneralizovaneHranice3".equals(localName)
                     && item instanceof ItemWithHranice) {
                 final ItemWithHranice itemHranice = (ItemWithHranice) item;
                 itemHranice.setHranice(GMLReader.readGML(
-                        reader, con, namespace, localName, logFile));
+                        reader, con, namespace, localName));
             } else {
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
             }
         } else {
-            XMLUtils.processUnsupported(reader, logFile);
+            XMLUtils.processUnsupported(reader);
         }
     }
 
@@ -672,22 +600,19 @@ public class Utils {
      * @param reader       XML stream reader
      * @param item         item
      * @param endNamespace namespace of MluvnickeCharakteristiky
-     * @param logFile      log file writer
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
     public static void processMluvnickeCharakteristiky(
             final XMLStreamReader reader, final ItemWithMluvCharPad item,
-            final String endNamespace, final Writer logFile)
-            throws XMLStreamException {
+            final String endNamespace) throws XMLStreamException {
         while (reader.hasNext()) {
             final int event = reader.next();
 
             switch (event) {
                 case XMLStreamReader.START_ELEMENT:
-                    processMluvnickeCharakteristikyElement(
-                            reader, item, logFile);
+                    processMluvnickeCharakteristikyElement(reader, item);
                     break;
                 case XMLStreamReader.END_ELEMENT:
                     if (XMLUtils.isEndElement(
@@ -701,16 +626,15 @@ public class Utils {
     /**
      * Processes sub-elements of MluvnickeCharakteristiky element.
      *
-     * @param reader  XML stream reader
-     * @param item    item
-     * @param logFile log file writer
+     * @param reader XML stream reader
+     * @param item   item
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
     private static void processMluvnickeCharakteristikyElement(
-            final XMLStreamReader reader, final ItemWithMluvCharPad item,
-            final Writer logFile) throws XMLStreamException {
+            final XMLStreamReader reader, final ItemWithMluvCharPad item)
+            throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case Namespaces.COMMON_TYPY:
                 switch (reader.getLocalName()) {
@@ -733,12 +657,12 @@ public class Utils {
                         item.setMluvCharPad7(reader.getElementText());
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
 
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 }

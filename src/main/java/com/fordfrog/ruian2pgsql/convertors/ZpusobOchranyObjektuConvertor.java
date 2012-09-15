@@ -24,7 +24,6 @@ package com.fordfrog.ruian2pgsql.convertors;
 import com.fordfrog.ruian2pgsql.containers.ZpusobOchranyObjektu;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -88,8 +87,7 @@ public class ZpusobOchranyObjektuConvertor
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final ZpusobOchranyObjektu item, final Writer logFile)
-            throws XMLStreamException {
+            final ZpusobOchranyObjektu item) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
@@ -109,18 +107,18 @@ public class ZpusobOchranyObjektuConvertor
                                 Long.parseLong(reader.getElementText()));
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
 
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 
     @Override
-    protected void saveData(final ZpusobOchranyObjektu item,
-            final Writer logFile) throws SQLException {
+    protected void saveData(final ZpusobOchranyObjektu item)
+            throws SQLException {
         insertItem(item);
     }
 

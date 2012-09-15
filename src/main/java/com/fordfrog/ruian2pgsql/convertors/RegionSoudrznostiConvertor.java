@@ -26,7 +26,6 @@ import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
 import com.fordfrog.ruian2pgsql.utils.Utils;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -113,14 +112,13 @@ public class RegionSoudrznostiConvertor
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final RegionSoudrznosti item, final Writer logFile)
-            throws XMLStreamException {
+            final RegionSoudrznosti item) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "Geometrie":
-                        Utils.processGeometrie(reader, getConnection(), item,
-                                NAMESPACE, logFile);
+                        Utils.processGeometrie(
+                                reader, getConnection(), item, NAMESPACE);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(
@@ -149,16 +147,15 @@ public class RegionSoudrznostiConvertor
                                 Utils.parseTimestamp(reader.getElementText()));
                         break;
                     case "Stat":
-                        item.setStatKod(
-                                Utils.getStatKod(reader, NAMESPACE, logFile));
+                        item.setStatKod(Utils.getStatKod(reader, NAMESPACE));
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
 
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 }

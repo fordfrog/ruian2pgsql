@@ -26,7 +26,6 @@ import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
 import com.fordfrog.ruian2pgsql.utils.Utils;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -110,14 +109,13 @@ public class SpravniObvodConvertor extends AbstractSaveConvertor<SpravniObvod> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final SpravniObvod item, final Writer logFile)
-            throws XMLStreamException {
+            final SpravniObvod item) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "Geometrie":
-                        Utils.processGeometrie(reader, getConnection(), item,
-                                NAMESPACE, logFile);
+                        Utils.processGeometrie(
+                                reader, getConnection(), item, NAMESPACE);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(
@@ -139,8 +137,7 @@ public class SpravniObvodConvertor extends AbstractSaveConvertor<SpravniObvod> {
                                 Boolean.valueOf(reader.getElementText()));
                         break;
                     case "Obec":
-                        item.setObecKod(
-                                Utils.getObecKod(reader, NAMESPACE, logFile));
+                        item.setObecKod(Utils.getObecKod(reader, NAMESPACE));
                         break;
                     case "PlatiOd":
                         item.setPlatiOd(
@@ -151,12 +148,12 @@ public class SpravniObvodConvertor extends AbstractSaveConvertor<SpravniObvod> {
                                 Integer.parseInt(reader.getElementText()));
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
 
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 }

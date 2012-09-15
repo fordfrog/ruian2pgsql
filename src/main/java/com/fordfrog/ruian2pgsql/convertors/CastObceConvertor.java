@@ -26,7 +26,6 @@ import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
 import com.fordfrog.ruian2pgsql.utils.Utils;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -119,14 +118,13 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final CastObce item, final Writer logFile)
-            throws XMLStreamException {
+            final CastObce item) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "Geometrie":
-                        Utils.processGeometrie(reader, getConnection(), item,
-                                NAMESPACE, logFile);
+                        Utils.processGeometrie(
+                                reader, getConnection(), item, NAMESPACE);
                         break;
                     case "GlobalniIdNavrhuZmeny":
                         item.setNzIdGlobalni(
@@ -141,7 +139,7 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
                         break;
                     case "MluvnickeCharakteristiky":
                         Utils.processMluvnickeCharakteristiky(
-                                reader, item, NAMESPACE, logFile);
+                                reader, item, NAMESPACE);
                         break;
                     case "Nazev":
                         item.setNazev(reader.getElementText());
@@ -151,20 +149,19 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
                                 Boolean.valueOf(reader.getElementText()));
                         break;
                     case "Obec":
-                        item.setObecKod(
-                                Utils.getObecKod(reader, NAMESPACE, logFile));
+                        item.setObecKod(Utils.getObecKod(reader, NAMESPACE));
                         break;
                     case "PlatiOd":
                         item.setPlatiOd(
                                 Utils.parseTimestamp(reader.getElementText()));
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
 
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 }

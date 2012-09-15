@@ -22,6 +22,7 @@
 package com.fordfrog.ruian2pgsql;
 
 import com.fordfrog.ruian2pgsql.convertors.MainConvertor;
+import com.fordfrog.ruian2pgsql.utils.Log;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -104,7 +105,8 @@ public class App {
                         Config.getLogFilePath() == null ? System.out
                         : Files.newOutputStream(Config.getLogFilePath()),
                         "UTF-8")) {
-            MainConvertor.convert(logFile);
+            Log.setLogWriter(logFile);
+            MainConvertor.convert();
         } catch (final IOException ex) {
             throw new RuntimeException("Failed to create log writer", ex);
         }

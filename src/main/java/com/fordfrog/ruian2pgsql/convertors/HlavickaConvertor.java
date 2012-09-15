@@ -26,7 +26,6 @@ import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
 import com.fordfrog.ruian2pgsql.utils.Utils;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -99,8 +98,7 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Hlavicka item, final Writer logFile)
-            throws XMLStreamException {
+            final Hlavicka item) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
@@ -120,10 +118,10 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
                         break;
                     case "TransakceOd":
                     case "TrasakceOd":
-                        processTransakceOd(reader, item, logFile);
+                        processTransakceOd(reader, item);
                         break;
                     case "TransakceDo":
-                        processTransakceDo(reader, item, logFile);
+                        processTransakceDo(reader, item);
                         break;
                     case "TypDavky":
                         item.setTypDavky(reader.getElementText());
@@ -135,34 +133,32 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
                         item.setTypZaznamu(reader.getElementText());
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
 
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 
     /**
      * Processes TransakceOd element.
      *
-     * @param reader  XML stream reader
-     * @param item    item of the element
-     * @param logFile log file writer
+     * @param reader XML stream reader
+     * @param item   item of the element
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
     private void processTransakceOd(final XMLStreamReader reader,
-            final Hlavicka item, final Writer logFile)
-            throws XMLStreamException {
+            final Hlavicka item) throws XMLStreamException {
         while (reader.hasNext()) {
             final int event = reader.next();
 
             switch (event) {
                 case XMLStreamReader.START_ELEMENT:
-                    processTransakceOdElement(reader, item, logFile);
+                    processTransakceOdElement(reader, item);
                     break;
                 case XMLStreamReader.END_ELEMENT:
                     if (NAMESPACE.equals(reader.getNamespaceURI())
@@ -177,16 +173,14 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
     /**
      * Processes TransakceOd sub-elements.
      *
-     * @param reader  XML stream reader
-     * @param header  item of the element
-     * @param logFile log file writer
+     * @param reader XML stream reader
+     * @param header item of the element
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
     private void processTransakceOdElement(final XMLStreamReader reader,
-            final Hlavicka header, final Writer logFile)
-            throws XMLStreamException {
+            final Hlavicka header) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case Namespaces.COMMON_TYPY:
                 switch (reader.getLocalName()) {
@@ -199,33 +193,31 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
                                 Utils.parseTimestamp(reader.getElementText()));
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 
     /**
      * Processes TransakceDo element.
      *
-     * @param reader  XML stream reader
-     * @param item    item of the element
-     * @param logFile log file writer
+     * @param reader XML stream reader
+     * @param item   item of the element
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
     private void processTransakceDo(final XMLStreamReader reader,
-            final Hlavicka header, final Writer logFile)
-            throws XMLStreamException {
+            final Hlavicka header) throws XMLStreamException {
         while (reader.hasNext()) {
             final int event = reader.next();
 
             switch (event) {
                 case XMLStreamReader.START_ELEMENT:
-                    processTransakceDoElement(reader, header, logFile);
+                    processTransakceDoElement(reader, header);
                     break;
                 case XMLStreamReader.END_ELEMENT:
                     if (NAMESPACE.equals(reader.getNamespaceURI())
@@ -239,16 +231,14 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
     /**
      * Processes TransakceDo sub-elements.
      *
-     * @param reader  XML stream reader
-     * @param header  item of the element
-     * @param logFile log file writer
+     * @param reader XML stream reader
+     * @param header item of the element
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      */
     private void processTransakceDoElement(final XMLStreamReader reader,
-            final Hlavicka header, final Writer logFile)
-            throws XMLStreamException {
+            final Hlavicka header) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case Namespaces.COMMON_TYPY:
                 switch (reader.getLocalName()) {
@@ -261,11 +251,11 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
                                 Utils.parseTimestamp(reader.getElementText()));
                         break;
                     default:
-                        XMLUtils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader);
                 }
                 break;
             default:
-                XMLUtils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader);
         }
     }
 }
