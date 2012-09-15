@@ -26,12 +26,11 @@ import com.fordfrog.ruian2pgsql.containers.ItemWithDefinicniCara;
 import com.fordfrog.ruian2pgsql.containers.ItemWithEmergency;
 import com.fordfrog.ruian2pgsql.containers.ItemWithHranice;
 import com.fordfrog.ruian2pgsql.containers.ItemWithMluvCharPad;
+import com.fordfrog.ruian2pgsql.gml.GMLReader;
+import com.fordfrog.ruian2pgsql.gml.GMLUtils;
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -88,63 +87,6 @@ public class Utils {
     }
 
     /**
-     * Processes unsupported element and its subelements.
-     *
-     * @param reader  XML stream reader
-     * @param logFile log file writer
-     *
-     * @throws XMLStreamException Thrown if problem occurred while reading XML
-     *                            stream.
-     */
-    public static void processUnsupported(final XMLStreamReader reader,
-            final Writer logFile) throws XMLStreamException {
-        processUnsupported(reader, 0, logFile);
-    }
-
-    /**
-     * Processes unsupported element and its subelements.
-     *
-     * @param reader  XML stream reader
-     * @param indent  indentation count
-     * @param logFile log file writer
-     *
-     * @throws XMLStreamException Thrown if problem occurred while reading XML
-     *                            stream.
-     */
-    private static void processUnsupported(final XMLStreamReader reader,
-            final int indent, final Writer logFile) throws XMLStreamException {
-        final String namespace = reader.getNamespaceURI();
-        final String localName = reader.getLocalName();
-        final StringBuilder sbString = new StringBuilder(namespace.length()
-                + localName.length() + 50);
-
-        for (int i = 0; i < indent; i++) {
-            sbString.append("  ");
-        }
-
-        sbString.append("Warning: Ignoring unsupported element ");
-        sbString.append(namespace);
-        sbString.append(' ');
-        sbString.append(localName);
-
-        printToLog(logFile, sbString.toString());
-
-        while (reader.hasNext()) {
-            final int event = reader.next();
-
-            switch (event) {
-                case XMLStreamReader.START_ELEMENT:
-                    processUnsupported(reader, indent + 1, logFile);
-                    break;
-                case XMLStreamReader.END_ELEMENT:
-                    if (isEndElement(namespace, localName, reader)) {
-                        return;
-                    }
-            }
-        }
-    }
-
-    /**
      * Prints text to log writer.
      *
      * @param logFile log file writer
@@ -173,22 +115,6 @@ public class Utils {
     }
 
     /**
-     * Checks whether XML stream reader namespace and local name match the one
-     * specified in the call.
-     *
-     * @param namespace namespace
-     * @param localName local name
-     * @param reader    XML stream reader
-     *
-     * @return trhe if namespace and local name match, otherwise false
-     */
-    public static boolean isEndElement(final String namespace,
-            final String localName, final XMLStreamReader reader) {
-        return namespace.equals(reader.getNamespaceURI())
-                && localName.equals(reader.getLocalName());
-    }
-
-    /**
      * Processes DefinicniBod element.
      *
      * @param reader       XML stream reader
@@ -212,77 +138,12 @@ public class Utils {
                             reader, con, item, endNamespace, logFile);
                     break;
                 case XMLStreamReader.END_ELEMENT:
-                    if (isEndElement(endNamespace, "DefinicniBod", reader)) {
+                    if (XMLUtils.isEndElement(
+                            endNamespace, "DefinicniBod", reader)) {
                         return;
                     }
             }
         }
-    }
-
-    /**
-     * Processes GML element(s).
-     *
-     * @param reader       XML stream reader
-     * @param con          database connection
-     * @param endNamespace namespace of DefinicniBod element
-     * @param endLocalName local name of DefinicniBod element
-     * @param logFile      log file writer
-     *
-     * @return GML geometry as string
-     *
-     * @throws XMLStreamException Thrown if problem occurred while reading XML
-     *                            stream.
-     */
-    private static String processGML(final XMLStreamReader reader,
-            final Connection con, final String endNamespace,
-            final String endLocalName, final Writer logFile)
-            throws XMLStreamException {
-        String definicniBod = null;
-
-        while (reader.hasNext()) {
-            final int event = reader.next();
-
-            switch (event) {
-                case XMLStreamReader.START_ELEMENT:
-                    definicniBod =
-                            processGMLElement(reader, con, logFile);
-                    break;
-                case XMLStreamReader.END_ELEMENT:
-                    if (isEndElement(endNamespace, endLocalName, reader)) {
-                        return definicniBod;
-                    }
-            }
-        }
-
-        return definicniBod;
-    }
-
-    /**
-     * Processes sub-elements of an element containing GML.
-     *
-     * @param reader  XML stream reader
-     * @param con     database connection
-     * @param logFile log file writer
-     *
-     * @return GML geometry as string
-     *
-     * @throws XMLStreamException Thrown if problem occurred while reading XML
-     *                            stream.
-     */
-    private static String processGMLElement(final XMLStreamReader reader,
-            final Connection con, final Writer logFile)
-            throws XMLStreamException {
-        String result = null;
-
-        switch (reader.getNamespaceURI()) {
-            case Namespaces.GML:
-                result = XMLStringUtil.createGMLString(reader, con, logFile);
-                break;
-            default:
-                processUnsupported(reader, logFile);
-        }
-
-        return result;
     }
 
     /**
@@ -309,31 +170,31 @@ public class Utils {
                     && item instanceof ItemWithDefinicniBod) {
                 final ItemWithDefinicniBod itemDefinicniBod =
                         (ItemWithDefinicniBod) item;
-                itemDefinicniBod.setDefinicniBod(processGML(reader, con,
+                itemDefinicniBod.setDefinicniBod(GMLReader.readGML(reader, con,
                         namespace, "AdresniBod", logFile));
             } else if ("Hasici".equals(localName)
                     && item instanceof ItemWithEmergency) {
                 final ItemWithEmergency itemEmergency =
                         (ItemWithEmergency) item;
-                itemEmergency.setHasici(
-                        processGML(reader, con, namespace, "Hasici", logFile));
+                itemEmergency.setHasici(GMLReader.readGML(
+                        reader, con, namespace, "Hasici", logFile));
             } else if ("Zachranka".equals(localName)
                     && item instanceof ItemWithEmergency) {
                 final ItemWithEmergency itemEmergency =
                         (ItemWithEmergency) item;
-                itemEmergency.setZachranka(processGML(
+                itemEmergency.setZachranka(GMLReader.readGML(
                         reader, con, namespace, "Zachranka", logFile));
             } else {
-                processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader, logFile);
             }
         } else if (Namespaces.GML.equals(curNamespace)
                 && item instanceof ItemWithDefinicniBod) {
             final ItemWithDefinicniBod itemDefinicniBod =
                     (ItemWithDefinicniBod) item;
             itemDefinicniBod.setDefinicniBod(
-                    XMLStringUtil.createGMLString(reader, con, logFile));
+                    GMLUtils.createGMLString(reader, con, logFile));
         } else {
-            processUnsupported(reader, logFile);
+            XMLUtils.processUnsupported(reader, logFile);
         }
     }
 
@@ -690,7 +551,8 @@ public class Utils {
                             reader, valueNamespace, valueLocalName, logFile);
                     break;
                 case XMLStreamReader.END_ELEMENT:
-                    if (Utils.isEndElement(endNamespace, endElement, reader)) {
+                    if (XMLUtils.isEndElement(
+                            endNamespace, endElement, reader)) {
                         return kod;
                     }
             }
@@ -720,7 +582,7 @@ public class Utils {
                 && localName.equals(reader.getLocalName())) {
             return Long.valueOf(reader.getElementText());
         } else {
-            processUnsupported(reader, logFile);
+            XMLUtils.processUnsupported(reader, logFile);
         }
 
         return null;
@@ -752,7 +614,8 @@ public class Utils {
                             reader, con, item, namespace, logFile);
                     break;
                 case XMLStreamReader.END_ELEMENT:
-                    if (isEndElement(namespace, "Geometrie", reader)) {
+                    if (XMLUtils.isEndElement(
+                            namespace, "Geometrie", reader)) {
                         return;
                     }
             }
@@ -783,23 +646,23 @@ public class Utils {
                     && item instanceof ItemWithDefinicniCara) {
                 final ItemWithDefinicniCara itemDefinicniCara =
                         (ItemWithDefinicniCara) item;
-                itemDefinicniCara.setDefinicniCara(
-                        processGML(reader, con, namespace, localName, logFile));
+                itemDefinicniCara.setDefinicniCara(GMLReader.readGML(
+                        reader, con, namespace, localName, logFile));
             } else if ("OriginalniHranice".equals(localName)
                     && item instanceof ItemWithHranice) {
                 final ItemWithHranice itemHranice = (ItemWithHranice) item;
-                itemHranice.setHranice(
-                        processGML(reader, con, namespace, localName, logFile));
+                itemHranice.setHranice(GMLReader.readGML(
+                        reader, con, namespace, localName, logFile));
             } else if ("GeneralizovaneHranice3".equals(localName)
                     && item instanceof ItemWithHranice) {
                 final ItemWithHranice itemHranice = (ItemWithHranice) item;
-                itemHranice.setHranice(
-                        processGML(reader, con, namespace, localName, logFile));
+                itemHranice.setHranice(GMLReader.readGML(
+                        reader, con, namespace, localName, logFile));
             } else {
-                processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader, logFile);
             }
         } else {
-            processUnsupported(reader, logFile);
+            XMLUtils.processUnsupported(reader, logFile);
         }
     }
 
@@ -827,7 +690,7 @@ public class Utils {
                             reader, item, logFile);
                     break;
                 case XMLStreamReader.END_ELEMENT:
-                    if (isEndElement(
+                    if (XMLUtils.isEndElement(
                             endNamespace, "MluvnickeCharakteristiky", reader)) {
                         return;
                     }
@@ -870,41 +733,12 @@ public class Utils {
                         item.setMluvCharPad7(reader.getElementText());
                         break;
                     default:
-                        processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                processUnsupported(reader, logFile);
-        }
-    }
-
-    /**
-     * Checks whether installed version of Postgis is affected by bug
-     * http://trac.osgeo.org/postgis/ticket/1928.
-     *
-     * @param con database connection
-     *
-     * @return true if it is affected, otherwise false
-     */
-    public static boolean checkMultipointBug(final Connection con) {
-        try (final Statement stm = con.createStatement();
-                final ResultSet rs = stm.executeQuery(
-                        "SELECT st_astext(st_geomfromgml('<gml:MultiPoint "
-                        + "xmlns:gml=\"http://www.opengis.net/gml/3.2\" "
-                        + "gml:id=\"DOB.545058.X\" "
-                        + "srsName=\"urn:ogc:def:crs:EPSG::2065\" "
-                        + "srsDimension=\"2\"><gml:pointMembers>"
-                        + "<gml:Point gml:id=\"DOB.545058.1\">"
-                        + "<gml:pos>496547.00 1139895.00</gml:pos>"
-                        + "</gml:Point></gml:pointMembers>"
-                        + "</gml:MultiPoint>'));")) {
-            rs.next();
-
-            return "MULTIPOINT Z EMPTY".equals(rs.getString(1));
-        } catch (final SQLException ex) {
-            throw new RuntimeException(
-                    "Failed to check multipoint bug presence", ex);
+                XMLUtils.processUnsupported(reader, logFile);
         }
     }
 }

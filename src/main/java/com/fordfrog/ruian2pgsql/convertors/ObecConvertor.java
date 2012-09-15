@@ -25,6 +25,7 @@ import com.fordfrog.ruian2pgsql.containers.Obec;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
 import com.fordfrog.ruian2pgsql.utils.Utils;
+import com.fordfrog.ruian2pgsql.utils.XMLUtils;
 import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -198,12 +199,12 @@ public class ObecConvertor extends AbstractSaveConvertor<Obec> {
                         item.setZnakText(reader.getElementText());
                         break;
                     default:
-                        Utils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                Utils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader, logFile);
         }
     }
 }

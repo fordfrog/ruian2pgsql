@@ -26,6 +26,7 @@ import com.fordfrog.ruian2pgsql.containers.StavebniObjekt;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
 import com.fordfrog.ruian2pgsql.utils.Utils;
+import com.fordfrog.ruian2pgsql.utils.XMLUtils;
 import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -308,12 +309,12 @@ public class StavebniObjektConvertor
                         convertorZpusobyOchranyObjektu.convert(reader, logFile);
                         break;
                     default:
-                        Utils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                Utils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader, logFile);
         }
     }
 
@@ -338,7 +339,8 @@ public class StavebniObjektConvertor
                     processCislaDomovniElement(reader, item, logFile);
                     break;
                 case XMLStreamReader.END_ELEMENT:
-                    if (Utils.isEndElement(NAMESPACE, "CislaDomovni", reader)) {
+                    if (XMLUtils.isEndElement(
+                            NAMESPACE, "CislaDomovni", reader)) {
                         return;
                     }
             }
@@ -366,11 +368,11 @@ public class StavebniObjektConvertor
                                 Integer.parseInt(reader.getElementText()));
                         break;
                     default:
-                        Utils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader, logFile);
                 }
                 break;
             default:
-                Utils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader, logFile);
         }
     }
 

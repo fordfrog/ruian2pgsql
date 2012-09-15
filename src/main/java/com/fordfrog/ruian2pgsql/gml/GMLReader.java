@@ -19,85 +19,92 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.fordfrog.ruian2pgsql.convertors;
+package com.fordfrog.ruian2pgsql.gml;
 
+import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
 import java.io.Writer;
-import java.sql.SQLException;
+import java.sql.Connection;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 /**
- * Abstract implementation of Convertor.
+ * Reads GML into string.
  *
  * @author fordfrog
  */
-public abstract class AbstractConvertor implements Convertor {
+public class GMLReader {
 
     /**
-     * Namespace of the processed element.
-     */
-    private final String namespace;
-    /**
-     * Local name of the processed element.
-     */
-    private final String localName;
-
-    /**
-     * Creates new instance of AbstractConvertor.
+     * Processes GML element(s).
      *
-     * @param namespace {@link #namespace}
-     * @param localName {@link #localName}
-     */
-    public AbstractConvertor(final String namespace, final String localName) {
-        this.namespace = namespace;
-        this.localName = localName;
-    }
-
-    /**
-     * Processes current elements and its sub-elements. On each element
-     * {@link #processElement(javax.xml.stream.XMLStreamReader, java.io.Writer)}
-     * is called.
+     * @param reader       XML stream reader
+     * @param con          database connection
+     * @param endNamespace namespace of DefinicniBod element
+     * @param endLocalName local name of DefinicniBod element
+     * @param logFile      log file writer
      *
-     * @param reader  XML stream reader
-     * @param logFile log file writer
+     * @return GML geometry as string
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws SQLException       Thrown if problem occurred while communicating
-     *                            with database.
      */
-    @Override
-    public void convert(final XMLStreamReader reader, final Writer logFile)
-            throws XMLStreamException, SQLException {
+    public static String readGML(final XMLStreamReader reader,
+            final Connection con, final String endNamespace,
+            final String endLocalName, final Writer logFile)
+            throws XMLStreamException {
+        String definicniBod = null;
+
         while (reader.hasNext()) {
             final int event = reader.next();
 
             switch (event) {
                 case XMLStreamReader.START_ELEMENT:
-                    processElement(reader, logFile);
+                    definicniBod =
+                            readGMLElement(reader, con, logFile);
                     break;
                 case XMLStreamReader.END_ELEMENT:
-                    if (XMLUtils.isEndElement(namespace, localName, reader)) {
-                        return;
+                    if (XMLUtils.isEndElement(
+                            endNamespace, endLocalName, reader)) {
+                        return definicniBod;
                     }
-
-                    break;
             }
         }
+
+        return definicniBod;
     }
 
     /**
-     * Processes current XML element.
+     * Processes sub-elements of an element containing GML.
      *
      * @param reader  XML stream reader
+     * @param con     database connection
      * @param logFile log file writer
+     *
+     * @return GML geometry as string
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
-     * @throws SQLException       Thrown if problem occurred while communicating
-     *                            with database.
      */
-    protected abstract void processElement(final XMLStreamReader reader,
-            final Writer logFile) throws XMLStreamException, SQLException;
+    private static String readGMLElement(final XMLStreamReader reader,
+            final Connection con, final Writer logFile)
+            throws XMLStreamException {
+        String result = null;
+
+        switch (reader.getNamespaceURI()) {
+            case Namespaces.GML:
+                result = GMLUtils.createGMLString(reader, con, logFile);
+                break;
+            default:
+                XMLUtils.processUnsupported(reader, logFile);
+        }
+
+        return result;
+    }
+
+    /**
+     * Creates new instance of GMLReader.
+     */
+    private GMLReader() {
+    }
 }

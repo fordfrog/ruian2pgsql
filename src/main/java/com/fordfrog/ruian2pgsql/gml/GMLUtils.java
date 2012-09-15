@@ -1,6 +1,5 @@
 /**
- * Copyright 2012 Miroslav Šulc To change this template, choose Tools |
- * Templates and open the template in the editor.
+ * Copyright 2012 Miroslav Šulc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,9 +19,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.fordfrog.ruian2pgsql.utils;
+package com.fordfrog.ruian2pgsql.gml;
 
 import com.fordfrog.ruian2pgsql.Config;
+import com.fordfrog.ruian2pgsql.utils.Namespaces;
+import com.fordfrog.ruian2pgsql.utils.Utils;
+import com.fordfrog.ruian2pgsql.utils.XMLUtils;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.sql.Connection;
@@ -30,6 +32,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Savepoint;
+import java.sql.Statement;
 import java.text.MessageFormat;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -37,23 +40,16 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 /**
- * Reads element and its subelements from XML stream reader and converts it to
- * string.
+ * GML utilities.
  *
  * @author fordfrog
  */
-public class XMLStringUtil {
+public class GMLUtils {
 
     /**
      * Whether to enable multipoint bug workaround.
      */
     private static boolean multipointBugWorkaround;
-
-    /**
-     * Creates new instance of XMLStringUtil.
-     */
-    private XMLStringUtil() {
-    }
 
     /**
      * Getter for {@link #multipointBugWorkaround}.
@@ -71,7 +67,36 @@ public class XMLStringUtil {
      */
     public static void setMultipointBugWorkaround(
             final boolean multipointBugWorkaround) {
-        XMLStringUtil.multipointBugWorkaround = multipointBugWorkaround;
+        GMLUtils.multipointBugWorkaround = multipointBugWorkaround;
+    }
+
+    /**
+     * Checks whether installed version of Postgis is affected by bug
+     * http://trac.osgeo.org/postgis/ticket/1928.
+     *
+     * @param con database connection
+     *
+     * @return true if it is affected, otherwise false
+     */
+    public static boolean checkMultipointBug(final Connection con) {
+        try (final Statement stm = con.createStatement();
+                final ResultSet rs = stm.executeQuery(
+                        "SELECT st_astext(st_geomfromgml('<gml:MultiPoint "
+                        + "xmlns:gml=\"http://www.opengis.net/gml/3.2\" "
+                        + "gml:id=\"DOB.545058.X\" "
+                        + "srsName=\"urn:ogc:def:crs:EPSG::2065\" "
+                        + "srsDimension=\"2\"><gml:pointMembers>"
+                        + "<gml:Point gml:id=\"DOB.545058.1\">"
+                        + "<gml:pos>496547.00 1139895.00</gml:pos>"
+                        + "</gml:Point></gml:pointMembers>"
+                        + "</gml:MultiPoint>'));")) {
+            rs.next();
+
+            return "MULTIPOINT Z EMPTY".equals(rs.getString(1));
+        } catch (final SQLException ex) {
+            throw new RuntimeException(
+                    "Failed to check multipoint bug presence", ex);
+        }
     }
 
     /**
@@ -103,7 +128,8 @@ public class XMLStringUtil {
         writer.writeEndDocument();
         writer.close();
 
-        final String result = stripDeclaration(stringWriter.toString());
+        final String result =
+                XMLUtils.stripDeclaration(stringWriter.toString());
 
         if (Config.isIgnoreInvalidGML()) {
             return isValidGML(con, result, logFile) ? result : null;
@@ -209,23 +235,6 @@ public class XMLStringUtil {
     }
 
     /**
-     * Strips XML declaration from the string.
-     *
-     * @param string XML string
-     *
-     * @return XML string without XML declaration
-     */
-    private static String stripDeclaration(final String string) {
-        final int pos = string.indexOf("?>");
-
-        if (pos == -1) {
-            return string;
-        } else {
-            return string.substring(pos + 2).trim();
-        }
-    }
-
-    /**
      * Checks whether specified GML string is valid for ST_GeomFromGML()
      * function.
      *
@@ -258,5 +267,11 @@ public class XMLStringUtil {
         }
 
         return true;
+    }
+
+    /**
+     * Creates new instance of GMLUtils.
+     */
+    private GMLUtils() {
     }
 }

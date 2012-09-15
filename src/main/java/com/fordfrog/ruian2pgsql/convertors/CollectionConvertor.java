@@ -22,7 +22,7 @@
 package com.fordfrog.ruian2pgsql.convertors;
 
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
-import com.fordfrog.ruian2pgsql.utils.Utils;
+import com.fordfrog.ruian2pgsql.utils.XMLUtils;
 import java.io.Writer;
 import java.sql.SQLException;
 import javax.xml.stream.XMLStreamException;
@@ -94,7 +94,7 @@ public class CollectionConvertor extends AbstractConvertor {
                 && itemName.equals(reader.getLocalName())) {
             convertor.convert(reader, logFile);
         } else {
-            Utils.processUnsupported(reader, logFile);
+            XMLUtils.processUnsupported(reader, logFile);
         }
     }
 }

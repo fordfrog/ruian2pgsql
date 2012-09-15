@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.fordfrog.ruian2pgsql.utils;
+package com.fordfrog.ruian2pgsql.gml;
 
 import java.io.ByteArrayInputStream;
 import java.io.OutputStreamWriter;
@@ -32,11 +32,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Tests for {@link XMLStringUtil}.
+ * Tests for {@link GMLUtils}.
  *
  * @author fordfrog
  */
-public class XMLStringUtilTest {
+public class GMLUtilsTest {
 
     /**
      * Original GML with pointMembers and single point.
@@ -143,7 +143,7 @@ public class XMLStringUtilTest {
     private void testGML(final String input, final String expResult,
             final boolean multipointBugWorkaround)
             throws UnsupportedEncodingException, XMLStreamException {
-        XMLStringUtil.setMultipointBugWorkaround(multipointBugWorkaround);
+        GMLUtils.setMultipointBugWorkaround(multipointBugWorkaround);
 
         final ByteArrayInputStream inputStream =
                 new ByteArrayInputStream(input.getBytes("UTF-8"));
@@ -157,7 +157,7 @@ public class XMLStringUtilTest {
         } while (event != XMLStreamReader.START_ELEMENT);
 
         @SuppressWarnings("UseOfSystemOutOrSystemErr")
-        final String result = XMLStringUtil.createGMLString(
+        final String result = GMLUtils.createGMLString(
                 reader, null, new OutputStreamWriter(System.out));
 
         Assert.assertThat(result, IsEqual.equalTo(expResult));

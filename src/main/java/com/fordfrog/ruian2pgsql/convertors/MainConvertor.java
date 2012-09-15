@@ -22,9 +22,10 @@
 package com.fordfrog.ruian2pgsql.convertors;
 
 import com.fordfrog.ruian2pgsql.Config;
+import com.fordfrog.ruian2pgsql.gml.GMLUtils;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.Utils;
-import com.fordfrog.ruian2pgsql.utils.XMLStringUtil;
+import com.fordfrog.ruian2pgsql.utils.XMLUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -93,14 +94,14 @@ public class MainConvertor {
                 runSQLFromResource(con, "/sql/reset_transaction_ids.sql");
             }
 
-            final boolean multipointBug = Utils.checkMultipointBug(con);
+            final boolean multipointBug = GMLUtils.checkMultipointBug(con);
 
             if (multipointBug) {
                 Utils.printToLog(logFile, "Installed version of Postgis is "
                         + "affected by multipoint bug "
                         + "http://trac.osgeo.org/postgis/ticket/1928, enabling "
                         + "workaround...");
-                XMLStringUtil.setMultipointBugWorkaround(true);
+                GMLUtils.setMultipointBugWorkaround(true);
             }
 
             for (final Path file : getInputFiles(Config.getInputDirPath())) {
@@ -295,11 +296,11 @@ public class MainConvertor {
                                 convert(reader, logFile);
                         break;
                     default:
-                        Utils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader, logFile);
                 }
                 break;
             default:
-                Utils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader, logFile);
         }
     }
 }

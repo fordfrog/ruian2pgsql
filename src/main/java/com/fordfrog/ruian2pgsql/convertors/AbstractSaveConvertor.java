@@ -22,7 +22,7 @@
 package com.fordfrog.ruian2pgsql.convertors;
 
 import com.fordfrog.ruian2pgsql.Config;
-import com.fordfrog.ruian2pgsql.utils.Utils;
+import com.fordfrog.ruian2pgsql.utils.XMLUtils;
 import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -143,7 +143,7 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
                     processElement(reader, item, logFile);
                     break;
                 case XMLStreamReader.END_ELEMENT:
-                    if (Utils.isEndElement(namespace, localName, reader)) {
+                    if (XMLUtils.isEndElement(namespace, localName, reader)) {
                         saveData(item, logFile);
 
                         return;

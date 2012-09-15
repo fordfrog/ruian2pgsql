@@ -23,7 +23,7 @@ package com.fordfrog.ruian2pgsql.convertors;
 
 import com.fordfrog.ruian2pgsql.containers.ZpusobOchranyObjektu;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
-import com.fordfrog.ruian2pgsql.utils.Utils;
+import com.fordfrog.ruian2pgsql.utils.XMLUtils;
 import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -109,12 +109,12 @@ public class ZpusobOchranyObjektuConvertor
                                 Long.parseLong(reader.getElementText()));
                         break;
                     default:
-                        Utils.processUnsupported(reader, logFile);
+                        XMLUtils.processUnsupported(reader, logFile);
                 }
 
                 break;
             default:
-                Utils.processUnsupported(reader, logFile);
+                XMLUtils.processUnsupported(reader, logFile);
         }
     }
 
