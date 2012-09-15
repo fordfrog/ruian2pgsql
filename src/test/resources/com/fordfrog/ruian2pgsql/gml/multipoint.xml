@@ -1,0 +1,7 @@
+<gml:MultiPoint xmlns:gml="http://www.opengis.net/gml/3.2" gml:id="DOP.19.X" srsName="urn:ogc:def:crs:EPSG::2065" srsDimension="2">
+    <gml:pointMembers>
+        <gml:Point gml:id="DOP.19.1">
+            <gml:pos>743100.00 1043300.00</gml:pos>
+        </gml:Point>
+    </gml:pointMembers>
+</gml:MultiPoint>

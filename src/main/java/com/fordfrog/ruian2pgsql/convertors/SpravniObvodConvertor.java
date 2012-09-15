@@ -54,8 +54,8 @@ public class SpravniObvodConvertor extends AbstractSaveConvertor<SpravniObvod> {
     private static final String SQL_INSERT = "INSERT INTO rn_spravni_obvod "
             + "(nazev, nespravny, obec_kod, spravni_momc_kod, id_trans_ruian, "
             + "plati_od, nz_id_globalni, zmena_grafiky, definicni_bod, "
-            + "hranice, kod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, "
-            + "ST_GeomFromGML(?), ST_GeomFromGML(?), ?)";
+            + "hranice, kod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, %FUNCTION%(?), "
+            + "%FUNCTION%(?), ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -63,7 +63,7 @@ public class SpravniObvodConvertor extends AbstractSaveConvertor<SpravniObvod> {
             + "SET nazev = ?, nespravny = ?, obec_kod = ?, "
             + "spravni_momc_kod = ?, id_trans_ruian = ?, plati_od = ?, "
             + "nz_id_globalni = ?, zmena_grafiky = ?, "
-            + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?), "
+            + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
 

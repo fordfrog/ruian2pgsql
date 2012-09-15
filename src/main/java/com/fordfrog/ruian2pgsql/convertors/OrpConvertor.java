@@ -54,8 +54,8 @@ public class OrpConvertor extends AbstractSaveConvertor<Orp> {
     private static final String SQL_INSERT = "INSERT INTO rn_orp "
             + "(nazev, nespravny, vusc_kod, spravni_obec_kod, id_trans_ruian, "
             + "plati_od, nz_id_globalni, zmena_grafiky, definicni_bod, "
-            + "hranice, kod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, "
-            + "ST_GeomFromGML(?), ST_GeomFromGML(?), ?)";
+            + "hranice, kod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, %FUNCTION%(?), "
+            + "%FUNCTION%(?), ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -63,7 +63,7 @@ public class OrpConvertor extends AbstractSaveConvertor<Orp> {
             + "SET nazev = ?, nespravny = ?, vusc_kod = ?, "
             + "spravni_obec_kod = ?, id_trans_ruian = ?, plati_od = ?, "
             + "nz_id_globalni = ?, zmena_grafiky = ?, "
-            + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?), "
+            + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
 

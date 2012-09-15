@@ -54,14 +54,14 @@ public class UliceConvertor extends AbstractSaveConvertor<Ulice> {
     private static final String SQL_INSERT = "INSERT INTO rn_ulice "
             + "(nazev, nespravny, obec_kod, id_trans_ruian, plati_od, "
             + "nz_id_globalni, zmena_grafiky, definicni_cara, kod) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ST_GeomFromGML(?), ?)";
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, %FUNCTION%(?), ?)";
     /**
      * SQL statement for update of existing item.
      */
     private static final String SQL_UPDATE = "UPDATE rn_ulice "
             + "SET nazev = ?, nespravny = ?, obec_kod = ?, id_trans_ruian = ?, "
             + "plati_od = ?, nz_id_globalni = ?, zmena_grafiky = ?, "
-            + "definicni_cara = ST_GeomFromGML(?), "
+            + "definicni_cara = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
 

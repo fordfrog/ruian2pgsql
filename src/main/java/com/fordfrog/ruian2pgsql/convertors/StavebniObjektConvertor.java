@@ -63,7 +63,7 @@ public class StavebniObjektConvertor
             + "zpusob_vytapeni_kod, zpusob_vyuziti_kod, id_trans_ruian, "
             + "plati_od, nz_id_globalni, definicni_bod, hranice, kod) "
             + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-            + "?, ?, ?, ?, ?, ?, ?, ST_GeomFromGML(?), ST_GeomFromGML(?), ?)";
+            + "?, ?, ?, ?, ?, ?, ?, %FUNCTION%(?), %FUNCTION%(?), ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -77,7 +77,7 @@ public class StavebniObjektConvertor
             + "pripoj_vodovod_kod = ?, typ_kod = ?, zastavena_plocha = ?, "
             + "zpusob_vytapeni_kod = ?, zpusob_vyuziti_kod = ?, "
             + "id_trans_ruian = ?, plati_od = ?, nz_id_globalni = ?, "
-            + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?), "
+            + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
     /**

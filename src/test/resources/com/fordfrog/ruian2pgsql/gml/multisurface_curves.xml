@@ -1,0 +1,29 @@
+<gml:MultiSurface xmlns:gml="http://www.opengis.net/gml/3.2" gml:id="HVC.86" srsName="urn:ogc:def:crs:EPSG::2065" srsDimension="2">
+    <gml:surfaceMember>
+        <gml:Polygon gml:id="HVC.86.1">
+            <gml:exterior>
+                <gml:Ring>
+                    <gml:curveMember>
+                        <gml:LineString gml:id="HVC.86.1.1">
+                            <gml:posList>669217.99 1007487.12 669215.39 1007488.13 669200.88 1007493.74 669180.68 1007500.88</gml:posList>
+                        </gml:LineString>
+                    </gml:curveMember>
+                    <gml:curveMember>
+                        <gml:Curve gml:id="HVC.86.1.2">
+                            <gml:segments>
+                                <gml:ArcString>
+                                    <gml:posList>588873.28 1055816.80 588874.14 1055816.63 588877.28 1055815.33 588880.28 1055812.24 588881.79 1055809.57</gml:posList>
+                                </gml:ArcString>
+                            </gml:segments>
+                        </gml:Curve>
+                    </gml:curveMember>
+                    <gml:curveMember>
+                        <gml:LineString gml:id="HVC.86.1.3">
+                            <gml:posList>588881.79 1055809.57 588883.77 1055808.81 588914.59 1055803.92 588921.82 1055803.28</gml:posList>
+                        </gml:LineString>
+                    </gml:curveMember>
+                </gml:Ring>
+            </gml:exterior>
+        </gml:Polygon>
+    </gml:surfaceMember>
+</gml:MultiSurface>

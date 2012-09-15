@@ -31,23 +31,28 @@ umístěný soubor pom.xml.
 Zde jsou informace o použití programu, které vypisuje ruian2pgsql, pokud ho
 spustíte bez parametrů (výpis je v angličtině, zde je přeložený):
 
-    Použití: java -jar ruian2pgsql-*-jar-with-dependencies.jar --db-connection-url <hodnota>
-        [--create-tables] [--reset-transaction-ids] [--dry-run] --input-dir <hodnota>
-        [--log-file <hodnota>]
+    Použití: java -jar ruian2pgsql-*-jar-with-dependencies.jar <volby>
 
     Kde:
+    --convert-to-ewkt
+            pokud je použito, tak jsou nejprve GML řetězce převedeny ze zdrojového
+            XML do EWKT formátu a následně uloženy do databáze, jinak jsou do
+            databáze ukládány původní GML řetězce (použijte tuto volbu v závislosti
+            na úrovni GML implementace ve vámi používané verzi Postgisu)
     --create-tables
             vytvoří databázové tabulky pro data (pokud tabulky se stejným názvem
             již existují, tak jsou nejdříve odstraněny)
-    --db-connection-url
+    --db-connection-url <hodnota>
             je připojovací URL ve formátu JDBC, například:
             jdbc:postgresql://localhost/ruian?user=ruian&password=p4ssw0rd
+    --debug
+            pokud je použito, jsou vypisovány ladící informace
     --dry-run
             zpracuje všechny uvedené soubory, ale žádná data nezapíše do
             databáze
-    --input-dir
+    --input-dir <hodnota>
             je adresář, který obsahuje stažené soubory s příponou .xml.gz
-    --log-file
+    --log-file <hodnota>
             je volitelná specifikace logovacího souboru (pokud není uveden, log
             bude zapsaný na konzoli)
     --ignore-invalid-gml
@@ -81,6 +86,10 @@ ruian2pgsql je distribuovaný pod MIT licencí.
   PostgreSQL verzemi menšími než 9.0.
 * Přidán přepínač --dry-run pro spuštění aplikace v režimu, kdy žádná data
   nejsou zapsána do databáze.
+* Přidán přepínač --convert-to-ewkt, který převádí GML řetězce do formátu EWKT
+  před uložením geometrií do databáze. To proto, že úroveň podpory GML v
+  Postgisu není dostatečná pro GML data obsažená v RÚIAN souborech.
+* Přidán přepínač --debug, který vypisuje ladící informace.
 
 ## Verze 1.2.0
 

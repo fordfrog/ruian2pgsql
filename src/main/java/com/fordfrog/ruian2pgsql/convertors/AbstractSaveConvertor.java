@@ -94,10 +94,12 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
         this.connection = con;
         this.pstmExists =
                 sqlExists == null ? null : con.prepareStatement(sqlExists);
-        this.pstmInsert =
-                sqlInsert == null ? null : con.prepareStatement(sqlInsert);
-        this.pstmUpdate =
-                sqlUpdate == null ? null : con.prepareStatement(sqlUpdate);
+        this.pstmInsert = sqlInsert == null ? null : con.prepareStatement(
+                sqlInsert.replace("%FUNCTION%", Config.isConvertToEWKT()
+                ? "ST_GeomFromEWKT" : "ST_GeomFromGML"));
+        this.pstmUpdate = sqlUpdate == null ? null : con.prepareStatement(
+                sqlUpdate.replace("%FUNCTION%", Config.isConvertToEWKT()
+                ? "ST_GeomFromEWKT" : "ST_GeomFromGML"));
     }
 
     /**
@@ -160,7 +162,7 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
      * called. Testing for whether item exists is performed via
      * {@link #exists(java.sql.Connection, java.lang.Object)}.
      *
-     * @param item    item to be saved
+     * @param item item to be saved
      *
      * @throws SQLException Thrown if problem occurred while saving item into
      *                      database.
@@ -232,8 +234,8 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
     /**
      * Processes elements of the main element.
      *
-     * @param reader  XML stream reader
-     * @param item    item of the main element
+     * @param reader XML stream reader
+     * @param item   item of the main element
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.

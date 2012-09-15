@@ -1,19 +1,24 @@
-Usage: java -jar ruian2pgsql-*-jar-with-dependencies.jar --db-connection-url <value>
-    [--create-tables] [--reset-transaction-ids] [--dry-run] --input-dir <value>
-    [--log-file <value>]
+Usage: java -jar ruian2pgsql-*-jar-with-dependencies.jar <options>
 
 Where:
+--convert-to-ewkt
+        if enabled, GML strings from the source XML files are first converted to
+        EWKT and then stored in database, otherwise original GML strings are
+        stored in database (choose this option based on Postgis level of GML
+        implementation)
 --create-tables
         creates database tables for the data (if tables with the same name
         already exists, it is first dropped)
---db-connection-url
+--db-connection-url <value>
         is JDBC connection URL, for example:
         jdbc:postgresql://localhost/ruian?user=ruian&password=p4ssw0rd
 --dry-run
         processes all specified files but no data are written to database
---input-dir
+--debug
+        if used, debug information are output
+--input-dir <value>
         is directory that contains downloaded .xml.gz files
---log-file
+--log-file <value>
         is optional specification of log file (if not specified, log will be
         output to console)
 --ignore-invalid-gml

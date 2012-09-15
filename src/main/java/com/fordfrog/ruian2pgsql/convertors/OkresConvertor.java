@@ -55,7 +55,7 @@ public class OkresConvertor extends AbstractSaveConvertor<Okres> {
             + "(nazev, nespravny, vusc_kod, kraj_1960_kod, id_trans_ruian, "
             + "nuts_lau, plati_od, nz_id_globalni, zmena_grafiky, "
             + "definicni_bod, hranice, kod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "
-            + "ST_GeomFromGML(?), ST_GeomFromGML(?), ?)";
+            + "%FUNCTION%(?), %FUNCTION%(?), ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -63,7 +63,7 @@ public class OkresConvertor extends AbstractSaveConvertor<Okres> {
             + "SET nazev = ?, nespravny = ?, vusc_kod = ?, kraj_1960_kod = ?, "
             + "id_trans_ruian = ?, nuts_lau = ?, plati_od = ?, "
             + "nz_id_globalni = ?, zmena_grafiky = ?, "
-            + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?), "
+            + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
 

@@ -54,15 +54,14 @@ public class KrajConvertor extends AbstractSaveConvertor<Kraj> {
     private static final String SQL_INSERT = "INSERT INTO rn_kraj_1960 "
             + "(nazev, nespravny, stat_kod, id_trans_ruian, plati_od, "
             + "nz_id_globalni, zmena_grafiky, definicni_bod, hranice, kod) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ST_GeomFromGML(?), "
-            + "ST_GeomFromGML(?), ?)";
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, %FUNCTION%(?), %FUNCTION%(?), ?)";
     /**
      * SQL statement for update of existing item.
      */
     private static final String SQL_UPDATE = "UPDATE rn_kraj_1960 "
             + "SET nazev = ?, nespravny = ?, stat_kod = ?, id_trans_ruian = ?, "
             + "plati_od = ?, nz_id_globalni = ?, zmena_grafiky = ?, "
-            + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?), "
+            + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
 

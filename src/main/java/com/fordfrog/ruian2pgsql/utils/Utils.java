@@ -21,13 +21,14 @@
  */
 package com.fordfrog.ruian2pgsql.utils;
 
+import com.fordfrog.ruian2pgsql.Config;
 import com.fordfrog.ruian2pgsql.containers.ItemWithDefinicniBod;
 import com.fordfrog.ruian2pgsql.containers.ItemWithDefinicniCara;
 import com.fordfrog.ruian2pgsql.containers.ItemWithEmergency;
 import com.fordfrog.ruian2pgsql.containers.ItemWithHranice;
 import com.fordfrog.ruian2pgsql.containers.ItemWithMluvCharPad;
+import com.fordfrog.ruian2pgsql.gml.GMLParser;
 import com.fordfrog.ruian2pgsql.gml.GMLReader;
-import com.fordfrog.ruian2pgsql.gml.GMLUtils;
 import java.sql.Connection;
 import java.util.Calendar;
 import java.util.Date;
@@ -138,20 +139,20 @@ public class Utils {
                     && item instanceof ItemWithDefinicniBod) {
                 final ItemWithDefinicniBod itemDefinicniBod =
                         (ItemWithDefinicniBod) item;
-                itemDefinicniBod.setDefinicniBod(GMLReader.readGML(
-                        reader, con, namespace, "AdresniBod"));
+                itemDefinicniBod.setDefinicniBod(
+                        processGML(reader, con, namespace, "AdresniBod"));
             } else if ("Hasici".equals(localName)
                     && item instanceof ItemWithEmergency) {
                 final ItemWithEmergency itemEmergency =
                         (ItemWithEmergency) item;
                 itemEmergency.setHasici(
-                        GMLReader.readGML(reader, con, namespace, "Hasici"));
+                        processGML(reader, con, namespace, "Hasici"));
             } else if ("Zachranka".equals(localName)
                     && item instanceof ItemWithEmergency) {
                 final ItemWithEmergency itemEmergency =
                         (ItemWithEmergency) item;
                 itemEmergency.setZachranka(
-                        GMLReader.readGML(reader, con, namespace, "Zachranka"));
+                        processGML(reader, con, namespace, "Zachranka"));
             } else {
                 XMLUtils.processUnsupported(reader);
             }
@@ -159,8 +160,8 @@ public class Utils {
                 && item instanceof ItemWithDefinicniBod) {
             final ItemWithDefinicniBod itemDefinicniBod =
                     (ItemWithDefinicniBod) item;
-            itemDefinicniBod.setDefinicniBod(
-                    GMLUtils.createGMLString(reader, con));
+            itemDefinicniBod.setDefinicniBod(processGML(
+                    reader, con, curNamespace, reader.getLocalName()));
         } else {
             XMLUtils.processUnsupported(reader);
         }
@@ -573,18 +574,18 @@ public class Utils {
                     && item instanceof ItemWithDefinicniCara) {
                 final ItemWithDefinicniCara itemDefinicniCara =
                         (ItemWithDefinicniCara) item;
-                itemDefinicniCara.setDefinicniCara(GMLReader.readGML(
-                        reader, con, namespace, localName));
+                itemDefinicniCara.setDefinicniCara(
+                        processGML(reader, con, namespace, localName));
             } else if ("OriginalniHranice".equals(localName)
                     && item instanceof ItemWithHranice) {
                 final ItemWithHranice itemHranice = (ItemWithHranice) item;
-                itemHranice.setHranice(GMLReader.readGML(
-                        reader, con, namespace, localName));
+                itemHranice.setHranice(
+                        processGML(reader, con, namespace, localName));
             } else if ("GeneralizovaneHranice3".equals(localName)
                     && item instanceof ItemWithHranice) {
                 final ItemWithHranice itemHranice = (ItemWithHranice) item;
-                itemHranice.setHranice(GMLReader.readGML(
-                        reader, con, namespace, localName));
+                itemHranice.setHranice(
+                        processGML(reader, con, namespace, localName));
             } else {
                 XMLUtils.processUnsupported(reader);
             }
@@ -663,5 +664,38 @@ public class Utils {
             default:
                 XMLUtils.processUnsupported(reader);
         }
+    }
+
+    /**
+     * Processes GML XML. Depending on the output format (GML or EWKT)
+     * appropriate method is called.
+     *
+     * @param reader       XML stream reader
+     * @param con          database connection
+     * @param endNamespace end namespace
+     * @param endLocalName end local name
+     *
+     * @return parsed GML as string (either GML or EWKT)
+     *
+     * @throws XMLStreamException Thrown if problem occurred while reading XML
+     *                            stream.
+     */
+    private static String processGML(final XMLStreamReader reader,
+            final Connection con, final String endNamespace,
+            final String endLocalName) throws XMLStreamException {
+        final String result;
+
+        if (Config.isConvertToEWKT()) {
+            result =
+                    GMLParser.parse(reader, endNamespace, endLocalName).toWKT();
+        } else {
+            result = GMLReader.readGML(reader, con, endNamespace, endLocalName);
+        }
+
+        if (Config.isDebug()) {
+            Log.write(result);
+        }
+
+        return result;
     }
 }

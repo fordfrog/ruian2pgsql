@@ -52,6 +52,15 @@ public class Config {
      */
     private static boolean ignoreInvalidGML;
     /**
+     * Whether geometries should be converted to EWKT before they are stored in
+     * database.
+     */
+    private static boolean convertToEWKT;
+    /**
+     * Whether debug information should be output.
+     */
+    private static boolean debug;
+    /**
      * If set to true, input files are processed but no data is stored in
      * database.
      */
@@ -168,6 +177,42 @@ public class Config {
      */
     public static void setIgnoreInvalidGML(final boolean ignoreInvalidGML) {
         Config.ignoreInvalidGML = ignoreInvalidGML;
+    }
+
+    /**
+     * Getter for {@link #convertToEWKT}.
+     *
+     * @return {@link #convertToEWKT}
+     */
+    public static boolean isConvertToEWKT() {
+        return convertToEWKT;
+    }
+
+    /**
+     * Setter for {@link #convertToEWKT}.
+     *
+     * @param convertToEWKT {@link #convertToEWKT}
+     */
+    public static void setConvertToEWKT(final boolean convertToEWKT) {
+        Config.convertToEWKT = convertToEWKT;
+    }
+
+    /**
+     * Getter for {@link #debug}.
+     *
+     * @return {@link #debug}
+     */
+    public static boolean isDebug() {
+        return debug;
+    }
+
+    /**
+     * Setter for {@link #debug}.
+     *
+     * @param debug {@link #debug}
+     */
+    public static void setDebug(final boolean debug) {
+        Config.debug = debug;
     }
 
     /**

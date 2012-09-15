@@ -56,8 +56,8 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
             + "mluv_char_pad_4, mluv_char_pad_5, mluv_char_pad_6, "
             + "mluv_char_pad_7, id_trans_ruian, zmena_grafiky, plati_od, "
             + "nz_id_globalni, definicni_bod, hranice, kod) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-            + "ST_GeomFromGML(?), ST_GeomFromGML(?), ?)";
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, %FUNCTION%(?), "
+            + "%FUNCTION%(?), ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -66,8 +66,8 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
             + "mluv_char_pad_2 = ?, mluv_char_pad_3 = ?, mluv_char_pad_4 = ?, "
             + "mluv_char_pad_5 = ?, mluv_char_pad_6 = ?, mluv_char_pad_7 = ?, "
             + "id_trans_ruian = ?, zmena_grafiky = ?, plati_od = ?, "
-            + "nz_id_globalni = ?, definicni_bod = ST_GeomFromGML(?), "
-            + "hranice = ST_GeomFromGML(?), "
+            + "nz_id_globalni = ?, definicni_bod = %FUNCTION%(?), "
+            + "hranice = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
 

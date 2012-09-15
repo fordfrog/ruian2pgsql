@@ -91,9 +91,7 @@ public class MainConvertor {
                 runSQLFromResource(con, "/sql/reset_transaction_ids.sql");
             }
 
-            final boolean multipointBug = GMLUtils.checkMultipointBug(con);
-
-            if (multipointBug) {
+            if (!Config.isConvertToEWKT() && GMLUtils.checkMultipointBug(con)) {
                 Log.write("Installed version of Postgis is affected by "
                         + "multipoint bug "
                         + "http://trac.osgeo.org/postgis/ticket/1928, enabling "

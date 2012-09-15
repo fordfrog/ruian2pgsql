@@ -30,22 +30,27 @@ located.
 Here is the usage information that ruian2pgsql outputs if run without
 parameters:
 
-    Usage: java -jar ruian2pgsql-*-jar-with-dependencies.jar --db-connection-url <value>
-        [--create-tables] [--reset-transaction-ids] [--dry-run] --input-dir <value>
-        [--log-file <value>]
+    Usage: java -jar ruian2pgsql-*-jar-with-dependencies.jar <options>
 
     Where:
+    --convert-to-ewkt
+            if enabled, GML strings from the source XML files are first converted to
+            EWKT and then stored in database, otherwise original GML strings are
+            stored in database (use this option based on the level of GML
+            implementation in Postgis version you use)
     --create-tables
             creates database tables for the data (if tables with the same name
             already exists, it is first dropped)
-    --db-connection-url
+    --db-connection-url <value>
             is JDBC connection URL, for example:
             jdbc:postgresql://localhost/ruian?user=ruian&password=p4ssw0rd
     --dry-run
             processes all specified files but no data are written to database
-    --input-dir
+    --debug
+            if used, debug information are output
+    --input-dir <value>
             is directory that contains downloaded .xml.gz files
-    --log-file
+    --log-file <value>
             is optional specification of log file (if not specified, log will be
             output to console)
     --ignore-invalid-gml
@@ -80,6 +85,11 @@ ruian2pgsql is distributed under MIT license.
   versions lower than 9.0.
 * Added command line switch --dry-run for running the application without making
   any modification in database.
+* Added command line switch --convert-to-ewkt which converts GML strings to EWKT
+  before the geometries are stored in database. This is because the level of GML
+  support in Postgis is not adequate to the GML geometries contained in RÚIAN
+  files.
+* Added command line switch --debug which outputs extra information.
 
 ## Version 1.2.0
 

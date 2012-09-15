@@ -58,7 +58,7 @@ public class KatastralniUzemiConvertor
             + "mluv_char_pad_6, mluv_char_pad_7, id_trans_ruian, plati_od, "
             + "nz_id_globalni, rizeni_id, definicni_bod, hranice, kod) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-            + "ST_GeomFromGML(?), ST_GeomFromGML(?), ?)";
+            + "%FUNCTION%(?), %FUNCTION%(?), ?)";
     /**
      * SQL statement for updating of existing item.
      */
@@ -67,8 +67,8 @@ public class KatastralniUzemiConvertor
             + "mluv_char_pad_2 = ?, mluv_char_pad_3 = ?, mluv_char_pad_4 = ?, "
             + "mluv_char_pad_5 = ?, mluv_char_pad_6 = ?, mluv_char_pad_7 = ?, "
             + "id_trans_ruian = ?, plati_od = ?, nz_id_globalni = ?, "
-            + "rizeni_id = ?, definicni_bod = ST_GeomFromGML(?), "
-            + "hranice = ST_GeomFromGML(?), "
+            + "rizeni_id = ?, definicni_bod = %FUNCTION%(?), "
+            + "hranice = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
 

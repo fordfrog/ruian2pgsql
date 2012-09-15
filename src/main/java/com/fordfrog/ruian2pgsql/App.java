@@ -63,6 +63,9 @@ public class App {
 
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
+                case "--convert-to-ewkt":
+                    Config.setConvertToEWKT(true);
+                    break;
                 case "--create-tables":
                     Config.setCreateTables(true);
                     break;
@@ -72,6 +75,9 @@ public class App {
                     break;
                 case "--dry-run":
                     Config.setDryRun(true);
+                    break;
+                case "--debug":
+                    Config.setDebug(true);
                     break;
                 case "--ignore-invalid-gml":
                     Config.setIgnoreInvalidGML(true);

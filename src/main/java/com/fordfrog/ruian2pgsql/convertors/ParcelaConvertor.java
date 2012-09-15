@@ -57,7 +57,7 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
             + "kmenove_cislo, poddeleni_cisla, vymera_parcely, id_trans_ruian, "
             + "zpusob_vyu_poz_kod, rizeni_id, plati_od, definicni_bod, "
             + "hranice, id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-            + "ST_GeomFromGML(?), ST_GeomFromGML(?), ?)";
+            + "%FUNCTION%(?), %FUNCTION%(?), ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -66,7 +66,7 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
             + "druh_cislovani_kod = ?, kmenove_cislo = ?, poddeleni_cisla = ?, "
             + "vymera_parcely = ?, id_trans_ruian = ?, "
             + "zpusob_vyu_poz_kod = ?, rizeni_id = ?, plati_od = ?, "
-            + "definicni_bod = ST_GeomFromGML(?), hranice = ST_GeomFromGML(?), "
+            + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE id = ? AND id_trans_ruian < ?";
     /**

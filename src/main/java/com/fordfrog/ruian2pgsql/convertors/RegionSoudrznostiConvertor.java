@@ -56,16 +56,16 @@ public class RegionSoudrznostiConvertor
             "INSERT INTO rn_region_soudrznosti "
             + "(nazev, nespravny, stat_kod, id_trans_ruian, nuts_lau, "
             + "plati_od, nz_id_globalni, zmena_grafiky, definicni_bod, "
-            + "hranice, kod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, "
-            + "ST_GeomFromGML(?), ST_GeomFromGML(?), ?)";
+            + "hranice, kod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, %FUNCTION%(?), "
+            + "%FUNCTION%(?), ?)";
     /**
      * SQL statement for update of existing item.
      */
     private static final String SQL_UPDATE = "UPDATE rn_region_soudrznosti "
             + "SET nazev = ?, nespravny = ?, stat_kod = ?, id_trans_ruian = ?, "
             + "nuts_lau = ?, plati_od = ?, nz_id_globalni = ?, "
-            + "zmena_grafiky = ?, definicni_bod = ST_GeomFromGML(?), "
-            + "hranice = ST_GeomFromGML(?), "
+            + "zmena_grafiky = ?, definicni_bod = %FUNCTION%(?), "
+            + "hranice = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
 

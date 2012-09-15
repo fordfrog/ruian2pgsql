@@ -56,8 +56,8 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
             + "cislo_orientacni_hodnota, cislo_orientacni_pismeno, "
             + "id_trans_ruian, plati_od, zmena_grafiky, nz_id_globalni, "
             + "definicni_bod, zachranka, hasici, kod) "
-            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_GeomFromGML(?), "
-            + "ST_GeomFromGML(?), ST_GeomFromGML(?), ?)";
+            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, %FUNCTION%(?), "
+            + "%FUNCTION%(?), %FUNCTION%(?), ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -66,8 +66,8 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
             + "stavobj_kod = ?, cislo_domovni = ?, "
             + "cislo_orientacni_hodnota = ?, cislo_orientacni_pismeno = ?, "
             + "id_trans_ruian = ?, plati_od = ?, zmena_grafiky = ?, "
-            + "nz_id_globalni = ?, definicni_bod = ST_GeomFromGML(?), "
-            + "zachranka = ST_GeomFromGML(?), hasici = ST_GeomFromGML(?), "
+            + "nz_id_globalni = ?, definicni_bod = %FUNCTION%(?), "
+            + "zachranka = %FUNCTION%(?), hasici = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
 
