@@ -60,7 +60,7 @@ public class GMLReader {
                     definicniBod = readGMLElement(reader, con);
                     break;
                 case XMLStreamReader.END_ELEMENT:
-                    if (XMLUtils.isEndElement(
+                    if (XMLUtils.isSameElement(
                             endNamespace, endLocalName, reader)) {
                         return definicniBod;
                     }

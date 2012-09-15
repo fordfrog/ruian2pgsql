@@ -107,7 +107,7 @@ public class Utils {
                             reader, con, item, endNamespace);
                     break;
                 case XMLStreamReader.END_ELEMENT:
-                    if (XMLUtils.isEndElement(
+                    if (XMLUtils.isSameElement(
                             endNamespace, "DefinicniBod", reader)) {
                         return;
                     }
@@ -484,7 +484,7 @@ public class Utils {
                             reader, valueNamespace, valueLocalName);
                     break;
                 case XMLStreamReader.END_ELEMENT:
-                    if (XMLUtils.isEndElement(
+                    if (XMLUtils.isSameElement(
                             endNamespace, endElement, reader)) {
                         return kod;
                     }
@@ -509,8 +509,7 @@ public class Utils {
     private static Long getElementValueFromElement(final XMLStreamReader reader,
             final String namespace, final String localName)
             throws XMLStreamException {
-        if (namespace.equals(reader.getNamespaceURI())
-                && localName.equals(reader.getLocalName())) {
+        if (XMLUtils.isSameElement(namespace, localName, reader)) {
             return Long.valueOf(reader.getElementText());
         } else {
             XMLUtils.processUnsupported(reader);
@@ -543,7 +542,7 @@ public class Utils {
                     processGeometrieElement(reader, con, item, namespace);
                     break;
                 case XMLStreamReader.END_ELEMENT:
-                    if (XMLUtils.isEndElement(
+                    if (XMLUtils.isSameElement(
                             namespace, "Geometrie", reader)) {
                         return;
                     }
@@ -615,7 +614,7 @@ public class Utils {
                     processMluvnickeCharakteristikyElement(reader, item);
                     break;
                 case XMLStreamReader.END_ELEMENT:
-                    if (XMLUtils.isEndElement(
+                    if (XMLUtils.isSameElement(
                             endNamespace, "MluvnickeCharakteristiky", reader)) {
                         return;
                     }

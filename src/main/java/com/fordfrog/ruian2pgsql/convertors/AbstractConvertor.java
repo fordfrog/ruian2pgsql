@@ -77,7 +77,7 @@ public abstract class AbstractConvertor implements Convertor {
                     processElement(reader);
                     break;
                 case XMLStreamReader.END_ELEMENT:
-                    if (XMLUtils.isEndElement(namespace, localName, reader)) {
+                    if (XMLUtils.isSameElement(namespace, localName, reader)) {
                         return;
                     }
 

@@ -89,8 +89,7 @@ public class CollectionConvertor extends AbstractConvertor {
     @Override
     protected void processElement(final XMLStreamReader reader)
             throws XMLStreamException, SQLException {
-        if (itemNamespace.equals(reader.getNamespaceURI())
-                && itemName.equals(reader.getLocalName())) {
+        if (XMLUtils.isSameElement(itemNamespace, itemName, reader)) {
             convertor.convert(reader);
         } else {
             XMLUtils.processUnsupported(reader);

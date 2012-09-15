@@ -334,7 +334,7 @@ public class StavebniObjektConvertor
                     processCislaDomovniElement(reader, item);
                     break;
                 case XMLStreamReader.END_ELEMENT:
-                    if (XMLUtils.isEndElement(
+                    if (XMLUtils.isSameElement(
                             NAMESPACE, "CislaDomovni", reader)) {
                         return;
                     }

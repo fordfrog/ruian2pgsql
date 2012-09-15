@@ -142,7 +142,7 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
                     processElement(reader, item);
                     break;
                 case XMLStreamReader.END_ELEMENT:
-                    if (XMLUtils.isEndElement(namespace, localName, reader)) {
+                    if (XMLUtils.isSameElement(namespace, localName, reader)) {
                         saveData(item);
 
                         return;

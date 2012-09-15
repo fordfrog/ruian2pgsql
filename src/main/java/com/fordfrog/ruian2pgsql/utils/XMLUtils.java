@@ -41,7 +41,7 @@ public class XMLUtils {
      *
      * @return true if namespace and local name match, otherwise false
      */
-    public static boolean isEndElement(final String namespace,
+    public static boolean isSameElement(final String namespace,
             final String localName, final XMLStreamReader reader) {
         return namespace.equals(reader.getNamespaceURI())
                 && localName.equals(reader.getLocalName());
@@ -112,7 +112,7 @@ public class XMLUtils {
                     processUnsupported(reader, indent + 1);
                     break;
                 case XMLStreamReader.END_ELEMENT:
-                    if (XMLUtils.isEndElement(
+                    if (XMLUtils.isSameElement(
                             namespace, localName, reader)) {
                         return;
                     }

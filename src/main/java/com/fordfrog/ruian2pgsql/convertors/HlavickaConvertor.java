@@ -161,9 +161,9 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
                     processTransakceOdElement(reader, item);
                     break;
                 case XMLStreamReader.END_ELEMENT:
-                    if (NAMESPACE.equals(reader.getNamespaceURI())
-                            && ("TransakceOd".equals(reader.getLocalName())
-                            || "TrasakceOd".equals(reader.getLocalName()))) {
+                    if (XMLUtils.isSameElement(NAMESPACE, "TransakceOd", reader)
+                            || XMLUtils.isSameElement(
+                            NAMESPACE, "TrasakceOd", reader)) {
                         return;
                     }
             }
@@ -220,8 +220,8 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
                     processTransakceDoElement(reader, header);
                     break;
                 case XMLStreamReader.END_ELEMENT:
-                    if (NAMESPACE.equals(reader.getNamespaceURI())
-                            && "TransakceDo".equals(reader.getLocalName())) {
+                    if (XMLUtils.isSameElement(
+                            NAMESPACE, "TransakceDo", reader)) {
                         return;
                     }
             }
