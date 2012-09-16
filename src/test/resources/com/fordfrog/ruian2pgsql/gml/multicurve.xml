@@ -4,4 +4,13 @@
             <gml:posList>655192.15 1091946.30 655201.78 1091959.87 655213.30 1091977.51 655224.82 1091993.72 655230.80 1092005.10 655235.29 1092014.91</gml:posList>
         </gml:LineString>
     </gml:curveMember>
+    <gml:curveMember>
+        <gml:Curve gml:id="HVC.86.1.2">
+            <gml:segments>
+                <gml:ArcString>
+                    <gml:posList>588873.28 1055816.80 588874.14 1055816.63 588877.28 1055815.33 588880.28 1055812.24 588881.79 1055809.57</gml:posList>
+                </gml:ArcString>
+            </gml:segments>
+        </gml:Curve>
+    </gml:curveMember>
 </gml:MultiCurve>
