@@ -1,0 +1,24 @@
+<gml:MultiSurface xmlns:gml="http://www.opengis.net/gml/3.2" gml:id="HVC.86" srsName="urn:ogc:def:crs:EPSG::2065" srsDimension="2">
+    <gml:surfaceMember>
+        <gml:Polygon gml:id="HVC.86.1">
+            <gml:exterior>
+                <gml:LinearRing>
+                    <gml:posList>880000.00 1090000.00 890000.00 1090000.00 890000.00 1080000.00 880000.00 1080000.00 880000.00 1090000.00</gml:posList>
+                </gml:LinearRing>
+            </gml:exterior>
+            <gml:interior>
+                <gml:Ring>
+                    <gml:curveMember>
+                        <gml:Curve gml:id="HPA.6402878010.1">
+                            <gml:segments>
+                                <gml:Circle>
+                                    <gml:posList>885000.00 1087500.00 887500.00 1085000.00 885000.00 1082500.00</gml:posList>
+                                </gml:Circle>
+                            </gml:segments>
+                        </gml:Curve>
+                    </gml:curveMember>
+                </gml:Ring>
+            </gml:interior>
+        </gml:Polygon>
+    </gml:surfaceMember>
+</gml:MultiSurface>
