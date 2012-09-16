@@ -20,7 +20,7 @@ CREATE OR REPLACE VIEW ruian_stats AS
             rn_kraj_1960.definicni_bod,
             rn_kraj_1960.hranice
             FROM rn_kraj_1960)
-        UNION ALL SELECT 'rm_momc'::text,
+        UNION ALL SELECT 'rn_momc'::text,
             rn_momc.definicni_bod,
             rn_momc.hranice
             FROM rn_momc)
