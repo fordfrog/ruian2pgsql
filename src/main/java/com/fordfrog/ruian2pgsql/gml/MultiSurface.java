@@ -60,7 +60,7 @@ public class MultiSurface implements Geometry {
                 sbString.append(',');
             }
 
-            sbString.append(polygon.toWKT());
+            sbString.append(polygon.toWKT().replaceFirst("^POLYGON", ""));
         }
 
         sbString.append(')');
