@@ -641,6 +641,9 @@ public class GMLParser {
                     if (XMLUtils.isSameElement(
                             Namespaces.GML, "ArcString", reader)) {
                         geometry = parseArcString(reader);
+                    } else if (XMLUtils.isSameElement(
+                            Namespaces.GML, "Circle", reader)) {
+                        geometry = parseCircle(reader);
                     } else {
                         throwUnsupportedElement(reader);
                     }
@@ -698,6 +701,47 @@ public class GMLParser {
         }
 
         return circularString;
+    }
+
+    /**
+     * Parses Circle.
+     *
+     * @param reader XML stream reader
+     *
+     * @return parsed circle
+     *
+     * @throws XMLStreamException Thrown if problem occurred while reading XML
+     *                            stream.
+     */
+    private static Circle parseCircle(final XMLStreamReader reader)
+            throws XMLStreamException {
+        Circle circle = new Circle();
+        circle.setSrid(getSrid(reader));
+
+        while (reader.hasNext()) {
+            final int event = reader.next();
+
+            switch (event) {
+                case XMLStreamReader.START_ELEMENT:
+                    if (XMLUtils.isSameElement(
+                            Namespaces.GML, "posList", reader)) {
+                        parsePosList(reader, circle);
+                    } else {
+                        throwUnsupportedElement(reader);
+                    }
+
+                    break;
+                case XMLStreamReader.END_ELEMENT:
+                    if (XMLUtils.isSameElement(
+                            Namespaces.GML, "Circle", reader)) {
+                        return circle;
+                    } else {
+                        throwUnexpectedElement(reader);
+                    }
+            }
+        }
+
+        return circle;
     }
 
     /**
