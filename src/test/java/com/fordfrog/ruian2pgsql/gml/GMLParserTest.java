@@ -53,6 +53,7 @@ public class GMLParserTest {
                     {"multipoint2"},
                     {"multisurface"},
                     {"multisurface_curves"},
+                    {"multisurface_circle"},
                     {"multicurve"}
                 });
     }
