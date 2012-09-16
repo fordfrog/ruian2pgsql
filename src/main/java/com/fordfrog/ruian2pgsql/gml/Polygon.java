@@ -101,7 +101,7 @@ public class Polygon implements Geometry {
                 new StringBuilder((inners.size() + 1) * 1_024);
         WKTUtils.appendSrid(sbString, srid);
 
-        if (isCurvePolygon()) {
+        if (hasArc()) {
             sbString.append("CURVEPOLYGON(");
         } else {
             sbString.append("POLYGON(");
@@ -120,11 +120,11 @@ public class Polygon implements Geometry {
     }
 
     /**
-     * Checks whether the polygon is curve polygon.
+     * Checks whether the polygon has arc.
      *
-     * @return true if it is curve polygon, otherwise false
+     * @return true if the polygon has arc, otherwise false
      */
-    private boolean isCurvePolygon() {
+    public boolean hasArc() {
         if (outer instanceof CompoundCurve) {
             return true;
         }

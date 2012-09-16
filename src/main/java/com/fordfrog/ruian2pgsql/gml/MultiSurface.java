@@ -45,7 +45,11 @@ public class MultiSurface implements Geometry {
         final StringBuilder sbString = new StringBuilder(1000);
         WKTUtils.appendSrid(sbString, srid);
 
-        sbString.append("MULTISURFACE(");
+        if (hasArc()) {
+            sbString.append("MULTISURFACE(");
+        } else {
+            sbString.append("MULTIPOLYGON(");
+        }
 
         boolean first = true;
 
@@ -56,7 +60,7 @@ public class MultiSurface implements Geometry {
                 sbString.append(',');
             }
 
-            sbString.append(polygon.toWKT());
+            sbString.append(polygon.toWKT().replaceFirst("^POLYGON", ""));
         }
 
         sbString.append(')');
@@ -85,5 +89,20 @@ public class MultiSurface implements Geometry {
      */
     public void addPolygon(final Polygon polygon) {
         polygons.add(polygon);
+    }
+
+    /**
+     * Checks whether the multipolygon has arc.
+     *
+     * @return true if the multipolygon has arc, otherwise false
+     */
+    public boolean hasArc() {
+        for (final Polygon polygon : polygons) {
+            if (polygon.hasArc()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
