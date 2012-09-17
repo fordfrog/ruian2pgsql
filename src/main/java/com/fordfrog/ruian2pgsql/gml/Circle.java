@@ -70,29 +70,31 @@ public class Circle implements Geometry, GeometryWithPoints {
                 points.size()));
         }
 
-        final double ac = (points.get(1).getX() - points.get(0).getX()) *
-                          (points.get(2).getY() - points.get(0).getY());
-        final double bd = (points.get(2).getX() - points.get(0).getX()) *
-                          (points.get(1).getY() - points.get(0).getY());
+        final double dx1 = points.get(1).getX() - points.get(0).getX();
+        final double dy1 = points.get(1).getY() - points.get(0).getY();
+        final double dx2 = points.get(2).getX() - points.get(0).getX();
+        final double dy2 = points.get(2).getY() - points.get(0).getY();
+
+        final double ac = dx1 * dy2;
+        final double bd = dx2 * dy1;
         if (ac == bd) {
             throw new RuntimeException(
                         "Invalid Circle definition: points are co-linear.");
         }
-        final double idet = 1.0 / (ac - bd);
+        final double idet = 0.5 / (ac - bd);
 
-        final double dx = (points.get(1).getX() - points.get(0).getX()) *
-                          (points.get(2).getX() - points.get(0).getX()) *
-                          (points.get(2).getX() - points.get(1).getX());
-        final double dy = (points.get(1).getY() - points.get(0).getY()) *
-                          (points.get(2).getY() - points.get(0).getY()) *
-                          (points.get(1).getY() - points.get(2).getY());
+        final double dxs = (dy1 * dy2 * (points.get(1).getY() - points.get(2).getY())
+                            + dx1 * ac - dx2 * bd) * idet;
+        final double dys = (dx1 * dx2 * (points.get(2).getX() - points.get(1).getX())
+                            + dy2 * ac - dy1 * bd) * idet;
+        final double xs = points.get(0).getX() + dxs;
+        final double ys = points.get(0).getY() + dys;
 
-        final double x = idet * (dy + points.get(1).getX() * ac - points.get(2).getX() * bd);
-        final double y = idet * (dx + points.get(2).getY() * ac - points.get(1).getY() * bd);
-
-        final List<Point> circularStringPoints = new ArrayList<>(3);
+        final List<Point> circularStringPoints = new ArrayList<>(5);
         circularStringPoints.add(points.get(0));
-        circularStringPoints.add(new Point(x, y));
+        circularStringPoints.add(new Point(xs - dys, ys + dxs));
+        circularStringPoints.add(new Point(xs + dxs, ys + dys));
+        circularStringPoints.add(new Point(xs + dys, ys - dxs));
         circularStringPoints.add(points.get(0));
 
         return circularStringPoints;
