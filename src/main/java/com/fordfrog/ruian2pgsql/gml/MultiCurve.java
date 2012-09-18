@@ -70,7 +70,11 @@ public class MultiCurve implements Geometry {
                 new StringBuilder(segments.size() * 1_024);
         WKTUtils.appendSrid(sbString, srid);
 
-        sbString.append("MULTICURVE(");
+        if (hasArc()) {
+            sbString.append("MULTICURVE(");
+        } else {
+            sbString.append("MULTILINESTRING(");
+        }
 
         boolean first = true;
 
@@ -81,11 +85,26 @@ public class MultiCurve implements Geometry {
                 sbString.append(',');
             }
 
-            sbString.append(segment.toWKT());
+            sbString.append(segment.toWKT().replaceFirst("^LINESTRING", ""));
         }
 
         sbString.append(')');
 
         return sbString.toString();
+    }
+
+    /**
+     * Checks whether the multiline has arc.
+     *
+     * @return true if the multiline has arc, otherwise false
+     */
+    public boolean hasArc() {
+        for (final Geometry segment : segments) {
+            if (segment instanceof CircularString) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
