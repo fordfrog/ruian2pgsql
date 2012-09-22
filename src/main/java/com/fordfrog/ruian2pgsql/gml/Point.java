@@ -26,12 +26,8 @@ package com.fordfrog.ruian2pgsql.gml;
  *
  * @author fordfrog
  */
-public class Point implements Geometry {
+public class Point extends AbstractGeometry {
 
-    /**
-     * SRID.
-     */
-    private Integer srid;
     /**
      * X coordinate.
      */
@@ -95,14 +91,9 @@ public class Point implements Geometry {
     }
 
     @Override
-    public Integer getSrid() {
-        return srid;
-    }
-
-    @Override
     public String toWKT() {
         final StringBuilder sbString = new StringBuilder(50);
-        WKTUtils.appendSrid(sbString, srid);
+        WKTUtils.appendSrid(sbString, getSrid());
 
         sbString.append("POINT(");
         sbString.append(x);
@@ -111,14 +102,5 @@ public class Point implements Geometry {
         sbString.append(')');
 
         return sbString.toString();
-    }
-
-    /**
-     * Setter for {@link #srid}.
-     *
-     * @param srid {@link #srid}
-     */
-    public void setSrid(final Integer srid) {
-        this.srid = srid;
     }
 }

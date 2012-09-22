@@ -29,30 +29,12 @@ import java.util.List;
  *
  * @author fordfrog
  */
-public class CircularString implements Geometry, GeometryWithPoints {
+public class CircularString extends AbstractGeometry implements GeometryWithPoints {
 
     /**
      * Circular string points.
      */
     private final List<Point> points = new ArrayList<>(5);
-    /**
-     * SRID.
-     */
-    private Integer srid;
-
-    @Override
-    public Integer getSrid() {
-        return srid;
-    }
-
-    /**
-     * Setter for {@link #srid}.
-     *
-     * @param srid {@link #srid}
-     */
-    public void setSrid(final Integer srid) {
-        this.srid = srid;
-    }
 
     @Override
     public void addPoint(final Point point) {
@@ -62,7 +44,7 @@ public class CircularString implements Geometry, GeometryWithPoints {
     @Override
     public String toWKT() {
         final StringBuilder sbString = new StringBuilder(100);
-        WKTUtils.appendSrid(sbString, srid);
+        WKTUtils.appendSrid(sbString, getSrid());
 
         sbString.append("CIRCULARSTRING(");
         WKTUtils.appendPoints(sbString, points);

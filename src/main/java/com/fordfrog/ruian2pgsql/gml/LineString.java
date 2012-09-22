@@ -29,12 +29,8 @@ import java.util.List;
  *
  * @author fordfrog
  */
-public class LineString implements Geometry, GeometryWithPoints {
+public class LineString extends AbstractGeometry implements GeometryWithPoints {
 
-    /**
-     * SRID.
-     */
-    private Integer srid;
     /**
      * List of points.
      */
@@ -46,24 +42,10 @@ public class LineString implements Geometry, GeometryWithPoints {
     }
 
     @Override
-    public Integer getSrid() {
-        return srid;
-    }
-
-    /**
-     * Setter for {@link #srid}.
-     *
-     * @param srid {@link #srid}
-     */
-    public void setSrid(final Integer srid) {
-        this.srid = srid;
-    }
-
-    @Override
     public String toWKT() {
         final StringBuilder sbString = new StringBuilder(points.size() * 20);
 
-        WKTUtils.appendSrid(sbString, srid);
+        WKTUtils.appendSrid(sbString, getSrid());
 
         sbString.append("LINESTRING(");
         WKTUtils.appendPoints(sbString, points);
