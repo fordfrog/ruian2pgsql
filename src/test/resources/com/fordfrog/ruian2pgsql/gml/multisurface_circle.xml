@@ -12,7 +12,20 @@
                         <gml:Curve gml:id="HPA.6402878010.1">
                             <gml:segments>
                                 <gml:Circle>
-                                    <gml:posList>885000.00 1087500.00 887500.00 1085000.00 885000.00 1082500.00</gml:posList>
+                                    <gml:posList>880005.00 1080007.50 880007.50 1080005.00 880005.00 1080002.50</gml:posList>
+                                </gml:Circle>
+                            </gml:segments>
+                        </gml:Curve>
+                    </gml:curveMember>
+                </gml:Ring>
+            </gml:interior>
+            <gml:interior>
+                <gml:Ring>
+                    <gml:curveMember>
+                        <gml:Curve gml:id="HPA.6402878010.1">
+                            <gml:segments>
+                                <gml:Circle>
+                                    <gml:posList>870000.50 1080000.75 870000.75 1080000.50 870000.50 1080000.25</gml:posList>
                                 </gml:Circle>
                             </gml:segments>
                         </gml:Curve>

@@ -8,7 +8,25 @@
         <gml:Curve gml:id="HVC.86.1.2">
             <gml:segments>
                 <gml:ArcString>
-                    <gml:posList>588873.28 1055816.80 588874.14 1055816.63 588877.28 1055815.33 588880.28 1055812.24 588881.79 1055809.57</gml:posList>
+                    <gml:posList>588000.00 105506.00 588003.00 105503.00 588000.00 105500.00 588000.50 105500.50 588000.00 105501.00</gml:posList>
+                </gml:ArcString>
+            </gml:segments>
+        </gml:Curve>
+    </gml:curveMember>
+    <gml:curveMember>
+        <gml:Curve gml:id="HVC.86.1.3">
+            <gml:segments>
+                <gml:ArcString>
+                    <gml:posList>19.21 13.89 16.22 17.83 3.34 17.46</gml:posList>
+                </gml:ArcString>
+            </gml:segments>
+        </gml:Curve>
+    </gml:curveMember>
+    <gml:curveMember>
+        <gml:Curve gml:id="HVC.86.1.4">
+            <gml:segments>
+                <gml:ArcString>
+                    <gml:posList>3.34 17.46 16.22 17.83 19.21 13.89</gml:posList>
                 </gml:ArcString>
             </gml:segments>
         </gml:Curve>
