@@ -48,30 +48,40 @@ public class GMLParserTest {
     @Parameters
     public static Collection<Object[]> getParameters() {
         return Arrays.asList(new Object[][]{
-                    {"point"},
-                    {"multipoint"},
-                    {"multipoint2"},
-                    {"multisurface"},
-                    {"multisurface_curves"},
-                    {"multisurface_circle"},
-                    {"multicurve"}
+                    {"point", false},
+                    {"multipoint", false},
+                    {"multipoint2", false},
+                    {"multisurface", false},
+                    {"multisurface_curves", false},
+                    {"multisurface_circle", false},
+                    {"multicurve", false},
+                    {"multisurface_curves", true},
+                    {"multisurface_circle", true},
+                    {"multicurve", true}
                 });
     }
     private String name;
+    private boolean linearize;
 
-    public GMLParserTest(final String name) {
+    public GMLParserTest(final String name, final boolean linearize) {
         this.name = name;
+        this.linearize = linearize;
     }
 
     @Test
     public void test() {
-        final String wkt = convertGMLtoWKT(name + ".xml");
-        final String expectedWKT = readWKT(name + ".wkt");
+        final String wkt = convertGMLtoWKT(name + ".xml", linearize);
+        String expectedWKT;
+        if (linearize) {
+            expectedWKT = readWKT(name + ".lwkt");
+        } else {
+            expectedWKT = readWKT(name + ".wkt");
+        }
 
         Assert.assertEquals(expectedWKT, wkt);
     }
 
-    private String convertGMLtoWKT(final String fileName) {
+    private String convertGMLtoWKT(final String fileName, final boolean linearize) {
         final XMLInputFactory xMLInputFactory = XMLInputFactory.newInstance();
 
         try (final InputStream inputStream =
@@ -86,7 +96,11 @@ public class GMLParserTest {
                     final Geometry geometry = GMLParser.parse(reader,
                             reader.getNamespaceURI(), reader.getLocalName());
 
-                    return geometry.toWKT();
+                    if (linearize) {
+                        return ((CurvedGeometry<Geometry>) geometry).linearize(1.0).toWKT();
+                    } else {
+                        return geometry.toWKT();
+                    }
                 }
             }
         } catch (final XMLStreamException ex) {
