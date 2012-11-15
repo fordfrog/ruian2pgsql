@@ -126,7 +126,7 @@ public class KatastralniUzemiConvertor
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "ExistujeDigitalniMapa":
-                        item.setMaDkm("A".equals(reader.getElementText()));
+                        item.setMaDkm("true".equals(reader.getElementText()));
                         break;
                     case "Geometrie":
                         Utils.processGeometrie(
