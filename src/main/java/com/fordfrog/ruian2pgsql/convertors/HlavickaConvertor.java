@@ -69,7 +69,7 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
      */
     public HlavickaConvertor(final Connection con) throws SQLException {
         super(Hlavicka.class, NAMESPACE, "Hlavicka", con, SQL_EXISTS,
-                SQL_INSERT, null);
+                SQL_INSERT, null, SQL_INSERT, null);
     }
 
     @Override

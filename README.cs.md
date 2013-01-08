@@ -15,7 +15,8 @@ unikátním klíčem přiřazeným v RÚIAN).
 ## Požadavky
 
 * JRE nebo JDK 7+
-* server PostgreSQL s nainstalovanou knihovnou PostGIS
+* server PostgreSQL s nainstalovanou knihovnou PostGIS nebo MySQL server (pokud
+  bude při importu použit přepínač --no-gis)
 * Apache Maven 3+ (pouze v případě, že si chcete sami aplikaci zkompilovat)
 
 ## Kompilace
@@ -31,9 +32,11 @@ umístěný soubor pom.xml.
 Zde jsou informace o použití programu, které vypisuje ruian2pgsql, pokud ho
 spustíte bez parametrů (výpis je v angličtině, zde je přeložený):
 
-    Použití: java -jar ruian2pgsql-*-jar-with-dependencies.jar <volby>
+    Použití: java -cp ruian2pgsql-*.jar:jdbc-driver.jar <volby>
 
     Kde:
+    jdbc-driver.jar
+            je soubor JAR obsahující databázový ovladač (bud PostgreSQL nebo MySQL)
     --convert-to-ewkt
             pokud je použito, tak jsou nejprve GML řetězce převedeny ze zdrojového
             XML do EWKT formátu a následně uloženy do databáze, jinak jsou do
@@ -55,6 +58,9 @@ spustíte bez parametrů (výpis je v angličtině, zde je přeložený):
     --log-file <hodnota>
             je volitelná specifikace logovacího souboru (pokud není uveden, log
             bude zapsaný na konzoli)
+    --no-gis
+            ignoruje všechny GIS informace (element Geometrie) ve vstupním XML
+            souboru
     --ignore-invalid-gml
             pokud je GML definice chybná, aplikace ji ignoruje a uloží objekt
             bez dané definice (pokud tento parametr není uvedený, aplikace
@@ -80,7 +86,12 @@ ruian2pgsql je distribuovaný pod MIT licencí.
 
 ## Changelog
 
-## Version 1.3.0
+## Verze 1.4.0
+
+* Přidán přepínač --no-gis, který vypíná import GIS dat.
+* Přidána podpora pro databáze MySQL, pokud je použit přepínač --no-gis.
+
+## Verze 1.3.0
 
 * Změněny DDL příkazy pro vytváření indexů tak, aby byly kompatibilní i s
   PostgreSQL verzemi menšími než 9.0.

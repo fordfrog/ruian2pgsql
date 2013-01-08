@@ -121,6 +121,32 @@ public class XMLUtils {
     }
 
     /**
+     * Skips current element and all its subelements.
+     *
+     * @param reader
+     *
+     * @throws XMLStreamException
+     */
+    public static void skipCurrentElement(final XMLStreamReader reader)
+            throws XMLStreamException {
+        final String namespace = reader.getNamespaceURI();
+        final String localName = reader.getLocalName();
+        while (reader.hasNext()) {
+            final int event = reader.next();
+
+            switch (event) {
+                case XMLStreamReader.START_ELEMENT:
+                    skipCurrentElement(reader);
+                    break;
+                case XMLStreamReader.END_ELEMENT:
+                    if (XMLUtils.isSameElement(namespace, localName, reader)) {
+                        return;
+                    }
+            }
+        }
+    }
+
+    /**
      * Creates new instance of XMLUtils.
      */
     private XMLUtils() {

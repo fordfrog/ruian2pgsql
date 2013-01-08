@@ -14,7 +14,8 @@ once (they are tracked by their unique id assigned in RÚIAN).
 ## Prerequisities
 
 * JRE or JDK 7+
-* PostgreSQL server with installed PostGIS
+* PostgreSQL server with installed PostGIS or MySQL server (if --no-gis command
+  line switch will be used)
 * Apache Maven 3+ (just in case you want to compile the application yourself)
 
 ## Compilation
@@ -30,9 +31,11 @@ located.
 Here is the usage information that ruian2pgsql outputs if run without
 parameters:
 
-    Usage: java -jar ruian2pgsql-*-jar-with-dependencies.jar <options>
+    Usage: java -cp ruian2pgsql-*.jar:jdbc-driver.jar <options>
 
     Where:
+    jdbc-driver.jar
+            is JAR file containing database driver (either PostgreSQL or MySQL)
     --convert-to-ewkt
             if enabled, GML strings from the source XML files are first converted to
             EWKT and then stored in database, otherwise original GML strings are
@@ -53,6 +56,8 @@ parameters:
     --log-file <value>
             is optional specification of log file (if not specified, log will be
             output to console)
+    --no-gis
+            ignores all GIS information (Geometrie element) in the input XML file
     --ignore-invalid-gml
             if GML definition is not valid, application ignores the definition and
             saves the object without the definition (if this parameter is not
@@ -78,6 +83,11 @@ List of planned features is at [wiki](https://github.com/fordfrog/ruian2pgsql/wi
 ruian2pgsql is distributed under MIT license.
 
 ## Changelog
+
+## Version 1.4.0
+
+* Added --no-gis command line switch that disables import of GIS data.
+* Added support for MySQL databases if --no-gis is used.
 
 ## Version 1.3.0
 

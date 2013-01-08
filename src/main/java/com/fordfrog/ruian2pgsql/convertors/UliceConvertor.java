@@ -21,6 +21,7 @@
  */
 package com.fordfrog.ruian2pgsql.convertors;
 
+import com.fordfrog.ruian2pgsql.Config;
 import com.fordfrog.ruian2pgsql.containers.Ulice;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
@@ -64,6 +65,21 @@ public class UliceConvertor extends AbstractSaveConvertor<Ulice> {
             + "definicni_cara = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
+    /**
+     * SQL statement for insertion of new item.
+     */
+    private static final String SQL_INSERT_NO_GIS = "INSERT INTO rn_ulice "
+            + "(nazev, nespravny, obec_kod, id_trans_ruian, plati_od, "
+            + "nz_id_globalni, zmena_grafiky, kod) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    /**
+     * SQL statement for update of existing item.
+     */
+    private static final String SQL_UPDATE_NO_GIS = "UPDATE rn_ulice "
+            + "SET nazev = ?, nespravny = ?, obec_kod = ?, id_trans_ruian = ?, "
+            + "plati_od = ?, nz_id_globalni = ?, zmena_grafiky = ?, "
+            + "item_timestamp = timezone('utc', now()), deleted = false "
+            + "WHERE kod = ? AND id_trans_ruian < ?";
 
     /**
      * Creates new instance of UliceMistoConvertor.
@@ -75,25 +91,32 @@ public class UliceConvertor extends AbstractSaveConvertor<Ulice> {
      */
     public UliceConvertor(final Connection con) throws SQLException {
         super(Ulice.class, Namespaces.VYMENNY_FORMAT_TYPY, "Ulice", con,
-                SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
+                SQL_EXISTS, SQL_INSERT, SQL_UPDATE, SQL_INSERT_NO_GIS,
+                SQL_UPDATE_NO_GIS);
     }
 
     @Override
+    @SuppressWarnings("ValueOfIncrementOrDecrementUsed")
     protected void fill(final PreparedStatement pstm, final Ulice item,
             final boolean update) throws SQLException {
         final PreparedStatementEx pstmEx = new PreparedStatementEx(pstm);
-        pstm.setString(1, item.getNazev());
-        pstmEx.setBoolean(2, item.getNespravny());
-        pstm.setInt(3, item.getObecKod());
-        pstm.setLong(4, item.getIdTransRuian());
-        pstmEx.setDate(5, item.getPlatiOd());
-        pstm.setLong(6, item.getNzIdGlobalni());
-        pstmEx.setBoolean(7, item.getZmenaGrafiky());
-        pstm.setString(8, item.getDefinicniCara());
-        pstm.setInt(9, item.getKod());
+        int index = 1;
+        pstm.setString(index++, item.getNazev());
+        pstmEx.setBoolean(index++, item.getNespravny());
+        pstm.setInt(index++, item.getObecKod());
+        pstm.setLong(index++, item.getIdTransRuian());
+        pstmEx.setDate(index++, item.getPlatiOd());
+        pstm.setLong(index++, item.getNzIdGlobalni());
+        pstmEx.setBoolean(index++, item.getZmenaGrafiky());
+
+        if (!Config.isNoGis()) {
+            pstm.setString(index++, item.getDefinicniCara());
+        }
+
+        pstm.setInt(index++, item.getKod());
 
         if (update) {
-            pstm.setLong(10, item.getIdTransRuian());
+            pstm.setLong(index++, item.getIdTransRuian());
         }
     }
 

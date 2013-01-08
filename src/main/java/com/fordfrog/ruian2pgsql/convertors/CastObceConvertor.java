@@ -21,6 +21,7 @@
  */
 package com.fordfrog.ruian2pgsql.convertors;
 
+import com.fordfrog.ruian2pgsql.Config;
 import com.fordfrog.ruian2pgsql.containers.CastObce;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
@@ -70,6 +71,26 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
             + "hranice = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
+    /**
+     * SQL statement for insertion of new item.
+     */
+    private static final String SQL_INSERT_NO_GIS = "INSERT INTO rn_cast_obce "
+            + "(nazev, nespravny, obec_kod, mluv_char_pad_2, mluv_char_pad_3, "
+            + "mluv_char_pad_4, mluv_char_pad_5, mluv_char_pad_6, "
+            + "mluv_char_pad_7, id_trans_ruian, zmena_grafiky, plati_od, "
+            + "nz_id_globalni, kod) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    /**
+     * SQL statement for update of existing item.
+     */
+    private static final String SQL_UPDATE_NO_GIS = "UPDATE rn_cast_obce "
+            + "SET nazev = ?, nespravny = ?, obec_kod = ?, "
+            + "mluv_char_pad_2 = ?, mluv_char_pad_3 = ?, mluv_char_pad_4 = ?, "
+            + "mluv_char_pad_5 = ?, mluv_char_pad_6 = ?, mluv_char_pad_7 = ?, "
+            + "id_trans_ruian = ?, zmena_grafiky = ?, plati_od = ?, "
+            + "nz_id_globalni = ?, item_timestamp = timezone('utc', now()), "
+            + "deleted = false "
+            + "WHERE kod = ? AND id_trans_ruian < ?";
 
     /**
      * Creates new instance of CastObceConvertor.
@@ -81,32 +102,39 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
      */
     public CastObceConvertor(final Connection con) throws SQLException {
         super(CastObce.class, Namespaces.VYMENNY_FORMAT_TYPY, "CastObce", con,
-                SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
+                SQL_EXISTS, SQL_INSERT, SQL_UPDATE, SQL_INSERT_NO_GIS,
+                SQL_UPDATE_NO_GIS);
     }
 
     @Override
+    @SuppressWarnings("ValueOfIncrementOrDecrementUsed")
     protected void fill(final PreparedStatement pstm, final CastObce item,
             final boolean update) throws SQLException {
         final PreparedStatementEx pstmEx = new PreparedStatementEx(pstm);
-        pstm.setString(1, item.getNazev());
-        pstmEx.setBoolean(2, item.getNespravny());
-        pstm.setInt(3, item.getObecKod());
-        pstm.setString(4, item.getMluvCharPad2());
-        pstm.setString(5, item.getMluvCharPad3());
-        pstm.setString(6, item.getMluvCharPad4());
-        pstm.setString(7, item.getMluvCharPad5());
-        pstm.setString(8, item.getMluvCharPad6());
-        pstm.setString(9, item.getMluvCharPad7());
-        pstm.setLong(10, item.getIdTransRuian());
-        pstmEx.setBoolean(11, item.getZmenaGrafiky());
-        pstmEx.setDate(12, item.getPlatiOd());
-        pstm.setLong(13, item.getNzIdGlobalni());
-        pstm.setString(14, item.getDefinicniBod());
-        pstm.setString(15, item.getHranice());
-        pstm.setInt(16, item.getKod());
+        int index = 1;
+        pstm.setString(index++, item.getNazev());
+        pstmEx.setBoolean(index++, item.getNespravny());
+        pstm.setInt(index++, item.getObecKod());
+        pstm.setString(index++, item.getMluvCharPad2());
+        pstm.setString(index++, item.getMluvCharPad3());
+        pstm.setString(index++, item.getMluvCharPad4());
+        pstm.setString(index++, item.getMluvCharPad5());
+        pstm.setString(index++, item.getMluvCharPad6());
+        pstm.setString(index++, item.getMluvCharPad7());
+        pstm.setLong(index++, item.getIdTransRuian());
+        pstmEx.setBoolean(index++, item.getZmenaGrafiky());
+        pstmEx.setDate(index++, item.getPlatiOd());
+        pstm.setLong(index++, item.getNzIdGlobalni());
+
+        if (!Config.isNoGis()) {
+            pstm.setString(index++, item.getDefinicniBod());
+            pstm.setString(index++, item.getHranice());
+        }
+
+        pstm.setInt(index++, item.getKod());
 
         if (update) {
-            pstm.setLong(17, item.getIdTransRuian());
+            pstm.setLong(index++, item.getIdTransRuian());
         }
     }
 

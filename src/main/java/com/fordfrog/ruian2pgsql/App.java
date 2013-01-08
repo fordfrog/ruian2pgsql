@@ -90,6 +90,9 @@ public class App {
                     i++;
                     Config.setLogFilePath(Paths.get(args[i]));
                     break;
+                case "--no-gis":
+                    Config.setNoGis(true);
+                    break;
                 case "--reset-transaction-ids":
                     Config.setResetTransactionIds(true);
                     break;

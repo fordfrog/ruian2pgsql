@@ -65,7 +65,7 @@ public class ZpusobOchranyObjektuConvertor
     public ZpusobOchranyObjektuConvertor(final Connection con)
             throws SQLException {
         super(ZpusobOchranyObjektu.class, NAMESPACE, "ZpusobOchrany", con, null,
-                SQL_INSERT, null);
+                SQL_INSERT, null, SQL_INSERT, null);
     }
 
     @Override

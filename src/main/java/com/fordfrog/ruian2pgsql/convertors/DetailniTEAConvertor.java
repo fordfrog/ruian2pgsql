@@ -67,7 +67,7 @@ public class DetailniTEAConvertor extends AbstractSaveConvertor<DetailniTEA> {
      */
     public DetailniTEAConvertor(final Connection con) throws SQLException {
         super(DetailniTEA.class, NAMESPACE, "DetailniTEA", con, null,
-                SQL_INSERT, null);
+                SQL_INSERT, null, SQL_INSERT, null);
     }
 
     @Override

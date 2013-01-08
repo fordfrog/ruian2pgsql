@@ -63,7 +63,7 @@ public class BonitovanyDilConvertor
      */
     public BonitovanyDilConvertor(final Connection con) throws SQLException {
         super(BonitovanyDil.class, NAMESPACE, "BonitovanyDil", con, null,
-                SQL_INSERT, null);
+                SQL_INSERT, null, SQL_INSERT, null);
     }
 
     @Override

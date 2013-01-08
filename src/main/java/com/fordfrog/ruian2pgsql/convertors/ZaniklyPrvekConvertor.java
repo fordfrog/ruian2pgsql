@@ -146,21 +146,23 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
      */
     public ZaniklyPrvekConvertor(final Connection con) throws SQLException {
         super(ZaniklyPrvek.class, NAMESPACE, "ZaniklyPrvek", con, null, null,
-                null);
+                null, null, null);
 
-        pstmUpdateAdresniMisto = con.prepareStatement(SQL_UPDATE_ADRESNI_MISTO);
+        pstmUpdateAdresniMisto =
+                con.prepareStatement(fixSql(SQL_UPDATE_ADRESNI_MISTO));
         pstmUpdateBonitDilyParcel =
-                con.prepareStatement(SQL_UPDATE_BONIT_DILY_PARCEL);
-        pstmUpdateCastObce = con.prepareStatement(SQL_UPDATE_CAST_OBCE);
-        pstmUpdateDetailniTea = con.prepareStatement(SQL_UPDATE_DETAILNI_TEA);
-        pstmUpdateParcela = con.prepareStatement(SQL_UPDATE_PARCELA);
+                con.prepareStatement(fixSql(SQL_UPDATE_BONIT_DILY_PARCEL));
+        pstmUpdateCastObce = con.prepareStatement(fixSql(SQL_UPDATE_CAST_OBCE));
+        pstmUpdateDetailniTea =
+                con.prepareStatement(fixSql(SQL_UPDATE_DETAILNI_TEA));
+        pstmUpdateParcela = con.prepareStatement(fixSql(SQL_UPDATE_PARCELA));
         pstmUpdateStavebniObjekt =
-                con.prepareStatement(SQL_UPDATE_STAVEBNI_OBJEKT);
-        pstmUpdateUlice = con.prepareStatement(SQL_UPDATE_ULICE);
+                con.prepareStatement(fixSql(SQL_UPDATE_STAVEBNI_OBJEKT));
+        pstmUpdateUlice = con.prepareStatement(fixSql(SQL_UPDATE_ULICE));
         pstmUpdateZpusobOchranyObjektu =
-                con.prepareStatement(SQL_UPDATE_ZPUSOB_OCHRANY_OBJEKTU);
+                con.prepareStatement(fixSql(SQL_UPDATE_ZPUSOB_OCHRANY_OBJEKTU));
         pstmUpdateZpusobOchranyPozemku =
-                con.prepareStatement(SQL_UPDATE_ZPUSOB_OCHRANY_POZEMKU);
+                con.prepareStatement(fixSql(SQL_UPDATE_ZPUSOB_OCHRANY_POZEMKU));
     }
 
     @Override

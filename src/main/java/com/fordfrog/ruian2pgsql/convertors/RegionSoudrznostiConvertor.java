@@ -21,6 +21,7 @@
  */
 package com.fordfrog.ruian2pgsql.convertors;
 
+import com.fordfrog.ruian2pgsql.Config;
 import com.fordfrog.ruian2pgsql.containers.RegionSoudrznosti;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
@@ -68,6 +69,24 @@ public class RegionSoudrznostiConvertor
             + "hranice = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
+    /**
+     * SQL statement for insertion of new item.
+     */
+    private static final String SQL_INSERT_NO_GIS =
+            "INSERT INTO rn_region_soudrznosti "
+            + "(nazev, nespravny, stat_kod, id_trans_ruian, nuts_lau, "
+            + "plati_od, nz_id_globalni, zmena_grafiky, kod) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    /**
+     * SQL statement for update of existing item.
+     */
+    private static final String SQL_UPDATE_NO_GIS =
+            "UPDATE rn_region_soudrznosti "
+            + "SET nazev = ?, nespravny = ?, stat_kod = ?, id_trans_ruian = ?, "
+            + "nuts_lau = ?, plati_od = ?, nz_id_globalni = ?, "
+            + "zmena_grafiky = ?, item_timestamp = timezone('utc', now()), "
+            + "deleted = false "
+            + "WHERE kod = ? AND id_trans_ruian < ?";
 
     /**
      * Creates new instance of RegionSoudrznostiConvertor.
@@ -79,28 +98,35 @@ public class RegionSoudrznostiConvertor
      */
     public RegionSoudrznostiConvertor(final Connection con) throws SQLException {
         super(RegionSoudrznosti.class, Namespaces.VYMENNY_FORMAT_TYPY,
-                "RegionSoudrznosti", con, SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
+                "RegionSoudrznosti", con, SQL_EXISTS, SQL_INSERT, SQL_UPDATE,
+                SQL_INSERT_NO_GIS, SQL_UPDATE_NO_GIS);
     }
 
     @Override
+    @SuppressWarnings("ValueOfIncrementOrDecrementUsed")
     protected void fill(final PreparedStatement pstm,
             final RegionSoudrznosti item, final boolean update)
             throws SQLException {
         final PreparedStatementEx pstmEx = new PreparedStatementEx(pstm);
-        pstm.setString(1, item.getNazev());
-        pstmEx.setBoolean(2, item.getNespravny());
-        pstm.setInt(3, item.getStatKod());
-        pstm.setLong(4, item.getIdTransRuian());
-        pstm.setString(5, item.getNutsLau());
-        pstmEx.setDate(6, item.getPlatiOd());
-        pstm.setLong(7, item.getNzIdGlobalni());
-        pstmEx.setBoolean(8, item.getZmenaGrafiky());
-        pstm.setString(9, item.getDefinicniBod());
-        pstm.setString(10, item.getHranice());
-        pstm.setInt(11, item.getKod());
+        int index = 1;
+        pstm.setString(index++, item.getNazev());
+        pstmEx.setBoolean(index++, item.getNespravny());
+        pstm.setInt(index++, item.getStatKod());
+        pstm.setLong(index++, item.getIdTransRuian());
+        pstm.setString(index++, item.getNutsLau());
+        pstmEx.setDate(index++, item.getPlatiOd());
+        pstm.setLong(index++, item.getNzIdGlobalni());
+        pstmEx.setBoolean(index++, item.getZmenaGrafiky());
+
+        if (!Config.isNoGis()) {
+            pstm.setString(index++, item.getDefinicniBod());
+            pstm.setString(index++, item.getHranice());
+        }
+
+        pstm.setInt(index++, item.getKod());
 
         if (update) {
-            pstm.setLong(12, item.getIdTransRuian());
+            pstm.setLong(index++, item.getIdTransRuian());
         }
     }
 

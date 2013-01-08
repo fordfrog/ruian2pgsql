@@ -21,6 +21,7 @@
  */
 package com.fordfrog.ruian2pgsql.convertors;
 
+import com.fordfrog.ruian2pgsql.Config;
 import com.fordfrog.ruian2pgsql.containers.Stat;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
@@ -64,6 +65,21 @@ public class StatConvertor extends AbstractSaveConvertor<Stat> {
             + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
+    /**
+     * SQL statement for insertion of the item.
+     */
+    private static final String SQL_INSERT_NO_GIS = "INSERT INTO rn_stat "
+            + "(nazev, nespravny, id_trans_ruian, nuts_lau, plati_od, "
+            + "nz_id_globalni, zmena_grafiky, kod) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    /**
+     * SQL statement for update of the item.
+     */
+    private static final String SQL_UPDATE_NO_GIS = "UPDATE rn_stat "
+            + "SET nazev = ?, nespravny = ?, id_trans_ruian = ?, nuts_lau = ?, "
+            + "plati_od = ?, nz_id_globalni = ?, zmena_grafiky = ?, "
+            + "item_timestamp = timezone('utc', now()), deleted = false "
+            + "WHERE kod = ? AND id_trans_ruian < ?";
 
     /**
      * Creates new instance of StatConvertor.
@@ -75,26 +91,33 @@ public class StatConvertor extends AbstractSaveConvertor<Stat> {
      */
     public StatConvertor(final Connection con) throws SQLException {
         super(Stat.class, Namespaces.VYMENNY_FORMAT_TYPY, "Stat", con,
-                SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
+                SQL_EXISTS, SQL_INSERT, SQL_UPDATE, SQL_INSERT_NO_GIS,
+                SQL_UPDATE_NO_GIS);
     }
 
     @Override
+    @SuppressWarnings("ValueOfIncrementOrDecrementUsed")
     protected void fill(final PreparedStatement pstm, final Stat item,
             final boolean update) throws SQLException {
         final PreparedStatementEx pstmEx = new PreparedStatementEx(pstm);
-        pstm.setString(1, item.getNazev());
-        pstmEx.setBoolean(2, item.getNespravny());
-        pstm.setLong(3, item.getIdTransRuian());
-        pstm.setString(4, item.getNutsLau());
-        pstmEx.setDate(5, item.getPlatiOd());
-        pstm.setLong(6, item.getNzIdGlobalni());
-        pstmEx.setBoolean(7, item.getZmenaGrafiky());
-        pstm.setString(8, item.getDefinicniBod());
-        pstm.setString(9, item.getHranice());
-        pstm.setInt(10, item.getKod());
+        int index = 1;
+        pstm.setString(index++, item.getNazev());
+        pstmEx.setBoolean(index++, item.getNespravny());
+        pstm.setLong(index++, item.getIdTransRuian());
+        pstm.setString(index++, item.getNutsLau());
+        pstmEx.setDate(index++, item.getPlatiOd());
+        pstm.setLong(index++, item.getNzIdGlobalni());
+        pstmEx.setBoolean(index++, item.getZmenaGrafiky());
+
+        if (!Config.isNoGis()) {
+            pstm.setString(index++, item.getDefinicniBod());
+            pstm.setString(index++, item.getHranice());
+        }
+
+        pstm.setInt(index++, item.getKod());
 
         if (update) {
-            pstm.setLong(11, item.getIdTransRuian());
+            pstm.setLong(index++, item.getIdTransRuian());
         }
     }
 

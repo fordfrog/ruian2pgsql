@@ -70,6 +70,24 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE id = ? AND id_trans_ruian < ?";
     /**
+     * SQL statement for insertion of new item.
+     */
+    private static final String SQL_INSERT_NO_GIS = "INSERT INTO rn_parcela "
+            + "(nespravny, katuz_kod, druh_pozemku_kod, druh_cislovani_kod, "
+            + "kmenove_cislo, poddeleni_cisla, vymera_parcely, id_trans_ruian, "
+            + "zpusob_vyu_poz_kod, rizeni_id, plati_od, id) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    /**
+     * SQL statement for update of existing item.
+     */
+    private static final String SQL_UPDATE_NO_GIS = "UPDATE rn_parcela "
+            + "SET nespravny = ?, katuz_kod = ?, druh_pozemku_kod = ?, "
+            + "druh_cislovani_kod = ?, kmenove_cislo = ?, poddeleni_cisla = ?, "
+            + "vymera_parcely = ?, id_trans_ruian = ?, "
+            + "zpusob_vyu_poz_kod = ?, rizeni_id = ?, plati_od = ?, "
+            + "item_timestamp = timezone('utc', now()), deleted = false "
+            + "WHERE id = ? AND id_trans_ruian < ?";
+    /**
      * SQL statement for deletion of BonitovaneDily.
      */
     private static final String SQL_DELETE_BONITOVANE_DILY =
@@ -114,7 +132,8 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
      */
     public ParcelaConvertor(final Connection con) throws SQLException {
         super(Parcela.class, Namespaces.VYMENNY_FORMAT_TYPY, "Parcela", con,
-                SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
+                SQL_EXISTS, SQL_INSERT, SQL_UPDATE, SQL_INSERT_NO_GIS,
+                SQL_UPDATE_NO_GIS);
 
         pstmDeleteBonitovaneDily =
                 con.prepareStatement(SQL_DELETE_BONITOVANE_DILY);
@@ -135,26 +154,32 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
     }
 
     @Override
+    @SuppressWarnings("ValueOfIncrementOrDecrementUsed")
     protected void fill(final PreparedStatement pstm, final Parcela item,
             final boolean update) throws SQLException {
         final PreparedStatementEx pstmEx = new PreparedStatementEx(pstm);
-        pstmEx.setBoolean(1, item.getNespravny());
-        pstm.setInt(2, item.getKatuzKod());
-        pstm.setInt(3, item.getDruhPozemkuKod());
-        pstm.setInt(4, item.getDruhCislovaniKod());
-        pstm.setInt(5, item.getKmenoveCislo());
-        pstmEx.setInt(6, item.getPoddeleniCisla());
-        pstm.setLong(7, item.getVymeraParcely());
-        pstm.setLong(8, item.getIdTransRuian());
-        pstmEx.setInt(9, item.getZpusobVyuPozKod());
-        pstm.setLong(10, item.getRizeniId());
-        pstmEx.setDate(11, item.getPlatiOd());
-        pstm.setString(12, item.getDefinicniBod());
-        pstm.setString(13, item.getHranice());
-        pstm.setLong(14, item.getId());
+        int index = 1;
+        pstmEx.setBoolean(index++, item.getNespravny());
+        pstm.setInt(index++, item.getKatuzKod());
+        pstm.setInt(index++, item.getDruhPozemkuKod());
+        pstm.setInt(index++, item.getDruhCislovaniKod());
+        pstm.setInt(index++, item.getKmenoveCislo());
+        pstmEx.setInt(index++, item.getPoddeleniCisla());
+        pstm.setLong(index++, item.getVymeraParcely());
+        pstm.setLong(index++, item.getIdTransRuian());
+        pstmEx.setInt(index++, item.getZpusobVyuPozKod());
+        pstm.setLong(index++, item.getRizeniId());
+        pstmEx.setDate(index++, item.getPlatiOd());
+
+        if (!Config.isNoGis()) {
+            pstm.setString(index++, item.getDefinicniBod());
+            pstm.setString(index++, item.getHranice());
+        }
+
+        pstm.setLong(index++, item.getId());
 
         if (update) {
-            pstm.setLong(15, item.getIdTransRuian());
+            pstm.setLong(index++, item.getIdTransRuian());
         }
     }
 

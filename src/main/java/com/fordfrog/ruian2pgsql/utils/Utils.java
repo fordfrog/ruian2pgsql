@@ -535,18 +535,22 @@ public class Utils {
     public static void processGeometrie(final XMLStreamReader reader,
             final Connection con, final Object item, final String namespace)
             throws XMLStreamException {
-        while (reader.hasNext()) {
-            final int event = reader.next();
+        if (Config.isNoGis()) {
+            XMLUtils.skipCurrentElement(reader);
+        } else {
+            while (reader.hasNext()) {
+                final int event = reader.next();
 
-            switch (event) {
-                case XMLStreamReader.START_ELEMENT:
-                    processGeometrieElement(reader, con, item, namespace);
-                    break;
-                case XMLStreamReader.END_ELEMENT:
-                    if (XMLUtils.isSameElement(
-                            namespace, "Geometrie", reader)) {
-                        return;
-                    }
+                switch (event) {
+                    case XMLStreamReader.START_ELEMENT:
+                        processGeometrieElement(reader, con, item, namespace);
+                        break;
+                    case XMLStreamReader.END_ELEMENT:
+                        if (XMLUtils.isSameElement(
+                                namespace, "Geometrie", reader)) {
+                            return;
+                        }
+                }
             }
         }
     }

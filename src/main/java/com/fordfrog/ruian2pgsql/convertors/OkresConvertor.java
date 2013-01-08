@@ -21,6 +21,7 @@
  */
 package com.fordfrog.ruian2pgsql.convertors;
 
+import com.fordfrog.ruian2pgsql.Config;
 import com.fordfrog.ruian2pgsql.containers.Okres;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
@@ -66,6 +67,22 @@ public class OkresConvertor extends AbstractSaveConvertor<Okres> {
             + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
+    /**
+     * SQL statement for insertion of new item.
+     */
+    private static final String SQL_INSERT_NO_GIS = "INSERT INTO rn_okres "
+            + "(nazev, nespravny, vusc_kod, kraj_1960_kod, id_trans_ruian, "
+            + "nuts_lau, plati_od, nz_id_globalni, zmena_grafiky, kod) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    /**
+     * SQL statement for update of existing item.
+     */
+    private static final String SQL_UPDATE_NO_GIS = "UPDATE rn_okres "
+            + "SET nazev = ?, nespravny = ?, vusc_kod = ?, kraj_1960_kod = ?, "
+            + "id_trans_ruian = ?, nuts_lau = ?, plati_od = ?, "
+            + "nz_id_globalni = ?, zmena_grafiky = ?, "
+            + "item_timestamp = timezone('utc', now()), deleted = false "
+            + "WHERE kod = ? AND id_trans_ruian < ?";
 
     /**
      * Creates new instance of OkresConvertor.
@@ -77,28 +94,35 @@ public class OkresConvertor extends AbstractSaveConvertor<Okres> {
      */
     public OkresConvertor(final Connection con) throws SQLException {
         super(Okres.class, Namespaces.VYMENNY_FORMAT_TYPY, "Okres", con,
-                SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
+                SQL_EXISTS, SQL_INSERT, SQL_UPDATE, SQL_INSERT_NO_GIS,
+                SQL_UPDATE_NO_GIS);
     }
 
     @Override
+    @SuppressWarnings("ValueOfIncrementOrDecrementUsed")
     protected void fill(PreparedStatement pstm, Okres item, boolean update)
             throws SQLException {
         final PreparedStatementEx pstmEx = new PreparedStatementEx(pstm);
-        pstm.setString(1, item.getNazev());
-        pstmEx.setBoolean(2, item.getNespravny());
-        pstm.setInt(3, item.getVuscKod());
-        pstm.setInt(4, item.getKraj1960Kod());
-        pstm.setLong(5, item.getIdTransRuian());
-        pstm.setString(6, item.getNutsLau());
-        pstmEx.setDate(7, item.getPlatiOd());
-        pstm.setLong(8, item.getNzIdGlobalni());
-        pstmEx.setBoolean(9, item.getZmenaGrafiky());
-        pstm.setString(10, item.getDefinicniBod());
-        pstm.setString(11, item.getHranice());
-        pstm.setInt(12, item.getKod());
+        int index = 1;
+        pstm.setString(index++, item.getNazev());
+        pstmEx.setBoolean(index++, item.getNespravny());
+        pstm.setInt(index++, item.getVuscKod());
+        pstm.setInt(index++, item.getKraj1960Kod());
+        pstm.setLong(index++, item.getIdTransRuian());
+        pstm.setString(index++, item.getNutsLau());
+        pstmEx.setDate(index++, item.getPlatiOd());
+        pstm.setLong(index++, item.getNzIdGlobalni());
+        pstmEx.setBoolean(index++, item.getZmenaGrafiky());
+
+        if (!Config.isNoGis()) {
+            pstm.setString(index++, item.getDefinicniBod());
+            pstm.setString(index++, item.getHranice());
+        }
+
+        pstm.setInt(index++, item.getKod());
 
         if (update) {
-            pstm.setLong(13, item.getIdTransRuian());
+            pstm.setLong(index++, item.getIdTransRuian());
         }
     }
 

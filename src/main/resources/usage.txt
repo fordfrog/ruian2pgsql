@@ -1,6 +1,8 @@
-Usage: java -jar ruian2pgsql-*-jar-with-dependencies.jar <options>
+Usage: java -jar ruian2pgsql-*.jar <options>
 
 Where:
+jdbc-driver.jar
+        is JAR file containing database driver (either PostgreSQL or MySQL)
 --convert-to-ewkt
         if enabled, GML strings from the source XML files are first converted to
         EWKT and then stored in database, otherwise original GML strings are
@@ -21,6 +23,8 @@ Where:
 --log-file <value>
         is optional specification of log file (if not specified, log will be
         output to console)
+--no-gis
+        ignores all GIS information (Geometrie element) in the input XML file
 --ignore-invalid-gml
         if GML definition is not valid, application ignores the definition and
         saves the object without the definition (if this parameter is not

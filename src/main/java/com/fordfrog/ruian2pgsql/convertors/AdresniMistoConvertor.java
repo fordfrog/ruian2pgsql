@@ -21,6 +21,7 @@
  */
 package com.fordfrog.ruian2pgsql.convertors;
 
+import com.fordfrog.ruian2pgsql.Config;
 import com.fordfrog.ruian2pgsql.containers.AdresniMisto;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
@@ -70,6 +71,26 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
             + "zachranka = %FUNCTION%(?), hasici = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
+    /**
+     * SQL statement for insertion of new item.
+     */
+    private static final String SQL_INSERT_NO_GIS =
+            "INSERT INTO rn_adresni_misto "
+            + "(nespravny, adrp_psc, ulice_kod, stavobj_kod, cislo_domovni, "
+            + "cislo_orientacni_hodnota, cislo_orientacni_pismeno, "
+            + "id_trans_ruian, plati_od, zmena_grafiky, nz_id_globalni, kod) "
+            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    /**
+     * SQL statement for update of existing item.
+     */
+    private static final String SQL_UPDATE_NO_GIS = "UPDATE rn_adresni_misto "
+            + "SET nespravny = ?, adrp_psc = ?, ulice_kod = ?, "
+            + "stavobj_kod = ?, cislo_domovni = ?, "
+            + "cislo_orientacni_hodnota = ?, cislo_orientacni_pismeno = ?, "
+            + "id_trans_ruian = ?, plati_od = ?, zmena_grafiky = ?, "
+            + "nz_id_globalni = ?, item_timestamp = timezone('utc', now()), "
+            + "deleted = false "
+            + "WHERE kod = ? AND id_trans_ruian < ?";
 
     /**
      * Creates new instance of AdresniMistoConvertor.
@@ -81,31 +102,38 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
      */
     public AdresniMistoConvertor(final Connection con) throws SQLException {
         super(AdresniMisto.class, Namespaces.VYMENNY_FORMAT_TYPY,
-                "AdresniMisto", con, SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
+                "AdresniMisto", con, SQL_EXISTS, SQL_INSERT, SQL_UPDATE,
+                SQL_INSERT_NO_GIS, SQL_UPDATE_NO_GIS);
     }
 
     @Override
+    @SuppressWarnings("ValueOfIncrementOrDecrementUsed")
     protected void fill(final PreparedStatement pstm, final AdresniMisto item,
             final boolean update) throws SQLException {
         final PreparedStatementEx pstmEx = new PreparedStatementEx(pstm);
-        pstmEx.setBoolean(1, item.getNespravny());
-        pstmEx.setInt(2, item.getAdrpPsc());
-        pstmEx.setInt(3, item.getUliceKod());
-        pstm.setInt(4, item.getStavobjKod());
-        pstm.setInt(5, item.getCisloDomovni());
-        pstmEx.setInt(6, item.getCisloOrientacniHodnota());
-        pstm.setString(7, item.getCisloOrientacniPismeno());
-        pstm.setLong(8, item.getIdTransRuian());
-        pstmEx.setDate(9, item.getPlatiOd());
-        pstmEx.setBoolean(10, item.getZmenaGrafiky());
-        pstm.setLong(11, item.getNzIdGlobalni());
-        pstm.setString(12, item.getDefinicniBod());
-        pstm.setString(13, item.getZachranka());
-        pstm.setString(14, item.getHasici());
-        pstm.setInt(15, item.getKod());
+        int index = 1;
+        pstmEx.setBoolean(index++, item.getNespravny());
+        pstmEx.setInt(index++, item.getAdrpPsc());
+        pstmEx.setInt(index++, item.getUliceKod());
+        pstm.setInt(index++, item.getStavobjKod());
+        pstm.setInt(index++, item.getCisloDomovni());
+        pstmEx.setInt(index++, item.getCisloOrientacniHodnota());
+        pstm.setString(index++, item.getCisloOrientacniPismeno());
+        pstm.setLong(index++, item.getIdTransRuian());
+        pstmEx.setDate(index++, item.getPlatiOd());
+        pstmEx.setBoolean(index++, item.getZmenaGrafiky());
+        pstm.setLong(index++, item.getNzIdGlobalni());
+
+        if (!Config.isNoGis()) {
+            pstm.setString(index++, item.getDefinicniBod());
+            pstm.setString(index++, item.getZachranka());
+            pstm.setString(index++, item.getHasici());
+        }
+
+        pstm.setInt(index++, item.getKod());
 
         if (update) {
-            pstm.setLong(16, item.getIdTransRuian());
+            pstm.setLong(index++, item.getIdTransRuian());
         }
     }
 

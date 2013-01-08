@@ -21,6 +21,7 @@
  */
 package com.fordfrog.ruian2pgsql.convertors;
 
+import com.fordfrog.ruian2pgsql.Config;
 import com.fordfrog.ruian2pgsql.containers.Obec;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
@@ -76,6 +77,32 @@ public class ObecConvertor extends AbstractSaveConvertor<Obec> {
             + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
+    /**
+     * SQL statement for insertion of new item.
+     */
+    private static final String SQL_INSERT_NO_GIS = "INSERT INTO rn_obec "
+            + "(nazev, nespravny, okres_kod, pou_kod, nuts_lau, "
+            + "mluv_char_pad_2, mluv_char_pad_3, mluv_char_pad_4, "
+            + "mluv_char_pad_5, mluv_char_pad_6, mluv_char_pad_7, "
+            + "zmena_grafiky, cleneni_sm_rozsah_kod, cleneni_sm_typ_kod, "
+            + "status_kod, vlajka_text, vlajka_obrazek, znak_text, "
+            + "znak_obrazek, id_trans_ruian, plati_od, nz_id_globalni, kod) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
+            + "?, ?, ?, ?, ?)";
+    /**
+     * SQL statement for update of existing item.
+     */
+    private static final String SQL_UPDATE_NO_GIS = "UPDATE rn_obec "
+            + "SET nazev = ?, nespravny = ?, okres_kod = ?, pou_kod = ?, "
+            + "nuts_lau = ?, mluv_char_pad_2 = ?, mluv_char_pad_3 = ?, "
+            + "mluv_char_pad_4 = ?, mluv_char_pad_5 = ?, mluv_char_pad_6 = ?, "
+            + "mluv_char_pad_7 = ?, zmena_grafiky = ?, "
+            + "cleneni_sm_rozsah_kod = ?, cleneni_sm_typ_kod = ?, "
+            + "status_kod = ?, vlajka_text = ?, vlajka_obrazek = ?, "
+            + "znak_text = ?, znak_obrazek = ?, id_trans_ruian = ?, "
+            + "plati_od = ?, nz_id_globalni = ?, "
+            + "item_timestamp = timezone('utc', now()), deleted = false "
+            + "WHERE kod = ? AND id_trans_ruian < ?";
 
     /**
      * Creates new instance of ObecConvertor.
@@ -87,41 +114,48 @@ public class ObecConvertor extends AbstractSaveConvertor<Obec> {
      */
     public ObecConvertor(final Connection con) throws SQLException {
         super(Obec.class, Namespaces.VYMENNY_FORMAT_TYPY, "Obec", con,
-                SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
+                SQL_EXISTS, SQL_INSERT, SQL_UPDATE, SQL_INSERT_NO_GIS,
+                SQL_UPDATE_NO_GIS);
     }
 
     @Override
+    @SuppressWarnings("ValueOfIncrementOrDecrementUsed")
     protected void fill(final PreparedStatement pstm, final Obec item,
             final boolean update) throws SQLException {
         final PreparedStatementEx pstmEx = new PreparedStatementEx(pstm);
-        pstm.setString(1, item.getNazev());
-        pstmEx.setBoolean(2, item.getNespravny());
-        pstm.setInt(3, item.getOkresKod());
-        pstm.setInt(4, item.getPouKod());
-        pstm.setString(5, item.getNutsLau());
-        pstm.setString(6, item.getMluvCharPad2());
-        pstm.setString(7, item.getMluvCharPad3());
-        pstm.setString(8, item.getMluvCharPad4());
-        pstm.setString(9, item.getMluvCharPad5());
-        pstm.setString(10, item.getMluvCharPad6());
-        pstm.setString(11, item.getMluvCharPad7());
-        pstmEx.setBoolean(12, item.getZmenaGrafiky());
-        pstmEx.setInt(13, item.getCleneniSmRozsahKod());
-        pstmEx.setInt(14, item.getCleneniSmTypKod());
-        pstm.setInt(15, item.getStatusKod());
-        pstm.setString(16, item.getVlajkaText());
-        pstm.setBytes(17, item.getVlajkaObrazek());
-        pstm.setString(18, item.getZnakText());
-        pstm.setBytes(19, item.getZnakObrazek());
-        pstm.setLong(20, item.getIdTransRuian());
-        pstmEx.setDate(21, item.getPlatiOd());
-        pstm.setLong(22, item.getNzIdGlobalni());
-        pstm.setString(23, item.getDefinicniBod());
-        pstm.setString(24, item.getHranice());
-        pstm.setInt(25, item.getKod());
+        int index = 1;
+        pstm.setString(index++, item.getNazev());
+        pstmEx.setBoolean(index++, item.getNespravny());
+        pstm.setInt(index++, item.getOkresKod());
+        pstm.setInt(index++, item.getPouKod());
+        pstm.setString(index++, item.getNutsLau());
+        pstm.setString(index++, item.getMluvCharPad2());
+        pstm.setString(index++, item.getMluvCharPad3());
+        pstm.setString(index++, item.getMluvCharPad4());
+        pstm.setString(index++, item.getMluvCharPad5());
+        pstm.setString(index++, item.getMluvCharPad6());
+        pstm.setString(index++, item.getMluvCharPad7());
+        pstmEx.setBoolean(index++, item.getZmenaGrafiky());
+        pstmEx.setInt(index++, item.getCleneniSmRozsahKod());
+        pstmEx.setInt(index++, item.getCleneniSmTypKod());
+        pstm.setInt(index++, item.getStatusKod());
+        pstm.setString(index++, item.getVlajkaText());
+        pstm.setBytes(index++, item.getVlajkaObrazek());
+        pstm.setString(index++, item.getZnakText());
+        pstm.setBytes(index++, item.getZnakObrazek());
+        pstm.setLong(index++, item.getIdTransRuian());
+        pstmEx.setDate(index++, item.getPlatiOd());
+        pstm.setLong(index++, item.getNzIdGlobalni());
+
+        if (!Config.isNoGis()) {
+            pstm.setString(index++, item.getDefinicniBod());
+            pstm.setString(index++, item.getHranice());
+        }
+
+        pstm.setInt(index++, item.getKod());
 
         if (update) {
-            pstm.setLong(26, item.getIdTransRuian());
+            pstm.setLong(index++, item.getIdTransRuian());
         }
     }
 

@@ -66,6 +66,10 @@ public class Config {
      */
     private static boolean dryRun;
     /**
+     * If set to true, no geometries are parsed.
+     */
+    private static boolean noGis;
+    /**
      * Path to file where runtime messages should be logged.
      */
     private static Path logFilePath;
@@ -231,6 +235,34 @@ public class Config {
      */
     public static void setDryRun(final boolean dryRun) {
         Config.dryRun = dryRun;
+    }
+
+    /**
+     * Getter for {@link #noGis}.
+     *
+     * @return {@link #noGis}
+     */
+    public static boolean isNoGis() {
+        return noGis;
+    }
+
+    /**
+     * Setter for {@link #noGis}.
+     *
+     * @param noGis {@link #noGis}
+     */
+    public static void setNoGis(final boolean noGis) {
+        Config.noGis = noGis;
+    }
+
+    /**
+     * Returns true if MySQL driver is used, otherwise false.
+     *
+     * @return true if MySQL driver is used, otherwise false
+     */
+    public static boolean isMysqlDriver() {
+        return dbConnectionUrl != null
+                && dbConnectionUrl.startsWith("jdbc:mysql:");
     }
 
     /**

@@ -75,24 +75,37 @@ public class MainConvertor {
         final long startTimestamp = System.currentTimeMillis();
 
         try (final Connection con = DriverManager.getConnection(
-                        Config.getDbConnectionUrl())) {
+                Config.getDbConnectionUrl())) {
             con.setAutoCommit(false);
 
             if (Config.isCreateTables()) {
                 Log.write("Initializing database schema...");
-                runSQLFromResource(con, "/sql/schema.sql");
+
+                if (Config.isNoGis() || Config.isMysqlDriver()) {
+                    if (Config.isMysqlDriver()) {
+                        runSQLFromResource(con, "/sql/schema_no_gis_mysql.sql");
+                    } else {
+                        runSQLFromResource(con, "/sql/schema_no_gis.sql");
+                    }
+                } else {
+                    runSQLFromResource(con, "/sql/schema.sql");
+                }
             }
 
-            Log.write("Recreating RÚIAN statistics views...");
-            runSQLFromResource(con, "/sql/ruian_stats.sql");
-            runSQLFromResource(con, "/sql/ruian_stats_full.sql");
+            if (!Config.isNoGis() && !Config.isMysqlDriver()) {
+                Log.write("Recreating RÚIAN statistics views...");
+                runSQLFromResource(con, "/sql/ruian_stats.sql");
+                runSQLFromResource(con, "/sql/ruian_stats_full.sql");
+            }
 
             if (Config.isResetTransactionIds()) {
                 Log.write("Resetting transaction ids...");
                 runSQLFromResource(con, "/sql/reset_transaction_ids.sql");
             }
 
-            if (!Config.isConvertToEWKT() && GMLUtils.checkMultipointBug(con)) {
+            if (!Config.isNoGis() && !Config.isMysqlDriver()
+                    && !Config.isConvertToEWKT()
+                    && GMLUtils.checkMultipointBug(con)) {
                 Log.write("Installed version of Postgis is affected by "
                         + "multipoint bug "
                         + "http://trac.osgeo.org/postgis/ticket/1928, enabling "
@@ -126,9 +139,9 @@ public class MainConvertor {
         final StringBuilder sbSQL = new StringBuilder(10_240);
 
         try (final BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(
-                        MainConvertor.class.getResourceAsStream(
-                        resourceName), "UTF-8"));
+                new InputStreamReader(
+                MainConvertor.class.getResourceAsStream(
+                resourceName), "UTF-8"));
                 final Statement stm = con.createStatement()) {
             String line = reader.readLine();
 
@@ -164,7 +177,7 @@ public class MainConvertor {
         final List<Path> result = new ArrayList<>(10);
 
         try (final DirectoryStream<Path> files =
-                        Files.newDirectoryStream(inputDirPath)) {
+                Files.newDirectoryStream(inputDirPath)) {
             final Iterator<Path> filesIterator = files.iterator();
 
             while (filesIterator.hasNext()) {

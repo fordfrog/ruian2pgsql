@@ -30,6 +30,7 @@ import com.fordfrog.ruian2pgsql.utils.XMLUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Arrays;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -81,6 +82,37 @@ public class StavebniObjektConvertor
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
     /**
+     * SQL statement for insertion of new item.
+     */
+    private static final String SQL_INSERT_NO_GIS =
+            "INSERT INTO rn_stavebni_objekt "
+            + "(nespravny, identifikacni_parcela_id, momc_kod, cobce_kod, "
+            + "budova_id, cisla_domovni, dokonceni, je_vytah_kod, "
+            + "zmena_grafiky, druh_konstrukce_kod, zmena_detailu, "
+            + "obestaveny_prostor, pocet_bytu, pocet_podlazi, "
+            + "podlahova_plocha, pripoj_el_energie, pripoj_kanal_sit_kod, "
+            + "pripoj_plyn_kod, pripoj_vodovod_kod, typ_kod, zastavena_plocha, "
+            + "zpusob_vytapeni_kod, zpusob_vyuziti_kod, id_trans_ruian, "
+            + "plati_od, nz_id_globalni, kod) "
+            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
+            + "?, ?, ?, ?, ?, ?, ?, ?)";
+    /**
+     * SQL statement for update of existing item.
+     */
+    private static final String SQL_UPDATE_NO_GIS =
+            "UPDATE rn_stavebni_objekt "
+            + "SET nespravny = ?, identifikacni_parcela_id = ?, momc_kod = ?, "
+            + "cobce_kod = ?, budova_id = ?, cisla_domovni = ?, dokonceni = ?, "
+            + "je_vytah_kod = ?, zmena_grafiky = ?, druh_konstrukce_kod = ?, "
+            + "zmena_detailu = ?, obestaveny_prostor = ?, pocet_bytu = ?, "
+            + "pocet_podlazi = ?, podlahova_plocha = ?, pripoj_el_energie = ?, "
+            + "pripoj_kanal_sit_kod = ?, pripoj_plyn_kod = ?, "
+            + "pripoj_vodovod_kod = ?, typ_kod = ?, zastavena_plocha = ?, "
+            + "zpusob_vytapeni_kod = ?, zpusob_vyuziti_kod = ?, "
+            + "id_trans_ruian = ?, plati_od = ?, nz_id_globalni = ?, "
+            + "item_timestamp = timezone('utc', now()), deleted = false "
+            + "WHERE kod = ? AND id_trans_ruian < ?";
+    /**
      * SQL statement for deleting of DetainiTEA.
      */
     private static final String SQL_DELETE_DETAILNI_TEA =
@@ -125,7 +157,8 @@ public class StavebniObjektConvertor
      */
     public StavebniObjektConvertor(final Connection con) throws SQLException {
         super(StavebniObjekt.class, Namespaces.VYMENNY_FORMAT_TYPY,
-                "StavebniObjekt", con, SQL_EXISTS, SQL_INSERT, SQL_UPDATE);
+                "StavebniObjekt", con, SQL_EXISTS, SQL_INSERT, SQL_UPDATE,
+                SQL_INSERT_NO_GIS, SQL_UPDATE_NO_GIS);
 
         pstmDeleteDetailniTEA = con.prepareStatement(SQL_DELETE_DETAILNI_TEA);
         pstmDeleteZpusobyOchranyObjektu =
@@ -145,41 +178,53 @@ public class StavebniObjektConvertor
     }
 
     @Override
+    @SuppressWarnings("ValueOfIncrementOrDecrementUsed")
     protected void fill(final PreparedStatement pstm, final StavebniObjekt item,
             final boolean update) throws SQLException {
         final PreparedStatementEx pstmEx = new PreparedStatementEx(pstm);
-        pstmEx.setBoolean(1, item.getNespravny());
-        pstmEx.setLong(2, item.getIdentifikacniParcelaId());
-        pstmEx.setInt(3, item.getMomcKod());
-        pstmEx.setInt(4, item.getCobceKod());
-        pstmEx.setLong(5, item.getBudovaId());
-        pstmEx.setIntArray(6, item.getCislaDomovni());
-        pstmEx.setDate(7, item.getDokonceni());
-        pstmEx.setInt(8, item.getJeVytahKod());
-        pstmEx.setBoolean(9, item.getZmenaGrafiky());
-        pstmEx.setInt(10, item.getDruhKonstrukceKod());
-        pstmEx.setBoolean(11, item.getZmenaDetailu());
-        pstmEx.setInt(12, item.getObestavenyProstor());
-        pstmEx.setInt(13, item.getPocetBytu());
-        pstmEx.setInt(14, item.getPocetPodlazi());
-        pstmEx.setInt(15, item.getPodlahovaPlocha());
-        pstmEx.setBoolean(16, item.getPripojElEnergie());
-        pstmEx.setInt(17, item.getPripojKanalSitKod());
-        pstmEx.setInt(18, item.getPripojPlynKod());
-        pstmEx.setInt(19, item.getPripojVodovodKod());
-        pstmEx.setInt(20, item.getTypKod());
-        pstmEx.setInt(21, item.getZastavenaPlocha());
-        pstmEx.setInt(22, item.getZpusobVytapeniKod());
-        pstmEx.setInt(23, item.getZpusobVyuzitiKod());
-        pstm.setLong(24, item.getIdTransRuian());
-        pstmEx.setDate(25, item.getPlatiOd());
-        pstm.setLong(26, item.getNzIdGlobalni());
-        pstm.setString(27, item.getDefinicniBod());
-        pstm.setString(28, item.getHranice());
-        pstm.setInt(29, item.getKod());
+        int index = 1;
+        pstmEx.setBoolean(index++, item.getNespravny());
+        pstmEx.setLong(index++, item.getIdentifikacniParcelaId());
+        pstmEx.setInt(index++, item.getMomcKod());
+        pstmEx.setInt(index++, item.getCobceKod());
+        pstmEx.setLong(index++, item.getBudovaId());
+
+        if (Config.isMysqlDriver()) {
+            pstm.setString(index++, Arrays.toString(item.getCislaDomovni()));
+        } else {
+            pstmEx.setIntArray(index++, item.getCislaDomovni());
+        }
+
+        pstmEx.setDate(index++, item.getDokonceni());
+        pstmEx.setInt(index++, item.getJeVytahKod());
+        pstmEx.setBoolean(index++, item.getZmenaGrafiky());
+        pstmEx.setInt(index++, item.getDruhKonstrukceKod());
+        pstmEx.setBoolean(index++, item.getZmenaDetailu());
+        pstmEx.setInt(index++, item.getObestavenyProstor());
+        pstmEx.setInt(index++, item.getPocetBytu());
+        pstmEx.setInt(index++, item.getPocetPodlazi());
+        pstmEx.setInt(index++, item.getPodlahovaPlocha());
+        pstmEx.setBoolean(index++, item.getPripojElEnergie());
+        pstmEx.setInt(index++, item.getPripojKanalSitKod());
+        pstmEx.setInt(index++, item.getPripojPlynKod());
+        pstmEx.setInt(index++, item.getPripojVodovodKod());
+        pstmEx.setInt(index++, item.getTypKod());
+        pstmEx.setInt(index++, item.getZastavenaPlocha());
+        pstmEx.setInt(index++, item.getZpusobVytapeniKod());
+        pstmEx.setInt(index++, item.getZpusobVyuzitiKod());
+        pstm.setLong(index++, item.getIdTransRuian());
+        pstmEx.setDate(index++, item.getPlatiOd());
+        pstm.setLong(index++, item.getNzIdGlobalni());
+
+        if (!Config.isNoGis()) {
+            pstm.setString(index++, item.getDefinicniBod());
+            pstm.setString(index++, item.getHranice());
+        }
+
+        pstm.setInt(index++, item.getKod());
 
         if (update) {
-            pstm.setLong(30, item.getIdTransRuian());
+            pstm.setLong(index++, item.getIdTransRuian());
         }
     }
 

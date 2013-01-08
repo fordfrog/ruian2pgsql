@@ -21,6 +21,7 @@
  */
 package com.fordfrog.ruian2pgsql.convertors;
 
+import com.fordfrog.ruian2pgsql.Config;
 import com.fordfrog.ruian2pgsql.containers.Zsj;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.PreparedStatementEx;
@@ -72,6 +73,28 @@ public class ZsjConvertor extends AbstractSaveConvertor<Zsj> {
             + "hranice = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
+    /**
+     * SQL statement for insertion of new item.
+     */
+    private static final String SQL_INSERT_NO_GIS = "INSERT INTO rn_zsj "
+            + "(nazev, nespravny, katuz_kod, charakter_zsj_kod, "
+            + "mluv_char_pad_2, mluv_char_pad_3, mluv_char_pad_4, "
+            + "mluv_char_pad_5, mluv_char_pad_6, mluv_char_pad_7, "
+            + "vymera, plati_od, zmena_grafiky, nz_id_globalni, "
+            + "id_trans_ruian, kod) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    /**
+     * SQL statement for update of existing item.
+     */
+    private static final String SQL_UPDATE_NO_GIS = "UPDATE rn_zsj "
+            + "SET nazev = ?, nespravny = ?, katuz_kod = ?, "
+            + "charakter_zsj_kod = ?, mluv_char_pad_2 = ?, "
+            + "mluv_char_pad_3 = ?, mluv_char_pad_4 = ?, mluv_char_pad_5 = ?, "
+            + "mluv_char_pad_6 = ?, mluv_char_pad_7 = ?, vymera = ?, "
+            + "plati_od = ?, zmena_grafiky = ?, nz_id_globalni = ?, "
+            + "id_trans_ruian = ?, item_timestamp = timezone('utc', now()), "
+            + "deleted = false "
+            + "WHERE kod = ? AND id_trans_ruian < ?";
 
     /**
      * Creates new instance of ZsjConvertor.
@@ -83,34 +106,40 @@ public class ZsjConvertor extends AbstractSaveConvertor<Zsj> {
      */
     public ZsjConvertor(final Connection con) throws SQLException {
         super(Zsj.class, Namespaces.VYMENNY_FORMAT_TYPY, "Zsj", con, SQL_EXISTS,
-                SQL_INSERT, SQL_UPDATE);
+                SQL_INSERT, SQL_UPDATE, SQL_INSERT_NO_GIS, SQL_UPDATE_NO_GIS);
     }
 
     @Override
+    @SuppressWarnings("ValueOfIncrementOrDecrementUsed")
     protected void fill(final PreparedStatement pstm, final Zsj item,
             final boolean update) throws SQLException {
         final PreparedStatementEx pstmEx = new PreparedStatementEx(pstm);
-        pstm.setString(1, item.getNazev());
-        pstmEx.setBoolean(2, item.getNespravny());
-        pstm.setInt(3, item.getKatuzKod());
-        pstm.setInt(4, item.getCharakterZsjKod());
-        pstm.setString(5, item.getMluvCharPad2());
-        pstm.setString(6, item.getMluvCharPad3());
-        pstm.setString(7, item.getMluvCharPad4());
-        pstm.setString(8, item.getMluvCharPad5());
-        pstm.setString(9, item.getMluvCharPad6());
-        pstm.setString(10, item.getMluvCharPad7());
-        pstm.setLong(11, item.getVymera());
-        pstmEx.setDate(12, item.getPlatiOd());
-        pstmEx.setBoolean(13, item.getZmenaGrafiky());
-        pstm.setLong(14, item.getNzIdGlobalni());
-        pstm.setLong(15, item.getIdTransRuian());
-        pstm.setString(16, item.getDefinicniBod());
-        pstm.setString(17, item.getHranice());
-        pstm.setInt(18, item.getKod());
+        int index = 1;
+        pstm.setString(index++, item.getNazev());
+        pstmEx.setBoolean(index++, item.getNespravny());
+        pstm.setInt(index++, item.getKatuzKod());
+        pstm.setInt(index++, item.getCharakterZsjKod());
+        pstm.setString(index++, item.getMluvCharPad2());
+        pstm.setString(index++, item.getMluvCharPad3());
+        pstm.setString(index++, item.getMluvCharPad4());
+        pstm.setString(index++, item.getMluvCharPad5());
+        pstm.setString(index++, item.getMluvCharPad6());
+        pstm.setString(index++, item.getMluvCharPad7());
+        pstm.setLong(index++, item.getVymera());
+        pstmEx.setDate(index++, item.getPlatiOd());
+        pstmEx.setBoolean(index++, item.getZmenaGrafiky());
+        pstm.setLong(index++, item.getNzIdGlobalni());
+        pstm.setLong(index++, item.getIdTransRuian());
+
+        if (!Config.isNoGis()) {
+            pstm.setString(index++, item.getDefinicniBod());
+            pstm.setString(index++, item.getHranice());
+        }
+
+        pstm.setInt(index++, item.getKod());
 
         if (update) {
-            pstm.setLong(19, item.getIdTransRuian());
+            pstm.setLong(index++, item.getIdTransRuian());
         }
     }
 

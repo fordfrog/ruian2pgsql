@@ -23,7 +23,6 @@ package com.fordfrog.ruian2pgsql.convertors;
 
 import com.fordfrog.ruian2pgsql.Config;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -72,14 +71,19 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
     /**
      * Creates new instance of AbstractSaveConvertor.
      *
-     * @param clazz     {@link #clazz}
-     * @param namespace {@link #namespace}
-     * @param localName {@link #localName}
-     * @param con       database connection
-     * @param sqlExists SQL statement for testing whether item exists, if item
-     *                  does not exist, it must return no row
-     * @param sqlInsert SQL statement for insertion of item to database
-     * @param sqlUpdate SQL statement for updating of item in database
+     * @param clazz          {@link #clazz}
+     * @param namespace      {@link #namespace}
+     * @param localName      {@link #localName}
+     * @param con            database connection
+     * @param sqlExists      SQL statement for testing whether item exists, if
+     *                       item
+     *                       does not exist, it must return no row
+     * @param sqlInsert      SQL statement for insertion of item to database
+     * @param sqlUpdate      SQL statement for updating of item in database
+     * @param sqlInsertNoGis SQL statement for insertion of item to database
+     *                       when --no-gis is used
+     * @param sqlUpdateNoGis SQL statement for updating of item in database when
+     *                       --no-gis is used
      *
      * @throws SQLException Thrown if problem occurred while preparing
      *                      statements.
@@ -87,19 +91,39 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
     public AbstractSaveConvertor(Class<T> clazz, final String namespace,
             final String localName, final Connection con,
             final String sqlExists, final String sqlInsert,
-            final String sqlUpdate) throws SQLException {
+            final String sqlUpdate, final String sqlInsertNoGis,
+            final String sqlUpdateNoGis) throws SQLException {
         this.clazz = clazz;
         this.namespace = namespace;
         this.localName = localName;
         this.connection = con;
         this.pstmExists =
                 sqlExists == null ? null : con.prepareStatement(sqlExists);
-        this.pstmInsert = sqlInsert == null ? null : con.prepareStatement(
-                sqlInsert.replace("%FUNCTION%", Config.isConvertToEWKT()
-                ? "ST_GeomFromEWKT" : "ST_GeomFromGML"));
-        this.pstmUpdate = sqlUpdate == null ? null : con.prepareStatement(
-                sqlUpdate.replace("%FUNCTION%", Config.isConvertToEWKT()
-                ? "ST_GeomFromEWKT" : "ST_GeomFromGML"));
+
+        String sqlInsertAdj = Config.isNoGis() ? sqlInsertNoGis : sqlInsert;
+        String sqlUpdateAdj = Config.isNoGis() ? sqlUpdateNoGis : sqlUpdate;
+
+        if (Config.isMysqlDriver()) {
+            sqlInsertAdj = fixSql(sqlInsertAdj);
+            sqlUpdateAdj = fixSql(sqlUpdateAdj);
+        }
+
+        if (sqlInsertAdj != null) {
+            sqlInsertAdj = sqlInsertAdj.replace("%FUNCTION%",
+                    Config.isConvertToEWKT()
+                    ? "ST_GeomFromEWKT" : "ST_GeomFromGML");
+        }
+
+        if (sqlUpdateAdj != null) {
+            sqlUpdateAdj = sqlUpdateAdj.replace("%FUNCTION%",
+                    Config.isConvertToEWKT()
+                    ? "ST_GeomFromEWKT" : "ST_GeomFromGML");
+        }
+
+        this.pstmInsert = sqlInsertAdj == null
+                ? null : con.prepareStatement(sqlInsertAdj);
+        this.pstmUpdate = sqlUpdateAdj == null
+                ? null : con.prepareStatement(sqlUpdateAdj);
     }
 
     /**
@@ -152,6 +176,25 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
 
                     break;
             }
+        }
+    }
+
+    /**
+     * Fixes SQL statement.
+     *
+     * @param sql SQL statement
+     *
+     * @return fixed SQL statement
+     */
+    protected String fixSql(final String sql) {
+        if (sql == null) {
+            return sql;
+        }
+
+        if (Config.isMysqlDriver()) {
+            return sql.replace("timezone('utc', now())", "current_timestamp");
+        } else {
+            return sql;
         }
     }
 
