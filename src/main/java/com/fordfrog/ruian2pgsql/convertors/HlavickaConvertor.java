@@ -80,9 +80,9 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
         pstm.setString(2, item.getTypDavky());
         pstm.setString(3, item.getTypSouboru());
         pstmEx.setDate(4, item.getDatum());
-        pstm.setInt(5, item.getTransakceOdId());
+        pstmEx.setInt(5, item.getTransakceOdId());
         pstmEx.setTimestamp(6, item.getTransakceOdZapsano());
-        pstm.setInt(7, item.getTransakceDoId());
+        pstmEx.setInt(7, item.getTransakceDoId());
         pstmEx.setTimestamp(8, item.getTransakceDoZapsano());
         pstm.setString(9, item.getPredchoziSoubor());
         pstm.setString(10, item.getPlnySoubor());
