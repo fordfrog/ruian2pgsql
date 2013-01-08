@@ -1,4 +1,4 @@
-Usage: java -jar ruian2pgsql-*.jar <options>
+Usage: java -jar ruian2pgsql-*.jar:jdbc-driver.jar com.fordfrog.ruian2pgsql.App <options>
 
 Where:
 jdbc-driver.jar

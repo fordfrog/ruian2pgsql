@@ -32,7 +32,7 @@ umístěný soubor pom.xml.
 Zde jsou informace o použití programu, které vypisuje ruian2pgsql, pokud ho
 spustíte bez parametrů (výpis je v angličtině, zde je přeložený):
 
-    Použití: java -cp ruian2pgsql-*.jar:jdbc-driver.jar <volby>
+    Použití: java -cp ruian2pgsql-*.jar:jdbc-driver.jar com.fordfrog.ruian2pgsql.App <volby>
 
     Kde:
     jdbc-driver.jar

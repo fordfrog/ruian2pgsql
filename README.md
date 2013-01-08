@@ -31,7 +31,7 @@ located.
 Here is the usage information that ruian2pgsql outputs if run without
 parameters:
 
-    Usage: java -cp ruian2pgsql-*.jar:jdbc-driver.jar <options>
+    Usage: java -cp ruian2pgsql-*.jar:jdbc-driver.jar com.fordfrog.ruian2pgsql.App <options>
 
     Where:
     jdbc-driver.jar
