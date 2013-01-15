@@ -90,6 +90,8 @@ ruian2pgsql je distribuovaný pod MIT licencí.
 
 * Přidán přepínač --no-gis, který vypíná import GIS dat.
 * Přidána podpora pro databáze MySQL, pokud je použit přepínač --no-gis.
+* Předpřipravené statementy jsou nyní inicializovány pouze jednou, ne pokaždé
+  když se zpracovává nový soubor.
 
 ## Verze 1.3.0
 

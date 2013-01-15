@@ -88,6 +88,8 @@ ruian2pgsql is distributed under MIT license.
 
 * Added --no-gis command line switch that disables import of GIS data.
 * Added support for MySQL databases if --no-gis is used.
+* Prepared statements are now initialized only once and not each time new file
+  is processed.
 
 ## Version 1.3.0
 

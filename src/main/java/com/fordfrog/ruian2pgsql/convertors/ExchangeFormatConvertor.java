@@ -40,19 +40,27 @@ public class ExchangeFormatConvertor extends AbstractConvertor {
      */
     private static final String NAMESPACE = Namespaces.VYMENNY_FORMAT_TYPY;
     /**
-     * Database connection.
+     * Data convertor instance.
      */
-    private final Connection connection;
+    private final DataConvertor dataConvertor;
+    /**
+     * Hlavicka convertor instance.
+     */
+    private final HlavickaConvertor hlavickaConvertor;
 
     /**
      * Creates new instance of ExchangeFormatConvertor.
      *
      * @param con {@link #connection}
+     *
+     * @throws SQLException Thrown if problem occurred while initializing
+     *                      convertors.
      */
-    public ExchangeFormatConvertor(final Connection con) {
+    public ExchangeFormatConvertor(final Connection con) throws SQLException {
         super(NAMESPACE, "VymennyFormat");
 
-        this.connection = con;
+        dataConvertor = new DataConvertor(con);
+        hlavickaConvertor = new HlavickaConvertor(con);
     }
 
     @Override
@@ -62,10 +70,10 @@ public class ExchangeFormatConvertor extends AbstractConvertor {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "Data":
-                        new DataConvertor(connection).convert(reader);
+                        dataConvertor.convert(reader);
                         break;
                     case "Hlavicka":
-                        new HlavickaConvertor(connection).convert(reader);
+                        hlavickaConvertor.convert(reader);
                         break;
                     default:
                         XMLUtils.processUnsupported(reader);

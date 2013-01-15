@@ -56,6 +56,11 @@ import javax.xml.stream.XMLStreamReader;
 public class MainConvertor {
 
     /**
+     * Exchange format convertor instance.
+     */
+    private static ExchangeFormatConvertor exchangeFormatConvertor;
+
+    /**
      * Creates new instance of MainConvertor.
      */
     private MainConvertor() {
@@ -76,6 +81,8 @@ public class MainConvertor {
 
         try (final Connection con = DriverManager.getConnection(
                 Config.getDbConnectionUrl())) {
+            exchangeFormatConvertor = new ExchangeFormatConvertor(con);
+
             con.setAutoCommit(false);
 
             if (Config.isCreateTables()) {
@@ -114,7 +121,7 @@ public class MainConvertor {
             }
 
             for (final Path file : getInputFiles(Config.getInputDirPath())) {
-                processFile(con, file);
+                processFile(file);
                 con.commit();
             }
 
@@ -206,7 +213,6 @@ public class MainConvertor {
     /**
      * Processes single input file.
      *
-     * @param con  database connection
      * @param file file path
      *
      * @throws UnsupportedEncodingException Thrown if UTF-8 encoding is not
@@ -216,8 +222,8 @@ public class MainConvertor {
      * @throws SQLException                 Thrown if problem occurred while
      *                                      communicating with database.
      */
-    private static void processFile(final Connection con, final Path file)
-            throws XMLStreamException, SQLException {
+    private static void processFile(final Path file) throws XMLStreamException,
+            SQLException {
         final String fileName = file.toString();
 
         if (fileName.endsWith(".xml.gz") || fileName.endsWith(".xml")) {
@@ -228,9 +234,9 @@ public class MainConvertor {
 
             try (final InputStream inputStream = Files.newInputStream(file)) {
                 if (fileName.endsWith(".gz")) {
-                    readInputStream(con, new GZIPInputStream(inputStream));
+                    readInputStream(new GZIPInputStream(inputStream));
                 } else {
-                    readInputStream(con, inputStream);
+                    readInputStream(inputStream);
                 }
             } catch (final IOException ex) {
                 throw new RuntimeException("Failed to read input file", ex);
@@ -247,7 +253,6 @@ public class MainConvertor {
     /**
      * Reads input stream and processes the XML content.
      *
-     * @param con         database connection
      * @param inputStream input stream containing XML data
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
@@ -255,9 +260,8 @@ public class MainConvertor {
      * @throws SQLException       Thrown if problem occurred while communicating
      *                            with database.
      */
-    private static void readInputStream(final Connection con,
-            final InputStream inputStream) throws XMLStreamException,
-            SQLException {
+    private static void readInputStream(final InputStream inputStream)
+            throws XMLStreamException, SQLException {
         final XMLInputFactory xMLInputFactory = XMLInputFactory.newInstance();
 
         final XMLStreamReader reader;
@@ -273,7 +277,7 @@ public class MainConvertor {
             final int event = reader.next();
 
             if (event == XMLStreamReader.START_ELEMENT) {
-                processElement(reader, con);
+                processElement(reader);
             }
         }
     }
@@ -282,20 +286,19 @@ public class MainConvertor {
      * Processes elements and its sub-elements.
      *
      * @param reader XML stream reader
-     * @param con    database connection
      *
      * @throws XMLStreamException Thrown if problem occurred while reading XML
      *                            stream.
      * @throws SQLException       Thrown if problem occurred while communicating
      *                            with database.
      */
-    private static void processElement(final XMLStreamReader reader,
-            final Connection con) throws XMLStreamException, SQLException {
+    private static void processElement(final XMLStreamReader reader)
+            throws XMLStreamException, SQLException {
         switch (reader.getNamespaceURI()) {
             case Namespaces.VYMENNY_FORMAT_TYPY:
                 switch (reader.getLocalName()) {
                     case "VymennyFormat":
-                        new ExchangeFormatConvertor(con).convert(reader);
+                        exchangeFormatConvertor.convert(reader);
                         break;
                     default:
                         XMLUtils.processUnsupported(reader);
