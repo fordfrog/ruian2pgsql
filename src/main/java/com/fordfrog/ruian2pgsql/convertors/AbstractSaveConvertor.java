@@ -109,15 +109,11 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
         }
 
         if (sqlInsertAdj != null) {
-            sqlInsertAdj = sqlInsertAdj.replace("%FUNCTION%",
-                    Config.isConvertToEWKT()
-                    ? "ST_GeomFromEWKT" : "ST_GeomFromGML");
+            sqlInsertAdj = formatGeometry(sqlInsertAdj);
         }
 
         if (sqlUpdateAdj != null) {
-            sqlUpdateAdj = sqlUpdateAdj.replace("%FUNCTION%",
-                    Config.isConvertToEWKT()
-                    ? "ST_GeomFromEWKT" : "ST_GeomFromGML");
+            sqlUpdateAdj = formatGeometry(sqlUpdateAdj);
         }
 
         this.pstmInsert = sqlInsertAdj == null
@@ -196,6 +192,35 @@ public abstract class AbstractSaveConvertor<T> implements Convertor {
         } else {
             return sql;
         }
+    }
+
+    /**
+     * Formats geometry in SQL statement.
+     *
+     * @param sql SQL statement
+     *
+     * @return fixed SQL statement
+     */
+    protected String formatGeometry(final String sql) {
+        if (sql == null) {
+            return sql;
+        }
+
+	String geomFunction;
+        if (Config.isConvertToEWKT()) {
+            geomFunction = "ST_GeomFromEWKT";
+        } else {
+            geomFunction = "ST_GeomFromGML";
+        }
+
+	String newsql;
+        if (Config.getDestinationSrid() != null) {
+	    newsql = sql.replace("%FUNCTION%(?)", "ST_Transform(" + geomFunction + "(?)," + Config.getDestinationSrid() + ")");
+        } else {
+	    newsql = sql.replace("%FUNCTION%", geomFunction);
+        }
+
+	return newsql;
     }
 
     /**
