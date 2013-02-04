@@ -96,6 +96,10 @@ public class App {
                 case "--reset-transaction-ids":
                     Config.setResetTransactionIds(true);
                     break;
+                case "--dest-srid":
+                    i++;
+                    Config.setDestinationSrid(Integer.valueOf(args[i]));
+                    break;
                 default:
                     throw new RuntimeException(
                             "Unsupported command line switch: " + args[i]);
