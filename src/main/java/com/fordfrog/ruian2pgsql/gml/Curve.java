@@ -1,6 +1,5 @@
 /**
  * Copyright 2012 Miroslav Šulc
- * Copyright 2012 Petr Morávek
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,67 +25,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * MultiCurve.
+ * Curve.
  *
  * @author fordfrog
  */
-public class MultiCurve extends AbstractGeometry {
+public class Curve extends AbstractGeometry implements GeometryWithPoints {
 
     /**
-     * Segments of the curve.
+     * Curve points.
      */
-    private final List<Geometry> segments = new ArrayList<>(5);
+    private final List<Point> points = new ArrayList<>(5);
 
-    /**
-     * Adds segment to the list of segments.
-     *
-     * @param segment segment
-     */
-    public void addSegment(final Geometry segment) {
-        segments.add(segment);
+    @Override
+    public void addPoint(final Point point) {
+        points.add(point);
     }
 
     @Override
     public String toWKT() {
-        final StringBuilder sbString =
-                new StringBuilder(segments.size() * 1_024);
+        final StringBuilder sbString = new StringBuilder(100);
         WKTUtils.appendSrid(sbString, getSrid());
 
-        if (hasArc()) {
-            sbString.append("MULTICURVE(");
-        } else {
-            sbString.append("MULTILINESTRING(");
-        }
-
-        boolean first = true;
-
-        for (final Geometry segment : segments) {
-            if (first) {
-                first = false;
-            } else {
-                sbString.append(',');
-            }
-
-            sbString.append(segment.toWKT().replaceFirst("^LINESTRING", ""));
-        }
-
+        sbString.append("CIRCULARSTRING(");
+        WKTUtils.appendPoints(sbString, points);
         sbString.append(')');
 
         return sbString.toString();
-    }
-
-    /**
-     * Checks whether the multiline has arc.
-     *
-     * @return true if the multiline has arc, otherwise false
-     */
-    public boolean hasArc() {
-        for (final Geometry segment : segments) {
-            if (segment instanceof CircularString) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

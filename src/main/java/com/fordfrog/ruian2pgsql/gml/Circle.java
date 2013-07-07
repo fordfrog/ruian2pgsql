@@ -54,7 +54,7 @@ public class Circle extends AbstractGeometry implements GeometryWithPoints {
         final double dx = center.getX() - points.get(0).getX();
         final double dy = center.getY() - points.get(0).getY();
 
-        final CircularString curve = new CircularString();
+        final Curve curve = new Curve();
         curve.addPoint(points.get(0));
         curve.addPoint(new Point(center.getX() - dy, center.getY() + dx));
         curve.addPoint(new Point(center.getX() + dx, center.getY() + dy));

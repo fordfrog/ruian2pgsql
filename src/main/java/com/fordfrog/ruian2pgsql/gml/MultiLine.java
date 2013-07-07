@@ -1,5 +1,6 @@
 /**
  * Copyright 2012 Miroslav Šulc
+ * Copyright 2012 Petr Morávek
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,31 +26,67 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * CircularString.
+ * MultiLine.
  *
  * @author fordfrog
  */
-public class CircularString extends AbstractGeometry implements GeometryWithPoints {
+public class MultiLine extends AbstractGeometry {
 
     /**
-     * Circular string points.
+     * Segments of the curve.
      */
-    private final List<Point> points = new ArrayList<>(5);
+    private final List<Geometry> segments = new ArrayList<>(5);
 
-    @Override
-    public void addPoint(final Point point) {
-        points.add(point);
+    /**
+     * Adds segment to the list of segments.
+     *
+     * @param segment segment
+     */
+    public void addSegment(final Geometry segment) {
+        segments.add(segment);
     }
 
     @Override
     public String toWKT() {
-        final StringBuilder sbString = new StringBuilder(100);
+        final StringBuilder sbString =
+                new StringBuilder(segments.size() * 1_024);
         WKTUtils.appendSrid(sbString, getSrid());
 
-        sbString.append("CIRCULARSTRING(");
-        WKTUtils.appendPoints(sbString, points);
+        if (hasArc()) {
+            sbString.append("MULTICURVE(");
+        } else {
+            sbString.append("MULTILINESTRING(");
+        }
+
+        boolean first = true;
+
+        for (final Geometry segment : segments) {
+            if (first) {
+                first = false;
+            } else {
+                sbString.append(',');
+            }
+
+            sbString.append(segment.toWKT().replaceFirst("^LINESTRING", ""));
+        }
+
         sbString.append(')');
 
         return sbString.toString();
+    }
+
+    /**
+     * Checks whether the multiline has arc.
+     *
+     * @return true if the multiline has arc, otherwise false
+     */
+    public boolean hasArc() {
+        for (final Geometry segment : segments) {
+            if (segment instanceof Curve) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

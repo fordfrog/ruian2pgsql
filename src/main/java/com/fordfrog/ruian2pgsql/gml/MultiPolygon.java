@@ -25,32 +25,66 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * LineString.
+ * MultiPolygon.
  *
  * @author fordfrog
  */
-public class LineString extends AbstractGeometry implements GeometryWithPoints {
+public class MultiPolygon extends AbstractGeometry {
 
     /**
-     * List of points.
+     * List of polygons.
      */
-    private final List<Point> points = new ArrayList<>(100);
-
-    @Override
-    public void addPoint(final Point point) {
-        points.add(point);
-    }
+    private final List<Polygon> polygons = new ArrayList<>(2);
 
     @Override
     public String toWKT() {
-        final StringBuilder sbString = new StringBuilder(points.size() * 20);
-
+        final StringBuilder sbString = new StringBuilder(1000);
         WKTUtils.appendSrid(sbString, getSrid());
 
-        sbString.append("LINESTRING(");
-        WKTUtils.appendPoints(sbString, points);
+        if (hasArc()) {
+            sbString.append("MULTISURFACE(");
+        } else {
+            sbString.append("MULTIPOLYGON(");
+        }
+
+        boolean first = true;
+
+        for (final Polygon polygon : polygons) {
+            if (first) {
+                first = false;
+            } else {
+                sbString.append(',');
+            }
+
+            sbString.append(polygon.toWKT().replaceFirst("^POLYGON", ""));
+        }
+
         sbString.append(')');
 
         return sbString.toString();
+    }
+
+    /**
+     * Adds polygon to the list of polygons.
+     *
+     * @param polygon polygon
+     */
+    public void addPolygon(final Polygon polygon) {
+        polygons.add(polygon);
+    }
+
+    /**
+     * Checks whether the multipolygon has arc.
+     *
+     * @return true if the multipolygon has arc, otherwise false
+     */
+    public boolean hasArc() {
+        for (final Polygon polygon : polygons) {
+            if (polygon.hasArc()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
