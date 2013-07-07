@@ -249,6 +249,8 @@ public class GMLParser {
         switch (value) {
             case "urn:ogc:def:crs:EPSG::2065":
                 return 2065;
+            case "urn:ogc:def:crs:EPSG::5514":
+                return 5514;
             default:
                 throw new RuntimeException(
                         MessageFormat.format("Unsupported SRID {0}", value));
