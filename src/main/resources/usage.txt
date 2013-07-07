@@ -15,8 +15,8 @@ jdbc-driver.jar
         is JDBC connection URL, for example:
         jdbc:postgresql://localhost/ruian?user=ruian&password=p4ssw0rd
 --dest-srid <value>
-        is optional integer identifier of coordinate system to which will be
-        the geometries transformed
+        optional integer identifier of coordinate system to which the geometries
+        should be transformed
 --debug
         if used, debug information are output
 --dry-run
