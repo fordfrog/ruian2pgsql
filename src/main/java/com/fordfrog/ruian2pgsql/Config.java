@@ -73,6 +73,10 @@ public class Config {
      * Path to file where runtime messages should be logged.
      */
     private static Path logFilePath;
+    /**
+     * SRID of coordinate system to which souldb be geometries transformed.
+     */
+    private static Integer destinationSrid;
 
     /**
      * Getter for {@link #inputDirPath}.
@@ -163,6 +167,24 @@ public class Config {
      */
     public static void setLogFilePath(final Path logFilePath) {
         Config.logFilePath = logFilePath;
+    }
+
+    /**
+     * Getter for {@link #destinationSrid}.
+     *
+     * @return {@link #destinationSrid}
+     */
+    public static Integer getDestinationSrid() {
+        return destinationSrid;
+    }
+
+    /**
+     * Setter for {@link #destinationSrid}.
+     *
+     * @param destinationSrid {@link #destinationSrid}
+     */
+    public static void setDestinationSrid(final Integer destinationSrid) {
+        Config.destinationSrid = destinationSrid;
     }
 
     /**
