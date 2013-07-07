@@ -50,6 +50,9 @@ spustíte bez parametrů (výpis je v angličtině, zde je přeložený):
             jdbc:postgresql://localhost/ruian?user=ruian&password=p4ssw0rd
     --debug
             pokud je použito, jsou vypisovány ladící informace
+    --dest-srid <value>
+            volitelný celočíselný identifikátor souřadnicového systému, do kterého
+            mají být geometrie převedeny
     --dry-run
             zpracuje všechny uvedené soubory, ale žádná data nezapíše do
             databáze

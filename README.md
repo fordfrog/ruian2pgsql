@@ -49,6 +49,9 @@ parameters:
             jdbc:postgresql://localhost/ruian?user=ruian&password=p4ssw0rd
     --debug
             if used, debug information are output
+    --dest-srid <value>
+            optional integer identifier of coordinate system to which the geometries
+            should be transformed
     --dry-run
             processes all specified files but no data are written to database
     --ignore-invalid-gml
