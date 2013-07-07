@@ -91,6 +91,9 @@ ruian2pgsql is distributed under MIT license.
 
 * Added --no-gis command line switch that disables import of GIS data.
 * Added support for MySQL databases if --no-gis is used.
+* Added --dest-srid command line switch that enables on the fly transformation
+  of geometries to a desired SRID.
+* Added support for EPSG::5514 coordinate system when parsing XML files.
 * Prepared statements are now initialized only once and not each time new file
   is processed.
 

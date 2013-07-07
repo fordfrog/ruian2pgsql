@@ -93,6 +93,9 @@ ruian2pgsql je distribuovaný pod MIT licencí.
 
 * Přidán přepínač --no-gis, který vypíná import GIS dat.
 * Přidána podpora pro databáze MySQL, pokud je použit přepínač --no-gis.
+* Přidán přepínač --dest-srid, který umožnuje za běhu převést geometrie do
+  požadovaného SRID.
+* Přidána podpora pro EPSG::5514 souřadnicový systém při parsování XML souborů.
 * Předpřipravené statementy jsou nyní inicializovány pouze jednou, ne pokaždé
   když se zpracovává nový soubor.
 
