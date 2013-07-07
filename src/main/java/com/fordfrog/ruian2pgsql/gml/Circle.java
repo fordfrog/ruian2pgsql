@@ -42,55 +42,25 @@ public class Circle extends AbstractGeometry implements GeometryWithPoints {
         points.add(point);
     }
 
-    /**
-     * Calculate points for WKT Circular String.
-     */
-    private List<Point> getCircularStringPoints() {
+    @Override
+    public String toWKT() {
         if (points.size() != 3) {
             throw new RuntimeException(MessageFormat.format(
                 "Invalid Circle definition: need 3 control points, but got {0}.",
                 points.size()));
         }
 
-        final double dx1 = points.get(1).getX() - points.get(0).getX();
-        final double dy1 = points.get(1).getY() - points.get(0).getY();
-        final double dx2 = points.get(2).getX() - points.get(0).getX();
-        final double dy2 = points.get(2).getY() - points.get(0).getY();
+        final Point center = GeometryUtils.getArcCenter(points.get(0), points.get(1), points.get(2));
+        final double dx = center.getX() - points.get(0).getX();
+        final double dy = center.getY() - points.get(0).getY();
 
-        final double ac = dx1 * dy2;
-        final double bd = dx2 * dy1;
-        if (ac == bd) {
-            throw new RuntimeException(
-                        "Invalid Circle definition: points are co-linear.");
-        }
-        final double idet = 0.5 / (ac - bd);
+        final CircularString curve = new CircularString();
+        curve.addPoint(points.get(0));
+        curve.addPoint(new Point(center.getX() - dy, center.getY() + dx));
+        curve.addPoint(new Point(center.getX() + dx, center.getY() + dy));
+        curve.addPoint(new Point(center.getX() + dy, center.getY() - dx));
+        curve.addPoint(points.get(0));
 
-        final double dxs = (dy1 * dy2 * (points.get(1).getY() - points.get(2).getY())
-                            + dx1 * ac - dx2 * bd) * idet;
-        final double dys = (dx1 * dx2 * (points.get(2).getX() - points.get(1).getX())
-                            + dy2 * ac - dy1 * bd) * idet;
-        final double xs = points.get(0).getX() + dxs;
-        final double ys = points.get(0).getY() + dys;
-
-        final List<Point> circularStringPoints = new ArrayList<>(5);
-        circularStringPoints.add(points.get(0));
-        circularStringPoints.add(new Point(xs - dys, ys + dxs));
-        circularStringPoints.add(new Point(xs + dxs, ys + dys));
-        circularStringPoints.add(new Point(xs + dys, ys - dxs));
-        circularStringPoints.add(points.get(0));
-
-        return circularStringPoints;
-    }
-
-    @Override
-    public String toWKT() {
-        final StringBuilder sbString = new StringBuilder(100);
-        WKTUtils.appendSrid(sbString, getSrid());
-
-        sbString.append("CIRCULARSTRING(");
-        WKTUtils.appendPoints(sbString, getCircularStringPoints());
-        sbString.append(")");
-
-        return sbString.toString();
+        return curve.toWKT();
     }
 }
