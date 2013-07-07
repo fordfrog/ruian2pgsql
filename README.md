@@ -47,17 +47,10 @@ parameters:
     --db-connection-url <value>
             is JDBC connection URL, for example:
             jdbc:postgresql://localhost/ruian?user=ruian&password=p4ssw0rd
-    --dry-run
-            processes all specified files but no data are written to database
     --debug
             if used, debug information are output
-    --input-dir <value>
-            is directory that contains downloaded .xml.gz files
-    --log-file <value>
-            is optional specification of log file (if not specified, log will be
-            output to console)
-    --no-gis
-            ignores all GIS information (Geometrie element) in the input XML file
+    --dry-run
+            processes all specified files but no data are written to database
     --ignore-invalid-gml
             if GML definition is not valid, application ignores the definition and
             saves the object without the definition (if this parameter is not
@@ -66,6 +59,13 @@ parameters:
             the import little bit slower because each GML definition is checked
             twice - once during the check and the other time during saving in
             database)
+    --input-dir <value>
+            is directory that contains downloaded .xml.gz files
+    --log-file <value>
+            is optional specification of log file (if not specified, log will be
+            output to console)
+    --no-gis
+            ignores all GIS information (Geometrie element) in the input XML file
     --reset-transaction-ids
             resets RÚIAN transaction ids so that following data import will update
             all data (data are updated only if new transaction id is greater than

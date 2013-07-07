@@ -53,6 +53,13 @@ spustíte bez parametrů (výpis je v angličtině, zde je přeložený):
     --dry-run
             zpracuje všechny uvedené soubory, ale žádná data nezapíše do
             databáze
+    --ignore-invalid-gml
+            pokud je GML definice chybná, aplikace ji ignoruje a uloží objekt
+            bez dané definice (pokud tento parametr není uvedený, aplikace
+            skončí vyjímkou při pokusu o uložení chybné GML definice, nevýhodou
+            tohoto parametru je, že import mírně zpomaluje, protože každá GML
+            definice je kontrolovaná dvakrát - jednou při kontrole a podruhé při
+            ukládání do databáze)
     --input-dir <hodnota>
             je adresář, který obsahuje stažené soubory s příponou .xml.gz
     --log-file <hodnota>
@@ -61,13 +68,6 @@ spustíte bez parametrů (výpis je v angličtině, zde je přeložený):
     --no-gis
             ignoruje všechny GIS informace (element Geometrie) ve vstupním XML
             souboru
-    --ignore-invalid-gml
-            pokud je GML definice chybná, aplikace ji ignoruje a uloží objekt
-            bez dané definice (pokud tento parametr není uvedený, aplikace
-            skončí vyjímkou při pokusu o uložení chybné GML definice, nevýhodou
-            tohoto parametru je, že import mírně zpomaluje, protože každá GML
-            definice je kontrolovaná dvakrát - jednou při kontrole a podruhé při
-            ukládání do databáze)
     --reset-transaction-ids
             zresetuje transakční id systému RÚIAN, takže při následujícím
             importu budou veškerá data přepsána (data jsou aktualizována pouze
