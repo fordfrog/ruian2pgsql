@@ -81,6 +81,10 @@ public class Config {
      * Precision used for linear approximation of curved objects.
      */
     private static double linearPrecision = 0.01;
+    /**
+     * Whether EWKT geometries should be linearized before they are stored in database.
+     */
+    private static boolean linearizeEWKT;
 
     /**
      * Getter for {@link #inputDirPath}.
@@ -298,6 +302,24 @@ public class Config {
      */
     public static double getLinearPrecision() {
         return linearPrecision;
+    }
+
+    /**
+     * Getter for {@link #linearizeEWKT}.
+     *
+     * @return {@link #linearizeEWKT}
+     */
+    public static boolean isLinearizeEWKT() {
+        return linearizeEWKT;
+    }
+
+    /**
+     * Setter for {@link #linearizeEWKT}.
+     *
+     * @param linearizeEWKT {@link #linearizeEWKT}
+     */
+    public static void setLinearizeEWKT(final boolean linearizeEWKT) {
+        Config.linearizeEWKT = linearizeEWKT;
     }
 
     /**

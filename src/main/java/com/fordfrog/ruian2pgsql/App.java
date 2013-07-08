@@ -100,6 +100,9 @@ public class App {
                     i++;
                     Config.setDestinationSrid(Integer.valueOf(args[i]));
                     break;
+                case "--linearize-ewkt":
+                     Config.setLinearizeEWKT(true);
+                     break;
                 default:
                     throw new RuntimeException(
                             "Unsupported command line switch: " + args[i]);
@@ -112,6 +115,11 @@ public class App {
                 + "&password=p4ssw0rd)");
         Objects.requireNonNull(
                 Config.getInputDirPath(), "--input-dir must be set");
+
+        if (Config.isLinearizeEWKT() && !Config.isConvertToEWKT()) {
+            throw new RuntimeException(
+                "Switch --linearize-ewkt without --convert-to-ewkt is not supported.");
+        }
 
         try (@SuppressWarnings("UseOfSystemOutOrSystemErr")
                 final Writer logFile = new OutputStreamWriter(
