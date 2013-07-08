@@ -30,7 +30,7 @@ import java.util.List;
  *
  * @author fordfrog
  */
-public class Polygon extends AbstractGeometry {
+public class Polygon extends AbstractGeometry implements CurvedGeometry<Polygon> {
 
     /**
      * Inner geometries.
@@ -107,16 +107,38 @@ public class Polygon extends AbstractGeometry {
      * @return true if the polygon has arc, otherwise false
      */
     public boolean hasArc() {
-        if (outer instanceof CompoundCurve) {
+        if (!(outer instanceof Line)) {
             return true;
         }
 
         for (final Geometry inner : inners) {
-            if (inner instanceof CompoundCurve) {
+            if (!(inner instanceof Line)) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    @Override
+    public Polygon linearize(final double precision) {
+        final Polygon polygon = new Polygon();
+        polygon.setSrid(getSrid());
+
+        if (outer instanceof Line) {
+            polygon.setOuter(outer);
+        } else {
+            polygon.setOuter(((CurvedGeometry<Line>) outer).linearize(precision));
+        }
+
+        for (final Geometry inner : inners) {
+            if (inner instanceof Line) {
+                polygon.addInner(inner);
+            } else {
+                polygon.addInner(((CurvedGeometry<Line>) inner).linearize(precision));
+            }
+        }
+
+        return polygon;
     }
 }
