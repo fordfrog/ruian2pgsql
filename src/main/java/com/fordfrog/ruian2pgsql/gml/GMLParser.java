@@ -83,6 +83,29 @@ public class GMLParser {
     }
 
     /**
+     * Parses GML string into geometry object and linearizes it.
+     *
+     * @param reader       XML stream reader
+     * @param endNamespace namespace where to end reading
+     * @param endLocalName local name where to end reading
+     * @param precision of linear approximation
+     *
+     * @return parsed linear geometry
+     *
+     * @throws XMLStreamException Thrown if problem occurred while reading XML
+     *                            stream.
+     */
+    public static Geometry parseLinearized(final XMLStreamReader reader,
+            final String endNamespace, final String endLocalName, final double precision)
+            throws XMLStreamException {
+        Geometry geometry = parse(reader, endNamespace, endLocalName);
+        if (geometry instanceof CurvedGeometry<?>) {
+            geometry = ((CurvedGeometry<Geometry>) geometry).linearize(precision);
+        }
+        return geometry;
+    }
+
+    /**
      * Parses GML top element.
      *
      * @param reader XML stream reader

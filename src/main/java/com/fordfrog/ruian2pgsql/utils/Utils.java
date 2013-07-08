@@ -690,8 +690,13 @@ public class Utils {
         final String result;
 
         if (Config.isConvertToEWKT()) {
-            result =
+            if (Config.isLinearizeEWKT()) {
+                result =
+                    GMLParser.parseLinearized(reader, endNamespace, endLocalName, Config.getLinearPrecision()).toWKT();
+            } else {
+                result =
                     GMLParser.parse(reader, endNamespace, endLocalName).toWKT();
+            }
         } else {
             result = GMLReader.readGML(reader, con, endNamespace, endLocalName);
         }
