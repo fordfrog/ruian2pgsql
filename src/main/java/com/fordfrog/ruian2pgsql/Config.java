@@ -77,6 +77,10 @@ public class Config {
      * SRID of coordinate system to which souldb be geometries transformed.
      */
     private static Integer destinationSrid;
+    /**
+     * Precision used for linear approximation of curved objects.
+     */
+    private static double linearPrecision = 0.01;
 
     /**
      * Getter for {@link #inputDirPath}.
@@ -285,6 +289,15 @@ public class Config {
     public static boolean isMysqlDriver() {
         return dbConnectionUrl != null
                 && dbConnectionUrl.startsWith("jdbc:mysql:");
+    }
+
+    /**
+     * Getter for {@link #linearPrecision}.
+     *
+     * @return {@link #linearPrecision}
+     */
+    public static double getLinearPrecision() {
+        return linearPrecision;
     }
 
     /**
