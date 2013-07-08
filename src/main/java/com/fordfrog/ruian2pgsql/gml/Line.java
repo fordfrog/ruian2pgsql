@@ -22,6 +22,7 @@
 package com.fordfrog.ruian2pgsql.gml;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -52,5 +53,14 @@ public class Line extends AbstractGeometry implements GeometryWithPoints {
         sbString.append(')');
 
         return sbString.toString();
+    }
+
+    /**
+     * Getter for {@link #points}.
+     *
+     * @return {@link #points}
+     */
+    public List<Point> getPoints() {
+        return Collections.unmodifiableList(points);
     }
 }

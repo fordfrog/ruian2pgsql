@@ -21,6 +21,7 @@
  */
 package com.fordfrog.ruian2pgsql.gml;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ import java.util.List;
  *
  * @author fordfrog
  */
-public class CompoundCurve extends AbstractGeometry {
+public class CompoundCurve extends AbstractGeometry implements CurvedGeometry<Line> {
 
     /**
      * Segments of the curve.
@@ -68,5 +69,39 @@ public class CompoundCurve extends AbstractGeometry {
         sbString.append(')');
 
         return sbString.toString();
+    }
+
+    @Override
+    public Line linearize(final double precision) {
+        final Line line = new Line();
+        line.setSrid(getSrid());
+        List<Point> points = null;
+        Point lastPoint = null;
+
+        for (final Geometry segment : segments) {
+            if (segment instanceof Line) {
+                points = ((Line) segment).getPoints();
+            } else {
+                points = ((CurvedGeometry<Line>) segment).linearize(precision).getPoints();
+            }
+
+            if (lastPoint != null) {
+                if (lastPoint.getX() != points.get(0).getX() ||
+                    lastPoint.getY() != points.get(0).getY()) {
+                    throw new RuntimeException(MessageFormat.format(
+                        "Could not connect segments of CompoundCurve: {0} != {1}.",
+                        lastPoint.toWKT(), points.get(0).toWKT()));
+                }
+            } else {
+                line.addPoint(points.get(0));
+            }
+
+            for (final Point point : points.subList(1, points.size())) {
+                line.addPoint(point);
+            }
+            lastPoint = points.get(points.size() - 1);
+        }
+
+        return line;
     }
 }
