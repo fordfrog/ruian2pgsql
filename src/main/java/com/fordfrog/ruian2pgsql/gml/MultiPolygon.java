@@ -29,7 +29,7 @@ import java.util.List;
  *
  * @author fordfrog
  */
-public class MultiPolygon extends AbstractGeometry {
+public class MultiPolygon extends AbstractGeometry implements CurvedGeometry<MultiPolygon> {
 
     /**
      * List of polygons.
@@ -86,5 +86,17 @@ public class MultiPolygon extends AbstractGeometry {
         }
 
         return false;
+    }
+
+    @Override
+    public MultiPolygon linearize(final double precision) {
+        final MultiPolygon multiPolygon = new MultiPolygon();
+        multiPolygon.setSrid(getSrid());
+
+        for (final Polygon polygon : polygons) {
+            multiPolygon.addPolygon(polygon.linearize(precision));
+        }
+
+        return multiPolygon;
     }
 }
