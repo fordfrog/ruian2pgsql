@@ -30,7 +30,7 @@ import java.util.List;
  *
  * @author fordfrog
  */
-public class MultiLine extends AbstractGeometry {
+public class MultiLine extends AbstractGeometry implements CurvedGeometry<MultiLine> {
 
     /**
      * Segments of the curve.
@@ -82,11 +82,27 @@ public class MultiLine extends AbstractGeometry {
      */
     public boolean hasArc() {
         for (final Geometry segment : segments) {
-            if (segment instanceof Curve) {
+            if (!(segment instanceof Line)) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    @Override
+    public MultiLine linearize(final double precision) {
+        final MultiLine multiLine = new MultiLine();
+        multiLine.setSrid(getSrid());
+
+        for (final Geometry segment : segments) {
+            if (segment instanceof Line) {
+                multiLine.addSegment(segment);
+            } else {
+                multiLine.addSegment(((CurvedGeometry<Line>) segment).linearize(precision));
+            }
+        }
+
+        return multiLine;
     }
 }
