@@ -42,6 +42,10 @@ spustíte bez parametrů (výpis je v angličtině, zde je přeložený):
             XML do EWKT formátu a následně uloženy do databáze, jinak jsou do
             databáze ukládány původní GML řetězce (použijte tuto volbu v závislosti
             na úrovni GML implementace ve vámi používané verzi Postgisu)
+    --linearize-ewkt
+            pokud je použito, tak jsou nejprve obloukové geometrie v EWKT linerizovány
+            před uložením do databáze; je podporováno pouze v kombinaci s volbou
+            --convert-to-ewkt
     --create-tables
             vytvoří databázové tabulky pro data (pokud tabulky se stejným názvem
             již existují, tak jsou nejdříve odstraněny)

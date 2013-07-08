@@ -41,6 +41,10 @@ parameters:
             EWKT and then stored in database, otherwise original GML strings are
             stored in database (use this option based on the level of GML
             implementation in Postgis version you use)
+    --linearize-ewkt
+            if enabled, curved geometries in parsed EWKT are linearized before they
+            are stored in database; supported only if the switch --convert-to-ewkt
+            is enabled
     --create-tables
             creates database tables for the data (if tables with the same name
             already exists, it is first dropped)
