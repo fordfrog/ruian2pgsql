@@ -29,6 +29,33 @@ package com.fordfrog.ruian2pgsql.gml;
 public class GeometryUtils {
 
     /**
+     * Calculates distance of two points.
+     *
+     * @param point1 first point
+     * @param point2 second point
+     *
+     * @return distance of points
+     */
+    public static double distance(final Point point1, final Point point2) {
+        return Math.hypot(point2.getX() - point1.getX(),
+                          point2.getY() - point1.getY());
+    }
+
+    /**
+     * Calculates determinant of orientation matrix.
+     *
+     * @param point1 first point
+     * @param point2 second point
+     * @param point3 third point
+     *
+     * @return determinant of orientation matrix
+     */
+    public static double orientationDet(final Point point1, final Point point2, final Point point3) {
+        return (point3.getX() - point2.getX()) * (point1.getY() - point2.getY()) -
+               (point1.getX() - point2.getX()) * (point3.getY() - point2.getY());
+    }
+
+    /**
      * Calculates center of the arc.
      *
      * @param point1 first point of the arc
@@ -39,24 +66,24 @@ public class GeometryUtils {
      */
     public static Point getArcCenter(final Point point1, final Point point2,
             final Point point3) {
-        final double dx1 = point2.getX() - point1.getX();
-        final double dy1 = point2.getY() - point1.getY();
-        final double dx2 = point3.getX() - point1.getX();
-        final double dy2 = point3.getY() - point1.getY();
+        final double dx1 = point1.getX() - point2.getX();
+        final double dy1 = point1.getY() - point2.getY();
+        final double dx3 = point3.getX() - point2.getX();
+        final double dy3 = point3.getY() - point2.getY();
 
-        final double ac = dx1 * dy2;
-        final double bd = dx2 * dy1;
+        final double ac = dx3 * dy1;
+        final double bd = dx1 * dy3;
         if (ac == bd) {
             throw new RuntimeException(
                         "Invalid Circle definition: points are co-linear.");
         }
         final double idet = 0.5 / (ac - bd);
 
-        final double dxs = (dy1 * dy2 * (point2.getY() - point3.getY())
-                            + dx1 * ac - dx2 * bd) * idet;
-        final double dys = (dx1 * dx2 * (point3.getX() - point2.getX())
-                            + dy2 * ac - dy1 * bd) * idet;
-        return new Point(point1.getX() + dxs, point1.getY() + dys);
+        final double dxs = (dy3 * dy1 * (point3.getY() - point1.getY())
+                            + (dx3 * ac - dx1 * bd)) * idet;
+        final double dys = (dx3 * dx1 * (point1.getX() - point3.getX())
+                            + (dy1 * ac - dy3 * bd)) * idet;
+        return new Point(point2.getX() + dxs, point2.getY() + dys);
     }
 
     /**
