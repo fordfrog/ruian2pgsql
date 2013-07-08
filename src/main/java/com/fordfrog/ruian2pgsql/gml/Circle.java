@@ -30,7 +30,7 @@ import java.util.List;
  *
  * @author xificurk
  */
-public class Circle extends AbstractGeometry implements GeometryWithPoints {
+public class Circle extends AbstractGeometry implements GeometryWithPoints, CurvedGeometry<Line> {
 
     /**
      * Circle points.
@@ -62,5 +62,36 @@ public class Circle extends AbstractGeometry implements GeometryWithPoints {
         curve.addPoint(points.get(0));
 
         return curve.toWKT();
+    }
+
+    @Override
+    public Line linearize(final double precision) {
+        if (points.size() != 3) {
+            throw new RuntimeException(MessageFormat.format(
+                "Invalid Circle definition: need 3 control points, but got {0}.",
+                points.size()));
+        }
+
+        final Point center = GeometryUtils.getArcCenter(points.get(0), points.get(1), points.get(2));
+        final double radius = GeometryUtils.distance(points.get(0), center);
+        final double a1 = Math.atan2(points.get(0).getY() - center.getY(),
+                                     points.get(0).getX() - center.getX());
+
+        double segmentCount = 3.0;
+        if (0.5 * radius > precision) {
+            segmentCount = Math.ceil(Math.PI / Math.acos(1 - precision / radius));
+        }
+
+        final Line line = new Line();
+        line.setSrid(getSrid());
+        line.addPoint(points.get(0));
+        for (int i = 1; i < segmentCount; i++) {
+            double a = a1 + i * 2 * Math.PI / segmentCount;
+            line.addPoint(new Point(center.getX() + radius * Math.cos(a),
+                                 center.getY() + radius * Math.sin(a)));
+        }
+        line.addPoint(points.get(0));
+
+        return line;
     }
 }
