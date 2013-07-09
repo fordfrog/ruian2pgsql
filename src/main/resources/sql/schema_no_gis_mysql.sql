@@ -1,4 +1,5 @@
 DROP VIEW IF EXISTS ruian_stats;
+DROP VIEW IF EXISTS ruian_stats_full;
 
 DROP TABLE IF EXISTS hlavicka;
 DROP TABLE IF EXISTS rn_stat;
