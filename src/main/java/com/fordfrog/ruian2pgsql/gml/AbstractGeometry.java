@@ -1,5 +1,6 @@
 /**
  * Copyright 2012 Miroslav Šulc
+ * Copyright 2012 Petr Morávek
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,35 +22,32 @@
  */
 package com.fordfrog.ruian2pgsql.gml;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * MultiPoint.
+ * AbstractGeometry.
  *
- * @author fordfrog
+ * @author xificurk
  */
-public class MultiPoint extends AbstractGeometry implements GeometryWithPoints {
+public abstract class AbstractGeometry implements Geometry {
 
     /**
-     * Points of the multipoint geometry.
+     * SRID.
      */
-    private final List<Point> points = new ArrayList<>(2);
+    private Integer srid;
 
     @Override
-    public void addPoint(final Point point) {
-        points.add(point);
+    public Integer getSrid() {
+        return srid;
+    }
+
+    /**
+     * Setter for {@link #srid}.
+     *
+     * @param srid {@link #srid}
+     */
+    public void setSrid(final Integer srid) {
+        this.srid = srid;
     }
 
     @Override
-    public String toWKT() {
-        final StringBuilder sbString = new StringBuilder(100);
-        WKTUtils.appendSrid(sbString, getSrid());
-
-        sbString.append("MULTIPOINT(");
-        WKTUtils.appendPoints(sbString, points);
-        sbString.append(')');
-
-        return sbString.toString();
-    }
+    public abstract String toWKT() throws RuntimeException;
 }

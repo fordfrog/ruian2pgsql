@@ -29,30 +29,12 @@ import java.util.List;
  *
  * @author fordfrog
  */
-public class CompoundCurve implements Geometry {
+public class CompoundCurve extends AbstractGeometry {
 
     /**
      * Segments of the curve.
      */
     private final List<Geometry> segments = new ArrayList<>(5);
-    /**
-     * SRID.
-     */
-    private Integer srid;
-
-    @Override
-    public Integer getSrid() {
-        return srid;
-    }
-
-    /**
-     * Setter for {@link #srid}.
-     *
-     * @param srid {@link #srid}
-     */
-    public void setSrid(final Integer srid) {
-        this.srid = srid;
-    }
 
     /**
      * Adds segment to the list of segments.
@@ -67,7 +49,7 @@ public class CompoundCurve implements Geometry {
     public String toWKT() {
         final StringBuilder sbString =
                 new StringBuilder(segments.size() * 1_024);
-        WKTUtils.appendSrid(sbString, srid);
+        WKTUtils.appendSrid(sbString, getSrid());
 
         sbString.append("COMPOUNDCURVE(");
 
