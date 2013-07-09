@@ -125,6 +125,8 @@ public class MainConvertor {
                 GMLUtils.setMultipointBugWorkaround(true);
             }
 
+            con.commit();
+
             for (final Path file : getInputFiles(Config.getInputDirPath())) {
                 processFile(file);
                 con.commit();
