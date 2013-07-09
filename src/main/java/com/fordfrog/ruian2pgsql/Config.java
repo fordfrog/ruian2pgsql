@@ -66,6 +66,10 @@ public class Config {
      */
     private static boolean dryRun;
     /**
+     * If set to true, removes data from all tables.
+     */
+    private static boolean truncateAll;
+    /**
      * If set to true, no geometries are parsed.
      */
     private static boolean noGis;
@@ -285,6 +289,24 @@ public class Config {
     public static boolean isMysqlDriver() {
         return dbConnectionUrl != null
                 && dbConnectionUrl.startsWith("jdbc:mysql:");
+    }
+
+    /**
+     * Getter for {@link #truncateAll}.
+     *
+     * @return {@link #truncateAll}
+     */
+    public static boolean isTruncateAll() {
+        return truncateAll;
+    }
+
+    /**
+     * Setter for {@link #truncateAll}
+     *
+     * @param truncateAll {@link #truncateAll}
+     */
+    public static void setTruncateAll(final boolean truncateAll) {
+        Config.truncateAll = truncateAll;
     }
 
     /**

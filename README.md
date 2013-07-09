@@ -76,6 +76,8 @@ parameters:
             case you want to regenerate your data because of some issue with
             previous import, without deleting all data and starting with fresh
             database)
+    --truncate-all
+            removes data from all tables
 
 ## To do
 

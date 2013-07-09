@@ -105,6 +105,11 @@ public class MainConvertor {
                 runSQLFromResource(con, "/sql/ruian_stats_full.sql");
             }
 
+            if (Config.isTruncateAll()) {
+                Log.write("Truncating all data tables...");
+                runSQLFromResource(con, "/sql/truncate_all.sql");
+            }
+
             if (Config.isResetTransactionIds()) {
                 Log.write("Resetting transaction ids...");
                 runSQLFromResource(con, "/sql/reset_transaction_ids.sql");

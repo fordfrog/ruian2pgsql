@@ -100,6 +100,8 @@ public class App {
                 case "--reset-transaction-ids":
                     Config.setResetTransactionIds(true);
                     break;
+                case "--truncate-all":
+                    Config.setTruncateAll(true);
                     break;
                 default:
                     throw new RuntimeException(

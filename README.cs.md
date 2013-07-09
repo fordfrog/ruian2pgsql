@@ -78,6 +78,8 @@ spustíte bez parametrů (výpis je v angličtině, zde je přeložený):
             v databázi - tato funkce je užitečná pokud potřebujete zregenerovat
             data z důvodu nějaké chyby při importu, bez nutnosti smazání všech
             dat a importu do čisté databáze)
+    --truncate-all
+            odstraní data ze všech tabulek
 
 ## To do
 
