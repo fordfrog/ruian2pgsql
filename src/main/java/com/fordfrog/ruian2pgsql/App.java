@@ -73,6 +73,10 @@ public class App {
                     i++;
                     Config.setDbConnectionUrl(args[i]);
                     break;
+                case "--dest-srid":
+                    i++;
+                    Config.setDestinationSrid(Integer.valueOf(args[i]));
+                    break;
                 case "--dry-run":
                     Config.setDryRun(true);
                     break;
@@ -96,9 +100,6 @@ public class App {
                 case "--reset-transaction-ids":
                     Config.setResetTransactionIds(true);
                     break;
-                case "--dest-srid":
-                    i++;
-                    Config.setDestinationSrid(Integer.valueOf(args[i]));
                     break;
                 default:
                     throw new RuntimeException(
