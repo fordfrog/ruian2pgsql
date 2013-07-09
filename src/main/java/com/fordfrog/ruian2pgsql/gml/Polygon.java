@@ -30,16 +30,12 @@ import java.util.List;
  *
  * @author fordfrog
  */
-public class Polygon implements Geometry {
+public class Polygon extends AbstractGeometry {
 
     /**
      * Inner geometries.
      */
     private final List<Geometry> inners = new ArrayList<>(5);
-    /**
-     * SRID.
-     */
-    private Integer srid;
     /**
      * Outer geometry.
      */
@@ -82,24 +78,10 @@ public class Polygon implements Geometry {
     }
 
     @Override
-    public Integer getSrid() {
-        return srid;
-    }
-
-    /**
-     * Setter for {@link #srid}.
-     *
-     * @param srid {@link #srid}
-     */
-    public void setSrid(final Integer srid) {
-        this.srid = srid;
-    }
-
-    @Override
     public String toWKT() {
         final StringBuilder sbString =
                 new StringBuilder((inners.size() + 1) * 1_024);
-        WKTUtils.appendSrid(sbString, srid);
+        WKTUtils.appendSrid(sbString, getSrid());
 
         if (hasArc()) {
             sbString.append("CURVEPOLYGON(");

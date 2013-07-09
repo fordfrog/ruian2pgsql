@@ -25,25 +25,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * MultiSurface.
+ * MultiPolygon.
  *
  * @author fordfrog
  */
-public class MultiSurface implements Geometry {
+public class MultiPolygon extends AbstractGeometry {
 
     /**
      * List of polygons.
      */
     private final List<Polygon> polygons = new ArrayList<>(2);
-    /**
-     * SRID of the geometry.
-     */
-    private int srid;
 
     @Override
     public String toWKT() {
         final StringBuilder sbString = new StringBuilder(1000);
-        WKTUtils.appendSrid(sbString, srid);
+        WKTUtils.appendSrid(sbString, getSrid());
 
         if (hasArc()) {
             sbString.append("MULTISURFACE(");
@@ -66,20 +62,6 @@ public class MultiSurface implements Geometry {
         sbString.append(')');
 
         return sbString.toString();
-    }
-
-    @Override
-    public Integer getSrid() {
-        return srid;
-    }
-
-    /**
-     * Setter for {@link #srid}.
-     *
-     * @param srid {@link #srid}
-     */
-    public void setSrid(final Integer srid) {
-        this.srid = srid;
     }
 
     /**
