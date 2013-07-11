@@ -95,6 +95,17 @@ ruian2pgsql je distribuovaný pod MIT licencí.
 
 ## Changelog
 
+## Verze 1.5.0
+
+* Přidán přepínač --linearize-ewkt, který zapíná interní linearizaci geometrií
+  s křivkami, pokud je použito EWKT.
+* Přidán přepínač --truncate-all, který odstraní data ze všech tabulek, ale
+  zachová databázovou strukturu.
+* Opravena chyba, kdy změny v databázi nebyly uloženy, když byly provedeny změny
+  z důvodu použití přepínače na příkazové řádce, ale žádná data nebyla
+  naimportována.
+* Opravena chyba při opětovném vytvoření již existující databázové struktury.
+
 ## Verze 1.4.0
 
 * Přidán přepínač --no-gis, který vypíná import GIS dat.

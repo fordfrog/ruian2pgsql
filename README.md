@@ -93,6 +93,17 @@ ruian2pgsql is distributed under MIT license.
 
 ## Changelog
 
+## Version 1.5.0
+
+* Added command line switch --linearize-ewkt which enables internal linearization
+  of curved geometries when EWKT is used.
+* Added command line switch --truncate-all which removes data from all tables
+  but prevents the database structure.
+* Fixed problem with database changes not being committed to database when
+  database modification was performed due to a command but no import was
+  performed.
+* Fixed re-creation of database schema when schema is already defined.
+
 ## Version 1.4.0
 
 * Added --no-gis command line switch that disables import of GIS data.
