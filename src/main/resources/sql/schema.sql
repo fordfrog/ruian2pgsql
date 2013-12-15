@@ -262,8 +262,8 @@ CREATE TABLE rn_momc (
 );
 
 CREATE TABLE rn_vo (
-	kod int PRIMARY KEY,
-	cislo int,
+    kod int PRIMARY KEY,
+    cislo int,
     nespravny boolean,
     obec_kod int,
     momc_kod int,
