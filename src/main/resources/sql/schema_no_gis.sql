@@ -451,6 +451,8 @@ CREATE INDEX rn_stavebni_objekt_identifikacni_parcela_id_idx ON rn_stavebni_obje
 CREATE INDEX rn_stavebni_objekt_momc_kod_idx ON rn_stavebni_objekt (momc_kod);
 CREATE INDEX rn_stavebni_objekt_typ_kod_idx ON rn_stavebni_objekt (typ_kod);
 CREATE INDEX rn_ulice_obec_kod_idx ON rn_ulice (obec_kod);
+CREATE INDEX rn_vo_obec_kod_idx ON rn_vo (obec_kod);
+CREATE INDEX rn_vo_momc_kod_idx ON rn_vo (momc_kod);
 CREATE INDEX rn_vusc_regsoudr_kod_idx ON rn_vusc (regsoudr_kod);
 CREATE INDEX rn_zsj_katuz_kod_idx ON rn_zsj (katuz_kod);
 CREATE INDEX rn_zpusob_ochrany_objektu_stavobj_kod_idx ON rn_zpusob_ochrany_objektu (stavobj_kod);
