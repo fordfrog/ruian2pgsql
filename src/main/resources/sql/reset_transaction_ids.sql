@@ -10,6 +10,7 @@ UPDATE rn_cast_obce SET id_trans_ruian = -1;
 UPDATE rn_mop SET id_trans_ruian = -1;
 UPDATE rn_spravni_obvod SET id_trans_ruian = -1;
 UPDATE rn_momc SET id_trans_ruian = -1;
+UPDATE rn_vo SET id_trans_ruian = -1;
 UPDATE rn_parcela SET id_trans_ruian = -1;
 UPDATE rn_zpusob_ochrany_pozemku SET id_trans_ruian = -1;
 UPDATE rn_bonit_dily_parcel SET id_trans_ruian = -1;
