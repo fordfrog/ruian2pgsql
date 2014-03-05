@@ -14,6 +14,7 @@ DROP TABLE IF EXISTS rn_cast_obce;
 DROP TABLE IF EXISTS rn_mop;
 DROP TABLE IF EXISTS rn_spravni_obvod;
 DROP TABLE IF EXISTS rn_momc;
+DROP TABLE IF EXISTS rn_vo;
 DROP TABLE IF EXISTS rn_parcela;
 DROP TABLE IF EXISTS rn_zpusob_ochrany_pozemku;
 DROP TABLE IF EXISTS rn_bonit_dily_parcel;
@@ -267,11 +268,13 @@ CREATE TABLE rn_vo (
     nespravny boolean,
     obec_kod int,
     momc_kod int,
+    poznamka varchar,
     id_trans_ruian bigint,
     plati_od date,
     nz_id_globalni bigint,
     definicni_bod geometry,
     hranice geometry,
+    item_timestamp timestamp without time zone DEFAULT timezone('utc', now()),
     deleted boolean DEFAULT false
 );
 
