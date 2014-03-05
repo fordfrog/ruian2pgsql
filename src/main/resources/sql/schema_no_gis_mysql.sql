@@ -14,6 +14,7 @@ DROP TABLE IF EXISTS rn_cast_obce;
 DROP TABLE IF EXISTS rn_mop;
 DROP TABLE IF EXISTS rn_spravni_obvod;
 DROP TABLE IF EXISTS rn_momc;
+DROP TABLE IF EXISTS rn_vo;
 DROP TABLE IF EXISTS rn_parcela;
 DROP TABLE IF EXISTS rn_zpusob_ochrany_pozemku;
 DROP TABLE IF EXISTS rn_bonit_dily_parcel;
@@ -237,6 +238,19 @@ CREATE TABLE rn_momc (
     deleted boolean DEFAULT false
 );
 
+CREATE TABLE rn_vo (
+    kod int PRIMARY KEY,
+    cislo int,
+    nespravny boolean,
+    obec_kod int,
+    mop_kod int,
+    poznamka text,
+    id_trans_ruian bigint,
+    plati_od date,
+    item_timestamp timestamp DEFAULT now(),
+    deleted boolean DEFAULT false
+);
+
 CREATE TABLE rn_parcela (
     id bigint PRIMARY KEY,
     nespravny boolean,
@@ -436,6 +450,8 @@ CREATE INDEX rn_stavebni_objekt_identifikacni_parcela_id_idx ON rn_stavebni_obje
 CREATE INDEX rn_stavebni_objekt_momc_kod_idx ON rn_stavebni_objekt (momc_kod);
 CREATE INDEX rn_stavebni_objekt_typ_kod_idx ON rn_stavebni_objekt (typ_kod);
 CREATE INDEX rn_ulice_obec_kod_idx ON rn_ulice (obec_kod);
+CREATE INDEX rn_vo_obec_kod_idx ON rn_vo (obec_kod);
+CREATE INDEX rn_vo_momc_kod_idx ON rn_vo (momc_kod);
 CREATE INDEX rn_vusc_regsoudr_kod_idx ON rn_vusc (regsoudr_kod);
 CREATE INDEX rn_zsj_katuz_kod_idx ON rn_zsj (katuz_kod);
 CREATE INDEX rn_zpusob_ochrany_objektu_stavobj_kod_idx ON rn_zpusob_ochrany_objektu (stavobj_kod);
