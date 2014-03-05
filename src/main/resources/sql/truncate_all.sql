@@ -17,6 +17,7 @@ truncate rn_spravni_obvod;
 truncate rn_stat;
 truncate rn_stavebni_objekt;
 truncate rn_ulice;
+truncate rn_vo;
 truncate rn_vusc;
 truncate rn_zpusob_ochrany_objektu;
 truncate rn_zpusob_ochrany_pozemku;
