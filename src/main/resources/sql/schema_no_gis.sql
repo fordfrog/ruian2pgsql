@@ -17,6 +17,7 @@ DROP TABLE IF EXISTS rn_momc;
 DROP TABLE IF EXISTS rn_parcela;
 DROP TABLE IF EXISTS rn_zpusob_ochrany_pozemku;
 DROP TABLE IF EXISTS rn_bonit_dily_parcel;
+DROP TABLE IF EXISTS rn_vo;
 DROP TABLE IF EXISTS rn_ulice;
 DROP TABLE IF EXISTS rn_stavebni_objekt;
 DROP TABLE IF EXISTS rn_detailni_tea;
@@ -230,6 +231,20 @@ CREATE TABLE rn_momc (
     vlajka_obrazek bytea,
     znak_text varchar,
     znak_obrazek bytea,
+    id_trans_ruian bigint,
+    plati_od date,
+    nz_id_globalni bigint,
+    item_timestamp timestamp without time zone DEFAULT timezone('utc', now()),
+    deleted boolean DEFAULT false
+);
+
+CREATE TABLE rn_vo (
+    kod int PRIMARY KEY,
+    cislo int,
+    nespravny boolean,
+    obec_kod int,
+    momc_kod int,
+    poznamka varchar,
     id_trans_ruian bigint,
     plati_od date,
     nz_id_globalni bigint,
