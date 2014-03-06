@@ -83,6 +83,11 @@ CREATE OR REPLACE VIEW ruian_stats_full AS
             rn_ulice.definicni_cara
             FROM rn_ulice
             WHERE deleted = false)
+        UNION ALL SELECT 'rn_vo'::text,
+            rn_vo.definicni_bod,
+            rn_vo.hranice
+            FROM rn_vo
+            WHERE deleted = false)
         UNION ALL SELECT 'rn_vusc'::text,
             rn_vusc.definicni_bod,
             rn_vusc.hranice
