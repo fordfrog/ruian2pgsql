@@ -104,6 +104,10 @@ public class DataConvertor extends AbstractConvertor {
      */
     private final Convertor convertorUlice;
     /**
+     * Convertor for VolebniOkrsek.
+     */
+    private final Convertor convertorVolebniOkrsek;
+    /**
      * Convertor for Vusc.
      */
     private final Convertor convertorVusc;
@@ -160,6 +164,8 @@ public class DataConvertor extends AbstractConvertor {
                 "Staty", "Stat", new StatConvertor(con));
         convertorUlice = new CollectionConvertor(
                 "Ulice", "Ulice", new UliceConvertor(con));
+        convertorVolebniOkrsek =
+                new CollectionConvertor("VolebniOkrsek", "VO", new VOConvertor(con));
         convertorVusc =
                 new CollectionConvertor("Vusc", "Vusc", new VuscConvertor(con));
         convertorZaniklePrvky = new CollectionConvertor(
@@ -221,6 +227,9 @@ public class DataConvertor extends AbstractConvertor {
                         break;
                     case "Ulice":
                         convertorUlice.convert(reader);
+                        break;
+                    case "VolebniOkrsek":
+                        convertorVolebniOkrsek.convert(reader);
                         break;
                     case "Vusc":
                         convertorVusc.convert(reader);
