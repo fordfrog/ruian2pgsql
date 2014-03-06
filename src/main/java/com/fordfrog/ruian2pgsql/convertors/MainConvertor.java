@@ -61,6 +61,11 @@ public class MainConvertor {
     private static ExchangeFormatConvertor exchangeFormatConvertor;
 
     /**
+     * Special exchange format convertor instance.
+     */
+    private static SpecialExchangeFormatConvertor specialExchangeFormatConvertor;
+
+    /**
      * Creates new instance of MainConvertor.
      */
     private MainConvertor() {
@@ -82,6 +87,7 @@ public class MainConvertor {
         try (final Connection con = DriverManager.getConnection(
                 Config.getDbConnectionUrl())) {
             exchangeFormatConvertor = new ExchangeFormatConvertor(con);
+            specialExchangeFormatConvertor = new SpecialExchangeFormatConvertor(con);
 
             con.setAutoCommit(false);
 
@@ -306,6 +312,15 @@ public class MainConvertor {
                 switch (reader.getLocalName()) {
                     case "VymennyFormat":
                         exchangeFormatConvertor.convert(reader);
+                        break;
+                    default:
+                        XMLUtils.processUnsupported(reader);
+                }
+                break;
+            case Namespaces.SPECIALNI_VYMENNY_FORMAT_TYPY:
+                switch (reader.getLocalName()) {
+                    case "SpecialniVymennyFormat":
+                        specialExchangeFormatConvertor.convert(reader);
                         break;
                     default:
                         XMLUtils.processUnsupported(reader);

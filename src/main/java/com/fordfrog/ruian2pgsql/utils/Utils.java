@@ -585,6 +585,11 @@ public class Utils {
                 final ItemWithHranice itemHranice = (ItemWithHranice) item;
                 itemHranice.setHranice(
                         processGML(reader, con, namespace, localName));
+            } else if ("OriginalniHraniceOmpv".equals(localName)
+                    && item instanceof ItemWithHranice) {
+                final ItemWithHranice itemHranice = (ItemWithHranice) item;
+                itemHranice.setHranice(
+                        processGML(reader, con, namespace, localName));
             } else if ("GeneralizovaneHranice3".equals(localName)
                     && item instanceof ItemWithHranice) {
                 final ItemWithHranice itemHranice = (ItemWithHranice) item;
