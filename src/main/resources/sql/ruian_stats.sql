@@ -4,7 +4,7 @@ CREATE OR REPLACE VIEW ruian_stats AS
         count(t.cary) AS cary,
         ((count(t.definicni_bod) * 100) / count(*)) AS p_bod,
         ((count(t.cary) * 100) / count(*)) AS p_cary
-    FROM (((((((((((((((((
+    FROM ((((((((((((((((((
         SELECT 'rn_adresni_misto'::text AS table_name,
             rn_adresni_misto.definicni_bod,
             NULL::geometry AS cary
