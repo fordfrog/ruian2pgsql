@@ -411,7 +411,7 @@ CREATE TABLE rn_vo (
     nespravny boolean,     -- Příznak nesprávnosti
     obec_kod int,          -- Nadřazená obec k VO
     momc_kod int,          -- Nadřazený MOMC k VO
-    poznamka varchar,      -- Poznámka k VO
+    poznamka text,         -- Poznámka k VO
     plati_od date,         -- Začátek platnosti
     plati_do date,         -- Konec platnosti
     id_trans_ruian bigint, -- ID transakce v RÚIAN
