@@ -53,7 +53,7 @@ public class VOConvertor extends AbstractSaveConvertor<VolebniOkrsek> {
      * SQL statement for insertion of new item.obec_kod
      */
     private static final String SQL_INSERT = "INSERT INTO rn_vo "
-            + "(cislo, nespravny, momc_kod = ?, obec_kod, poznamka, plati_od, plati_do, nz_id_globalni, "
+            + "(cislo, nespravny, momc_kod, obec_kod, poznamka, plati_od, plati_do, nz_id_globalni, "
             + "id_trans_ruian, definicni_bod, hranice, kod) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, %FUNCTION%(?), %FUNCTION%(?), ?)";
     /**
@@ -61,7 +61,7 @@ public class VOConvertor extends AbstractSaveConvertor<VolebniOkrsek> {
      */
     private static final String SQL_UPDATE = "UPDATE rn_vo "
             + "SET cislo = ?, nespravny = ?, momc_kod = ?,"
-            + "obec_kod = ?, poznamka = ?, plati_od = ?, plati_do = ?, nz_id_globalni = ?, id_trans_ruian = ?"
+            + "obec_kod = ?, poznamka = ?, plati_od = ?, plati_do = ?, nz_id_globalni = ?, id_trans_ruian = ?,"
             + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?),"
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
@@ -77,7 +77,7 @@ public class VOConvertor extends AbstractSaveConvertor<VolebniOkrsek> {
      */
     private static final String SQL_UPDATE_NO_GIS = "UPDATE rn_vo "
             + "SET cislo = ?, nespravny = ?, momc_kod = ?,"
-            + "obec_kod = ?, poznamka = ?, plati_od = ?, plati_do = ?, nz_id_globalni = ?, id_trans_ruian = ?"
+            + "obec_kod = ?, poznamka = ?, plati_od = ?, plati_do = ?, nz_id_globalni = ?, id_trans_ruian = ?,"
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian < ?";
 
@@ -90,7 +90,7 @@ public class VOConvertor extends AbstractSaveConvertor<VolebniOkrsek> {
      *                      database.
      */
     public VOConvertor(final Connection con) throws SQLException {
-        super(VolebniOkrsek.class, Namespaces.VYMENNY_FORMAT_TYPY, "VolebniOkrsek", con,
+        super(VolebniOkrsek.class, Namespaces.SPECIALNI_VYMENNY_FORMAT_TYPY, "VO", con,
                 SQL_EXISTS, SQL_INSERT, SQL_UPDATE, SQL_INSERT_NO_GIS,
                 SQL_UPDATE_NO_GIS);
     }
@@ -136,19 +136,24 @@ public class VOConvertor extends AbstractSaveConvertor<VolebniOkrsek> {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
                     case "PlatiOd":
-                        item.setPlatiOd(Utils.parseTimestamp(reader.getElementText()));
+                        item.setPlatiOd(
+                                Utils.parseTimestamp(reader.getElementText()));
                         break;
                     case "PlatiDo":
-                        item.setPlatiDo(Utils.parseTimestamp(reader.getElementText()));
+                        item.setPlatiDo(
+                                Utils.parseTimestamp(reader.getElementText()));
                         break;
                     case "IdTransakce":
-                        item.setIdTransRuian(Long.parseLong(reader.getElementText()));
+                        item.setIdTransRuian(
+                                Long.parseLong(reader.getElementText()));
                         break;
                     case "GlobalniIdNavrhuZmeny":
-                        item.setNzIdGlobalni(Long.parseLong(reader.getElementText()));
+                        item.setNzIdGlobalni(
+                                Long.parseLong(reader.getElementText()));
                         break;
                     case "Geometrie":
-                        Utils.processGeometrie(reader, getConnection(), item, NAMESPACE);
+                        Utils.processGeometrie(
+                                reader, getConnection(), item, NAMESPACE);
                         break;
                     case "Kod":
                         item.setKod(Integer.parseInt(reader.getElementText()));
@@ -157,7 +162,8 @@ public class VOConvertor extends AbstractSaveConvertor<VolebniOkrsek> {
                         item.setCislo(Integer.parseInt(reader.getElementText()));
                         break;
                     case "Nespravny":
-                        item.setNespravny(Boolean.valueOf(reader.getElementText()));
+                        item.setNespravny(
+                                Boolean.valueOf(reader.getElementText()));
                         break;
                     case "Obec":
                         item.setObecKod(Utils.getObecKod(reader, NAMESPACE));
@@ -166,9 +172,10 @@ public class VOConvertor extends AbstractSaveConvertor<VolebniOkrsek> {
                         item.setMomcKod(Utils.getMomcKod(reader, NAMESPACE));
                         break;
                     case "Poznamka":
-                        item.setPoznamka(reader.getElementText());
+                        item.setPoznamka(
+                                reader.getElementText());
                         break;
-                   default:
+                    default:
                         XMLUtils.processUnsupported(reader);
                 }
 

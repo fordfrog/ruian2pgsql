@@ -29,38 +29,33 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 /**
- * Special exchange format convertor.
+ * Data convertor.
  *
  * @author fordfrog
  */
-public class SpecialExchangeFormatConvertor extends AbstractConvertor {
+public class SpecialniDataConvertor extends AbstractConvertor {
 
     /**
-     * Namespace of SpecialniVymennyFormat and its sub-elements.
+     * Namespace of the Data element and its sub-elements.
      */
     private static final String NAMESPACE = Namespaces.SPECIALNI_VYMENNY_FORMAT_TYPY;
-    /**
-     * Data convertor instance.
-     */
-    private final SpecialniDataConvertor dataConvertor;
-    /**
-     * Hlavicka convertor instance.
-     */
-    private final HlavickaConvertor hlavickaConvertor;
+
+    private final Convertor convertorVolebniOkrsek;
 
     /**
-     * Creates new instance of ExchangeFormatConvertor.
+     * Creates new instance of DataConvertor.
      *
-     * @param con {@link #connection}
+     * @param con database connection
      *
-     * @throws SQLException Thrown if problem occurred while initializing
-     *                      convertors.
+     * @throws SQLException Thrown if problem occurred while communicating with
+     *                      database.
      */
-    public SpecialExchangeFormatConvertor(final Connection con) throws SQLException {
-        super(NAMESPACE, "SpecialniVymennyFormat");
+    public SpecialniDataConvertor(final Connection con) throws SQLException {
+        super(NAMESPACE, "Data");
 
-        dataConvertor = new SpecialniDataConvertor(con);
-        hlavickaConvertor = new HlavickaConvertor(con);
+         convertorVolebniOkrsek = new SpecialniCollectionConvertor(
+                "VolebniOkrsek", "VO", new VOConvertor(con));
+        
     }
 
     @Override
@@ -69,12 +64,10 @@ public class SpecialExchangeFormatConvertor extends AbstractConvertor {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
-                    case "Data":
-                        dataConvertor.convert(reader);
+                 
+                    case "VolebniOkrsek":
+                        convertorVolebniOkrsek.convert(reader);
                         break;
-//                    case "Hlavicka":
-//                        hlavickaConvertor.convert(reader);
-//                        break;
                     default:
                         XMLUtils.processUnsupported(reader);
                 }

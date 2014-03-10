@@ -57,8 +57,6 @@ public class Namespaces {
             "urn:cz:isvs:ruian:schemas:PouIntTypy:v1";
     public static final String REG_SOU_INTI_TYPY =
             "urn:cz:isvs:ruian:schemas:RegSouIntiTypy:v1";
-    public static final String SPECIALNI_VYMENNY_FORMAT_TYPY =
-            "urn:cz:isvs:ruian:schemas:SpecialniVymennyFormatTypy:v1";
     public static final String SPRAV_OBV_INT_TYPY =
             "urn:cz:isvs:ruian:schemas:SpravObvIntTypy:v1";
     public static final String STAT_INT_TYPY =
@@ -73,6 +71,8 @@ public class Namespaces {
             "urn:cz:isvs:ruian:schemas:VuscIntTypy:v1";
     public static final String VYMENNY_FORMAT_TYPY =
             "urn:cz:isvs:ruian:schemas:VymennyFormatTypy:v1";
+    public static final String SPECIALNI_VYMENNY_FORMAT_TYPY =
+            "urn:cz:isvs:ruian:schemas:SpecialniVymennyFormatTypy:v1";
     public static final String XLINK = "http://www.w3.org/1999/xlink";
     public static final String ZSJ_INT_TYPY =
             "urn:cz:isvs:ruian:schemas:ZsjIntTypy:v1";

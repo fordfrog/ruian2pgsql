@@ -53,17 +53,17 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
      * SQL statement for insertion of new item.
      */
     private static final String SQL_INSERT = "INSERT INTO rn_adresni_misto "
-            + "(nespravny, adrp_psc, ulice_kod, stavobj_kod, cislo_domovni, "
+            + "(nespravny, adrp_psc, ulice_kod, vo_kod, stavobj_kod, cislo_domovni, "
             + "cislo_orientacni_hodnota, cislo_orientacni_pismeno, "
             + "id_trans_ruian, plati_od, zmena_grafiky, nz_id_globalni, "
             + "definicni_bod, zachranka, hasici, kod) "
-            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, %FUNCTION%(?), "
+            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, %FUNCTION%(?), "
             + "%FUNCTION%(?), %FUNCTION%(?), ?)";
     /**
      * SQL statement for update of existing item.
      */
     private static final String SQL_UPDATE = "UPDATE rn_adresni_misto "
-            + "SET nespravny = ?, adrp_psc = ?, ulice_kod = ?, "
+            + "SET nespravny = ?, adrp_psc = ?, ulice_kod = ?, vo_kod = ?, "
             + "stavobj_kod = ?, cislo_domovni = ?, "
             + "cislo_orientacni_hodnota = ?, cislo_orientacni_pismeno = ?, "
             + "id_trans_ruian = ?, plati_od = ?, zmena_grafiky = ?, "
@@ -76,15 +76,15 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
      */
     private static final String SQL_INSERT_NO_GIS =
             "INSERT INTO rn_adresni_misto "
-            + "(nespravny, adrp_psc, ulice_kod, stavobj_kod, cislo_domovni, "
+            + "(nespravny, adrp_psc, ulice_kod, vo_kod, stavobj_kod, cislo_domovni, "
             + "cislo_orientacni_hodnota, cislo_orientacni_pismeno, "
             + "id_trans_ruian, plati_od, zmena_grafiky, nz_id_globalni, kod) "
-            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     /**
      * SQL statement for update of existing item.
      */
     private static final String SQL_UPDATE_NO_GIS = "UPDATE rn_adresni_misto "
-            + "SET nespravny = ?, adrp_psc = ?, ulice_kod = ?, "
+            + "SET nespravny = ?, adrp_psc = ?, ulice_kod = ?, vo_kod = ?, "
             + "stavobj_kod = ?, cislo_domovni = ?, "
             + "cislo_orientacni_hodnota = ?, cislo_orientacni_pismeno = ?, "
             + "id_trans_ruian = ?, plati_od = ?, zmena_grafiky = ?, "
@@ -115,6 +115,7 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
         pstmEx.setBoolean(index++, item.getNespravny());
         pstmEx.setInt(index++, item.getAdrpPsc());
         pstmEx.setInt(index++, item.getUliceKod());
+        pstmEx.setInt(index++, item.getVoKod());
         pstm.setInt(index++, item.getStavobjKod());
         pstm.setInt(index++, item.getCisloDomovni());
         pstmEx.setInt(index++, item.getCisloOrientacniHodnota());
@@ -193,6 +194,9 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
                         break;
                     case "Ulice":
                         item.setUliceKod(Utils.getUliceKod(reader, NAMESPACE));
+                        break;
+                    case "VOKod":
+                        item.setVoKod(Integer.parseInt(reader.getElementText()));
                         break;
                     default:
                         XMLUtils.processUnsupported(reader);

@@ -76,6 +76,7 @@ public class VolebniOkrsek implements ItemWithDefinicniBod, ItemWithHranice {
     }
 
     public Integer getMomcKod() {
+        if (momcKod==null) return 0;
         return momcKod;
     }
 
