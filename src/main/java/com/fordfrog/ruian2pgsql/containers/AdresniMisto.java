@@ -34,6 +34,7 @@ public class AdresniMisto implements ItemWithDefinicniBod, ItemWithEmergency {
     private Boolean nespravny;
     private Integer adrpPsc;
     private Integer uliceKod;
+    private Integer voKod;
     private Integer stavobjKod;
     private Integer cisloDomovni;
     private Integer cisloOrientacniHodnota;
@@ -76,6 +77,14 @@ public class AdresniMisto implements ItemWithDefinicniBod, ItemWithEmergency {
 
     public void setUliceKod(final Integer uliceKod) {
         this.uliceKod = uliceKod;
+    }
+
+    public Integer getVoKod() {
+        return voKod;
+    }
+
+    public void setVoKod(final Integer voKod) {
+        this.voKod = voKod;
     }
 
     public Integer getStavobjKod() {
@@ -174,4 +183,5 @@ public class AdresniMisto implements ItemWithDefinicniBod, ItemWithEmergency {
     public void setHasici(final String hasici) {
         this.hasici = hasici;
     }
+
 }

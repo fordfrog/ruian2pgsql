@@ -89,6 +89,7 @@ public class MainConvertor {
             exchangeFormatConvertor = new ExchangeFormatConvertor(con);
             specialExchangeFormatConvertor = new SpecialExchangeFormatConvertor(con);
 
+            
             con.setAutoCommit(false);
 
             if (Config.isCreateTables()) {

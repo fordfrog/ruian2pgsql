@@ -380,6 +380,7 @@ CREATE TABLE rn_adresni_misto (
     nespravny boolean,
     adrp_psc int,
     ulice_kod int,
+    vo_kod int,
     stavobj_kod int,
     cislo_domovni int,
     cislo_orientacni_hodnota int,
@@ -460,6 +461,7 @@ CREATE TABLE rn_vo (
 CREATE INDEX rn_adresni_misto_adrp_psc_idx ON rn_adresni_misto (adrp_psc);
 CREATE INDEX rn_adresni_misto_stavobj_kod_idx ON rn_adresni_misto (stavobj_kod);
 CREATE INDEX rn_adresni_misto_ulice_kod_idx ON rn_adresni_misto (ulice_kod);
+CREATE INDEX rn_adresni_misto_vo_kod_idx ON rn_adresni_misto (vo_kod);
 CREATE INDEX rn_bonit_dily_parcel_parcela_id_idx ON rn_bonit_dily_parcel (parcela_id);
 CREATE INDEX rn_cast_obce_obec_kod_idx ON rn_cast_obce (obec_kod);
 CREATE INDEX rn_detailni_tea_adresni_misto_kod_idx ON rn_detailni_tea (adresni_misto_kod);
@@ -493,9 +495,9 @@ CREATE INDEX rn_ulice_obec_kod_idx ON rn_ulice (obec_kod);
 CREATE INDEX rn_vo_obec_kod_idx ON rn_vo (obec_kod);
 CREATE INDEX rn_vo_momc_kod_idx ON rn_vo (momc_kod);
 CREATE INDEX rn_vusc_regsoudr_kod_idx ON rn_vusc (regsoudr_kod);
-CREATE INDEX rn_zsj_katuz_kod_idx ON rn_zsj (katuz_kod);
 CREATE INDEX rn_zpusob_ochrany_objektu_stavobj_kod_idx ON rn_zpusob_ochrany_objektu (stavobj_kod);
 CREATE INDEX rn_zpusob_ochrany_pozemku_parcela_id_idx ON rn_zpusob_ochrany_pozemku (parcela_id);
+CREATE INDEX rn_zsj_katuz_kod_idx ON rn_zsj (katuz_kod);
 
 CREATE INDEX rn_adresni_misto_definicni_bod_idx ON rn_adresni_misto USING GIST (definicni_bod);
 CREATE INDEX rn_adresni_misto_hasici_idx ON rn_adresni_misto USING GIST (hasici);
