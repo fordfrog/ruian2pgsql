@@ -64,7 +64,7 @@ public class UliceConvertor extends AbstractSaveConvertor<Ulice> {
             + "plati_od = ?, nz_id_globalni = ?, zmena_grafiky = ?, "
             + "definicni_cara = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
-            + "WHERE kod = ? AND id_trans_ruian < ?";
+            + "WHERE kod = ? AND id_trans_ruian <= ?";
     /**
      * SQL statement for insertion of new item.
      */
@@ -79,7 +79,7 @@ public class UliceConvertor extends AbstractSaveConvertor<Ulice> {
             + "SET nazev = ?, nespravny = ?, obec_kod = ?, id_trans_ruian = ?, "
             + "plati_od = ?, nz_id_globalni = ?, zmena_grafiky = ?, "
             + "item_timestamp = timezone('utc', now()), deleted = false "
-            + "WHERE kod = ? AND id_trans_ruian < ?";
+            + "WHERE kod = ? AND id_trans_ruian <= ?";
 
     /**
      * Creates new instance of UliceMistoConvertor.

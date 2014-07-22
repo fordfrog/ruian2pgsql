@@ -64,7 +64,7 @@ public class StatConvertor extends AbstractSaveConvertor<Stat> {
             + "plati_od = ?, nz_id_globalni = ?, zmena_grafiky = ?, "
             + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
-            + "WHERE kod = ? AND id_trans_ruian < ?";
+            + "WHERE kod = ? AND id_trans_ruian <= ?";
     /**
      * SQL statement for insertion of the item.
      */
@@ -79,7 +79,7 @@ public class StatConvertor extends AbstractSaveConvertor<Stat> {
             + "SET nazev = ?, nespravny = ?, id_trans_ruian = ?, nuts_lau = ?, "
             + "plati_od = ?, nz_id_globalni = ?, zmena_grafiky = ?, "
             + "item_timestamp = timezone('utc', now()), deleted = false "
-            + "WHERE kod = ? AND id_trans_ruian < ?";
+            + "WHERE kod = ? AND id_trans_ruian <= ?";
 
     /**
      * Creates new instance of StatConvertor.

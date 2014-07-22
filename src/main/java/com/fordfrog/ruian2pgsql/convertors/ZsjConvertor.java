@@ -72,7 +72,7 @@ public class ZsjConvertor extends AbstractSaveConvertor<Zsj> {
             + "id_trans_ruian = ?, definicni_bod = %FUNCTION%(?), "
             + "hranice = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
-            + "WHERE kod = ? AND id_trans_ruian < ?";
+            + "WHERE kod = ? AND id_trans_ruian <= ?";
     /**
      * SQL statement for insertion of new item.
      */
@@ -94,7 +94,7 @@ public class ZsjConvertor extends AbstractSaveConvertor<Zsj> {
             + "plati_od = ?, zmena_grafiky = ?, nz_id_globalni = ?, "
             + "id_trans_ruian = ?, item_timestamp = timezone('utc', now()), "
             + "deleted = false "
-            + "WHERE kod = ? AND id_trans_ruian < ?";
+            + "WHERE kod = ? AND id_trans_ruian <= ?";
 
     /**
      * Creates new instance of ZsjConvertor.

@@ -80,7 +80,7 @@ public class StavebniObjektConvertor
             + "id_trans_ruian = ?, plati_od = ?, nz_id_globalni = ?, "
             + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
-            + "WHERE kod = ? AND id_trans_ruian < ?";
+            + "WHERE kod = ? AND id_trans_ruian <= ?";
     /**
      * SQL statement for insertion of new item.
      */
@@ -111,7 +111,7 @@ public class StavebniObjektConvertor
             + "zpusob_vytapeni_kod = ?, zpusob_vyuziti_kod = ?, "
             + "id_trans_ruian = ?, plati_od = ?, nz_id_globalni = ?, "
             + "item_timestamp = timezone('utc', now()), deleted = false "
-            + "WHERE kod = ? AND id_trans_ruian < ?";
+            + "WHERE kod = ? AND id_trans_ruian <= ?";
     /**
      * SQL statement for deleting of DetainiTEA.
      */

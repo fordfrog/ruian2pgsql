@@ -64,7 +64,7 @@ public class VOConvertor extends AbstractSaveConvertor<VolebniOkrsek> {
             + "obec_kod = ?, poznamka = ?, plati_od = ?, plati_do = ?, nz_id_globalni = ?, id_trans_ruian = ?,"
             + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?),"
             + "item_timestamp = timezone('utc', now()), deleted = false "
-            + "WHERE kod = ? AND id_trans_ruian < ?";
+            + "WHERE kod = ? AND id_trans_ruian <= ?";
     /**
      * SQL statement for insertion of new item.
      */
@@ -79,7 +79,7 @@ public class VOConvertor extends AbstractSaveConvertor<VolebniOkrsek> {
             + "SET cislo = ?, nespravny = ?, momc_kod = ?,"
             + "obec_kod = ?, poznamka = ?, plati_od = ?, plati_do = ?, nz_id_globalni = ?, id_trans_ruian = ?,"
             + "item_timestamp = timezone('utc', now()), deleted = false "
-            + "WHERE kod = ? AND id_trans_ruian < ?";
+            + "WHERE kod = ? AND id_trans_ruian <= ?";
 
     /**
      * Creates new instance of VOMistoConvertor.
