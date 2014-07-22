@@ -70,7 +70,7 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
             + "nz_id_globalni = ?, definicni_bod = %FUNCTION%(?), "
             + "zachranka = %FUNCTION%(?), hasici = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
-            + "WHERE kod = ? AND id_trans_ruian < ?";
+            + "WHERE kod = ? AND id_trans_ruian <= ?";
     /**
      * SQL statement for insertion of new item.
      */
@@ -90,7 +90,7 @@ public class AdresniMistoConvertor extends AbstractSaveConvertor<AdresniMisto> {
             + "id_trans_ruian = ?, plati_od = ?, zmena_grafiky = ?, "
             + "nz_id_globalni = ?, item_timestamp = timezone('utc', now()), "
             + "deleted = false "
-            + "WHERE kod = ? AND id_trans_ruian < ?";
+            + "WHERE kod = ? AND id_trans_ruian <= ?";
 
     /**
      * Creates new instance of AdresniMistoConvertor.

@@ -68,7 +68,7 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
             + "zpusob_vyu_poz_kod = ?, rizeni_id = ?, plati_od = ?, "
             + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
-            + "WHERE id = ? AND id_trans_ruian < ?";
+            + "WHERE id = ? AND id_trans_ruian <= ?";
     /**
      * SQL statement for insertion of new item.
      */
@@ -86,7 +86,7 @@ public class ParcelaConvertor extends AbstractSaveConvertor<Parcela> {
             + "vymera_parcely = ?, id_trans_ruian = ?, "
             + "zpusob_vyu_poz_kod = ?, rizeni_id = ?, plati_od = ?, "
             + "item_timestamp = timezone('utc', now()), deleted = false "
-            + "WHERE id = ? AND id_trans_ruian < ?";
+            + "WHERE id = ? AND id_trans_ruian <= ?";
     /**
      * SQL statement for deletion of BonitovaneDily.
      */

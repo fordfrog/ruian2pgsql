@@ -73,7 +73,7 @@ public class MomcConvertor extends AbstractSaveConvertor<Momc> {
             + "id_trans_ruian = ?, plati_od = ?, nz_id_globalni = ?, "
             + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?), "
             + "item_timestamp = timezone('utc', now()), deleted = false "
-            + "WHERE kod = ? AND id_trans_ruian < ?";
+            + "WHERE kod = ? AND id_trans_ruian <= ?";
     /**
      * SQL statement for insertion of new item.
      */
@@ -96,7 +96,7 @@ public class MomcConvertor extends AbstractSaveConvertor<Momc> {
             + "vlajka_obrazek = ?, znak_text = ?, znak_obrazek = ?, "
             + "id_trans_ruian = ?, plati_od = ?, nz_id_globalni = ?, "
             + "item_timestamp = timezone('utc', now()), deleted = false "
-            + "WHERE kod = ? AND id_trans_ruian < ?";
+            + "WHERE kod = ? AND id_trans_ruian <= ?";
 
     /**
      * Creates new instance of MomcConvertor.
