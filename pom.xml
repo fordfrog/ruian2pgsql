@@ -6,7 +6,7 @@
 
     <groupId>com.fordfrog</groupId>
     <artifactId>ruian2pgsql</artifactId>
-    <version>1.5.0</version>
+    <version>1.6.0</version>
     <packaging>jar</packaging>
 
     <name>ruian2pgsql</name>
