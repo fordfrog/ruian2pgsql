@@ -93,6 +93,16 @@ ruian2pgsql is distributed under MIT license.
 
 ## Changelog
 
+## Version 1.6.0
+
+* Added support for OriginalniHraniceOmpv. (Martin Kokeš)
+* Added support for VolebniOkrsek. (Martin Kokeš)
+* Added support for VOKod for AdresniMisto. (Martin Kokeš)
+* Added PostgreSQL database schema upgrade scripts for upgrade to version 1.6.0.
+  (Martin Kokeš)
+* Fixed update of data with regard to the fact that transaction id is not changed
+  on each data update. (Petr Morávek)
+
 ## Version 1.5.0
 
 * Added command line switch --linearize-ewkt which enables internal linearization

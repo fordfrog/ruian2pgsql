@@ -95,6 +95,16 @@ ruian2pgsql je distribuovaný pod MIT licencí.
 
 ## Changelog
 
+## Verze 1.6.0
+
+* Přidána podpora pro OriginalniHraniceOmpv. (Martin Kokeš)
+* Přidána podpora pro VolebniOkrsek. (Martin Kokeš)
+* Přidána podpora pro VOKod v objektu AdresniMisto. (Martin Kokeš)
+* Přidán skript pro aktualizaci schématu PostgreSQL databáze na verzi 1.6.0.
+  (Martin Kokeš)
+* Opravena aktualizace dat vzhledem k faktu, že id transakce není změněno při každé
+  změně dat. (Petr Morávek)
+
 ## Verze 1.5.0
 
 * Přidán přepínač --linearize-ewkt, který zapíná interní linearizaci geometrií
