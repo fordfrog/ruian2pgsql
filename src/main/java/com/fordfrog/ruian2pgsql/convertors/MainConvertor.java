@@ -93,16 +93,16 @@ public class MainConvertor {
             con.setAutoCommit(false);
 
             if (Config.isCreateTables()) {
-                Log.write("Initializing database schema...");
+                Log.write("Recreating tables...");
 
                 if (Config.isNoGis() || Config.isMysqlDriver()) {
                     if (Config.isMysqlDriver()) {
-                        runSQLFromResource(con, "/sql/schema_no_gis_mysql.sql");
+                        runSQLFromResource(con, "/sql/schema_no_gis_mysql_tbl.sql");
                     } else {
-                        runSQLFromResource(con, "/sql/schema_no_gis.sql");
+                        runSQLFromResource(con, "/sql/schema_no_gis_tbl.sql");
                     }
                 } else {
-                    runSQLFromResource(con, "/sql/schema.sql");
+                    runSQLFromResource(con, "/sql/schema_tbl.sql");
                 }
             }
 
@@ -137,6 +137,20 @@ public class MainConvertor {
             for (final Path file : getInputFiles(Config.getInputDirPath())) {
                 processFile(file);
                 con.commit();
+            }
+
+            if (Config.isCreateTables()) {
+                Log.write("Creating indexes...");
+
+                if (Config.isNoGis() || Config.isMysqlDriver()) {
+                    if (Config.isMysqlDriver()) {
+                        runSQLFromResource(con, "/sql/schema_no_gis_mysql_idx.sql");
+                    } else {
+                        runSQLFromResource(con, "/sql/schema_no_gis_idx.sql");
+                    }
+                } else {
+                    runSQLFromResource(con, "/sql/schema_idx.sql");
+                }
             }
 
             Log.write("Total duration: "
