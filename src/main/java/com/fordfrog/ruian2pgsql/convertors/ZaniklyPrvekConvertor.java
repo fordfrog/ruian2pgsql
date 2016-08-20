@@ -322,7 +322,7 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
 
         pstmUpdateParcela.clearParameters();
         pstmUpdateParcela.setLong(1, item.getIdTransakce());
-        pstmUpdateParcela.setInt(2, item.getPrvekId().intValue());
+        pstmUpdateParcela.setLong(2, item.getPrvekId());
         pstmUpdateParcela.setLong(3, item.getIdTransakce());
         pstmUpdateParcela.execute();
 
