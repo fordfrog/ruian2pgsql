@@ -93,6 +93,10 @@ ruian2pgsql is distributed under MIT license.
 
 ## Changelog
 
+## Version 1.6.1
+
+* Fixed integer overflow in deleteParcela (Petr Vejsada)
+
 ## Version 1.6.0
 
 * Added support for OriginalniHraniceOmpv. (Martin Kokeš)
