@@ -95,6 +95,12 @@ ruian2pgsql je distribuovaný pod MIT licencí.
 
 ## Changelog
 
+## Verze 1.6.1
+
+* optimalizace rychlosti při inicializaci databáze (Dusan Stloukal)
+* opraveno mazání parcel (Martin Kokeš)
+* aktualizována verze PostgreSQL ovladače (Dusan Stloukal)
+
 ## Verze 1.6.0
 
 * Přidána podpora pro OriginalniHraniceOmpv. (Martin Kokeš)

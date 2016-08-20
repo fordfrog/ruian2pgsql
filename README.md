@@ -93,6 +93,12 @@ ruian2pgsql is distributed under MIT license.
 
 ## Changelog
 
+## Version 1.6.1
+
+* improved performance when initializing database (Dusan Stloukal)
+* fixed deletion of records in rn_parcela table (Martin Kokeš)
+* updated PostgreSQL driver version (Dusan Stloukal)
+
 ## Version 1.6.0
 
 * Added support for OriginalniHraniceOmpv. (Martin Kokeš)
