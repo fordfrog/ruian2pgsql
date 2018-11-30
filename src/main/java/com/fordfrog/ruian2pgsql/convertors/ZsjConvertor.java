@@ -125,7 +125,7 @@ public class ZsjConvertor extends AbstractSaveConvertor<Zsj> {
         pstm.setString(index++, item.getMluvCharPad5());
         pstm.setString(index++, item.getMluvCharPad6());
         pstm.setString(index++, item.getMluvCharPad7());
-        pstm.setLong(index++, item.getVymera());
+        pstmEx.setLong(index++, item.getVymera());
         pstmEx.setDate(index++, item.getPlatiOd());
         pstmEx.setBoolean(index++, item.getZmenaGrafiky());
         pstm.setLong(index++, item.getNzIdGlobalni());
