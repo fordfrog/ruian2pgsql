@@ -34,7 +34,7 @@ jdbc-driver.jar
         twice - once during the check and the other time during saving in
         database)
 --input-dir <value>
-        is directory that contains downloaded .xml.gz files
+        is directory that contains downloaded .xml.gz or .xml.zip files
 --log-file <value>
         is optional specification of log file (if not specified, log will be
         output to console)

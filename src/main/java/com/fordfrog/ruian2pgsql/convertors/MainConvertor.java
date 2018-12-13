@@ -27,6 +27,7 @@ import com.fordfrog.ruian2pgsql.utils.Log;
 import com.fordfrog.ruian2pgsql.utils.Namespaces;
 import com.fordfrog.ruian2pgsql.utils.XMLUtils;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -44,6 +45,9 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -254,7 +258,7 @@ public class MainConvertor {
             SQLException {
         final String fileName = file.toString();
 
-        if (fileName.endsWith(".xml.gz") || fileName.endsWith(".xml")) {
+        if (fileName.endsWith(".xml.gz") || fileName.endsWith(".xml.zip") || fileName.endsWith(".xml")) {
             final long startTimestamp = System.currentTimeMillis();
 
             Log.write("Processing file " + file);
@@ -263,7 +267,14 @@ public class MainConvertor {
             try (final InputStream inputStream = Files.newInputStream(file)) {
                 if (fileName.endsWith(".gz")) {
                     readInputStream(new GZIPInputStream(inputStream));
-                } else {
+                } 
+                else if (fileName.endsWith(".zip")) {
+                	ZipFile zif = new ZipFile(fileName);
+                	ZipEntry ze = zif.entries().nextElement();
+                	readInputStream(zif.getInputStream(ze));
+                	zif.close();
+				}
+                else {
                     readInputStream(inputStream);
                 }
             } catch (final IOException ex) {
