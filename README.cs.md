@@ -68,7 +68,7 @@ spustíte bez parametrů (výpis je v angličtině, zde je přeložený):
             definice je kontrolovaná dvakrát - jednou při kontrole a podruhé při
             ukládání do databáze)
     --input-dir <hodnota>
-            je adresář, který obsahuje stažené soubory s příponou .xml.gz
+            je adresář, který obsahuje stažené soubory s příponou .xml.gz nebo .xml.zip
     --log-file <hodnota>
             je volitelná specifikace logovacího souboru (pokud není uveden, log
             bude zapsaný na konzoli)
