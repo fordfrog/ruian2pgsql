@@ -57,9 +57,9 @@ public class ZsjConvertor extends AbstractSaveConvertor<Zsj> {
             + "mluv_char_pad_2, mluv_char_pad_3, mluv_char_pad_4, "
             + "mluv_char_pad_5, mluv_char_pad_6, mluv_char_pad_7, "
             + "vymera, plati_od, zmena_grafiky, nz_id_globalni, "
-            + "id_trans_ruian, definicni_bod, hranice, kod) VALUES (?, ?, ?, "
+            + "id_trans_ruian, definicni_bod, hranice, datum_vzniku, kod) VALUES (?, ?, ?, "
             + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, %FUNCTION%(?), "
-            + "%FUNCTION%(?), ?)";
+            + "%FUNCTION%(?), ?, ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -70,7 +70,7 @@ public class ZsjConvertor extends AbstractSaveConvertor<Zsj> {
             + "mluv_char_pad_6 = ?, mluv_char_pad_7 = ?, vymera = ?, "
             + "plati_od = ?, zmena_grafiky = ?, nz_id_globalni = ?, "
             + "id_trans_ruian = ?, definicni_bod = %FUNCTION%(?), "
-            + "hranice = %FUNCTION%(?), "
+            + "hranice = %FUNCTION%(?), datum_vzniku = ?, "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian <= ?";
     /**
@@ -81,8 +81,8 @@ public class ZsjConvertor extends AbstractSaveConvertor<Zsj> {
             + "mluv_char_pad_2, mluv_char_pad_3, mluv_char_pad_4, "
             + "mluv_char_pad_5, mluv_char_pad_6, mluv_char_pad_7, "
             + "vymera, plati_od, zmena_grafiky, nz_id_globalni, "
-            + "id_trans_ruian, kod) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "id_trans_ruian, datum_vzniku, kod) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -92,7 +92,7 @@ public class ZsjConvertor extends AbstractSaveConvertor<Zsj> {
             + "mluv_char_pad_3 = ?, mluv_char_pad_4 = ?, mluv_char_pad_5 = ?, "
             + "mluv_char_pad_6 = ?, mluv_char_pad_7 = ?, vymera = ?, "
             + "plati_od = ?, zmena_grafiky = ?, nz_id_globalni = ?, "
-            + "id_trans_ruian = ?, item_timestamp = timezone('utc', now()), "
+            + "id_trans_ruian = ?, datum_vzniku = ?, item_timestamp = timezone('utc', now()), "
             + "deleted = false "
             + "WHERE kod = ? AND id_trans_ruian <= ?";
 
@@ -136,6 +136,7 @@ public class ZsjConvertor extends AbstractSaveConvertor<Zsj> {
             pstm.setString(index++, item.getHranice());
         }
 
+        pstmEx.setDate(index++, item.getDatumVzniku());
         pstm.setInt(index++, item.getKod());
 
         if (update) {
@@ -158,6 +159,10 @@ public class ZsjConvertor extends AbstractSaveConvertor<Zsj> {
                     case "CharakterZsjKod":
                         item.setCharakterZsjKod(
                                 Integer.parseInt(reader.getElementText()));
+                        break;
+                    case "DatumVzniku":
+                        item.setDatumVzniku(
+                                Utils.parseTimestamp(reader.getElementText()));
                         break;
                     case "Geometrie":
                         Utils.processGeometrie(

@@ -46,7 +46,7 @@ public class SpecialExchangeFormatConvertor extends AbstractConvertor {
     /**
      * Hlavicka convertor instance.
      */
-    private final HlavickaConvertor hlavickaConvertor;
+    private final SpecialniHlavickaConvertor hlavickaConvertor;
 
     /**
      * Creates new instance of ExchangeFormatConvertor.
@@ -60,7 +60,7 @@ public class SpecialExchangeFormatConvertor extends AbstractConvertor {
         super(NAMESPACE, "SpecialniVymennyFormat");
 
         dataConvertor = new SpecialniDataConvertor(con);
-        hlavickaConvertor = new HlavickaConvertor(con);
+        hlavickaConvertor = new SpecialniHlavickaConvertor(con);
     }
 
     @Override
@@ -72,9 +72,9 @@ public class SpecialExchangeFormatConvertor extends AbstractConvertor {
                     case "Data":
                         dataConvertor.convert(reader);
                         break;
-//                    case "Hlavicka":
-//                        hlavickaConvertor.convert(reader);
-//                        break;
+                    case "Hlavicka":
+                        hlavickaConvertor.convert(reader);
+                        break;
                     default:
                         XMLUtils.processUnsupported(reader);
                 }

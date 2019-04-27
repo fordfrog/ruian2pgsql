@@ -48,6 +48,7 @@ public class KatastralniUzemi implements ItemWithDefinicniBod, ItemWithHranice,
     private Long rizeniId;
     private String definicniBod;
     private String hranice;
+    private Date datumVzniku;
 
     public Integer getKod() {
         return kod;
@@ -201,5 +202,13 @@ public class KatastralniUzemi implements ItemWithDefinicniBod, ItemWithHranice,
     @Override
     public void setHranice(String hranice) {
         this.hranice = hranice;
+    }
+
+    public Date getDatumVzniku() {
+        return datumVzniku;
+    }
+
+    public void setDatumVzniku(final Date datumVzniku) {
+        this.datumVzniku = datumVzniku;
     }
 }

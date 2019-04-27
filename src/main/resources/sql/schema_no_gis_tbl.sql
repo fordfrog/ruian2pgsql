@@ -2,8 +2,6 @@ DROP VIEW IF EXISTS ruian_stats;
 DROP VIEW IF EXISTS ruian_stats_full;
 
 DROP TABLE IF EXISTS hlavicka;
-DROP TABLE IF EXISTS specialni_hlavicka;
-
 DROP TABLE IF EXISTS rn_stat;
 DROP TABLE IF EXISTS rn_region_soudrznosti;
 DROP TABLE IF EXISTS rn_vusc;
@@ -29,6 +27,8 @@ DROP TABLE IF EXISTS rn_zsj;
 DROP TABLE IF EXISTS rn_vo;
 
 CREATE TABLE hlavicka (
+    id serial,
+    verze_vfr varchar,
     typ_zaznamu varchar,
     typ_davky varchar,
     typ_souboru varchar,
@@ -40,8 +40,11 @@ CREATE TABLE hlavicka (
     predchozi_soubor varchar,
     plny_soubor varchar,
     metadata varchar,
+    platnost_dat_k_usui timestamp without time zone,
+    platnost_dat_k_iskn timestamp without time zone,
     import_timestamp timestamp without time zone DEFAULT timezone('utc', now()),
-    deleted boolean DEFAULT false
+    deleted boolean DEFAULT false,
+    CONSTRAINT hlavicka_pkey PRIMARY KEY (id)
 );
 
 CREATE TABLE rn_stat (
@@ -53,6 +56,7 @@ CREATE TABLE rn_stat (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
+    datum_vzniku date,
     item_timestamp timestamp without time zone DEFAULT timezone('utc', now()),
     deleted boolean DEFAULT false
 );
@@ -67,6 +71,7 @@ CREATE TABLE rn_region_soudrznosti (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
+    datum_vzniku date,
     item_timestamp timestamp without time zone DEFAULT timezone('utc', now()),
     deleted boolean DEFAULT false
 );
@@ -81,6 +86,7 @@ CREATE TABLE rn_vusc (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
+    datum_vzniku date,
     item_timestamp timestamp without time zone DEFAULT timezone('utc', now()),
     deleted boolean DEFAULT false
 );
@@ -94,6 +100,7 @@ CREATE TABLE rn_kraj_1960 (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
+    datum_vzniku date,
     item_timestamp timestamp without time zone DEFAULT timezone('utc', now()),
     deleted boolean DEFAULT false
 );
@@ -109,6 +116,7 @@ CREATE TABLE rn_okres (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
+    datum_vzniku date,
     item_timestamp timestamp without time zone DEFAULT timezone('utc', now()),
     deleted boolean DEFAULT false
 );
@@ -123,6 +131,7 @@ CREATE TABLE rn_orp (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
+    datum_vzniku date,
     item_timestamp timestamp without time zone DEFAULT timezone('utc', now()),
     deleted boolean DEFAULT false
 );
@@ -137,6 +146,7 @@ CREATE TABLE rn_pou (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
+    datum_vzniku date,
     item_timestamp timestamp without time zone DEFAULT timezone('utc', now()),
     deleted boolean DEFAULT false
 );
@@ -165,6 +175,7 @@ CREATE TABLE rn_obec (
     id_trans_ruian bigint,
     plati_od date,
     nz_id_globalni bigint,
+    datum_vzniku date,
     item_timestamp timestamp without time zone DEFAULT timezone('utc', now()),
     deleted boolean DEFAULT false
 );
@@ -184,6 +195,7 @@ CREATE TABLE rn_cast_obce (
     zmena_grafiky boolean,
     plati_od date,
     nz_id_globalni bigint,
+    datum_vzniku date,
     item_timestamp timestamp without time zone DEFAULT timezone('utc', now()),
     deleted boolean DEFAULT false
 );
@@ -197,6 +209,7 @@ CREATE TABLE rn_mop (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
+    datum_vzniku date,
     item_timestamp timestamp without time zone DEFAULT timezone('utc', now()),
     deleted boolean DEFAULT false
 );
@@ -236,6 +249,7 @@ CREATE TABLE rn_momc (
     id_trans_ruian bigint,
     plati_od date,
     nz_id_globalni bigint,
+    datum_vzniku date,
     item_timestamp timestamp without time zone DEFAULT timezone('utc', now()),
     deleted boolean DEFAULT false
 );
@@ -386,6 +400,7 @@ CREATE TABLE rn_katastralni_uzemi (
     plati_od date,
     nz_id_globalni bigint,
     rizeni_id bigint,
+    datum_vzniku date,
     item_timestamp timestamp without time zone DEFAULT timezone('utc', now()),
     deleted boolean DEFAULT false
 );
@@ -407,19 +422,20 @@ CREATE TABLE rn_zsj (
     zmena_grafiky boolean,
     nz_id_globalni bigint,
     id_trans_ruian bigint,
+    datum_vzniku date,
     item_timestamp timestamp without time zone DEFAULT timezone('utc', now()),
     deleted boolean DEFAULT false
 );
 
 CREATE TABLE rn_vo (
-    kod int PRIMARY KEY,   -- Kód VO
-    cislo int,             -- Číslo VO unikátní v rámci obce nebo MOMC
-    nespravny boolean,     -- Příznak nesprávnosti
-    obec_kod int,          -- Nadřazená obec k VO
-    momc_kod int,          -- Nadřazený MOMC k VO
-    poznamka varchar,      -- Poznámka k VO
-    plati_od date,         -- Začátek platnosti
-    plati_do date,         -- Konec platnosti
+    kod int PRIMARY KEY, -- Kód VO
+    cislo int, -- Číslo VO unikátní v rámci obce nebo MOMC
+    nespravny boolean, -- Příznak nesprávnosti
+    obec_kod int, -- Nadřazená obec k VO
+    momc_kod int, -- Nadřazený MOMC k VO
+    poznamka varchar, -- Poznámka k VO
+    plati_od date, -- Začátek platnosti
+    plati_do date, -- Konec platnosti
     id_trans_ruian bigint, -- ID transakce v RÚIAN
     nz_id_globalni bigint, -- ID návrhu změny v ISÚI
     item_timestamp timestamp without time zone DEFAULT timezone('utc', now()),

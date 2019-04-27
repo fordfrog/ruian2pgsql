@@ -55,8 +55,8 @@ public class OkresConvertor extends AbstractSaveConvertor<Okres> {
     private static final String SQL_INSERT = "INSERT INTO rn_okres "
             + "(nazev, nespravny, vusc_kod, kraj_1960_kod, id_trans_ruian, "
             + "nuts_lau, plati_od, nz_id_globalni, zmena_grafiky, "
-            + "definicni_bod, hranice, kod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "
-            + "%FUNCTION%(?), %FUNCTION%(?), ?)";
+            + "definicni_bod, hranice, datum_vzniku, kod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "
+            + "%FUNCTION%(?), %FUNCTION%(?), ?, ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -64,7 +64,7 @@ public class OkresConvertor extends AbstractSaveConvertor<Okres> {
             + "SET nazev = ?, nespravny = ?, vusc_kod = ?, kraj_1960_kod = ?, "
             + "id_trans_ruian = ?, nuts_lau = ?, plati_od = ?, "
             + "nz_id_globalni = ?, zmena_grafiky = ?, "
-            + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?), "
+            + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?), datum_vzniku = ?, "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian <= ?";
     /**
@@ -72,15 +72,15 @@ public class OkresConvertor extends AbstractSaveConvertor<Okres> {
      */
     private static final String SQL_INSERT_NO_GIS = "INSERT INTO rn_okres "
             + "(nazev, nespravny, vusc_kod, kraj_1960_kod, id_trans_ruian, "
-            + "nuts_lau, plati_od, nz_id_globalni, zmena_grafiky, kod) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "nuts_lau, plati_od, nz_id_globalni, zmena_grafiky, datum_vzniku, kod) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     /**
      * SQL statement for update of existing item.
      */
     private static final String SQL_UPDATE_NO_GIS = "UPDATE rn_okres "
             + "SET nazev = ?, nespravny = ?, vusc_kod = ?, kraj_1960_kod = ?, "
             + "id_trans_ruian = ?, nuts_lau = ?, plati_od = ?, "
-            + "nz_id_globalni = ?, zmena_grafiky = ?, "
+            + "nz_id_globalni = ?, zmena_grafiky = ?, datum_vzniku = ?, "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian <= ?";
 
@@ -119,6 +119,7 @@ public class OkresConvertor extends AbstractSaveConvertor<Okres> {
             pstm.setString(index++, item.getHranice());
         }
 
+        pstmEx.setDate(index++, item.getDatumVzniku());
         pstm.setInt(index++, item.getKod());
 
         if (update) {
@@ -138,6 +139,10 @@ public class OkresConvertor extends AbstractSaveConvertor<Okres> {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
+                    case "DatumVzniku":
+                        item.setDatumVzniku(
+                                Utils.parseTimestamp(reader.getElementText()));
+                        break;
                     case "Geometrie":
                         Utils.processGeometrie(
                                 reader, getConnection(), item, NAMESPACE);

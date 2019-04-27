@@ -27,9 +27,11 @@ DROP TABLE IF EXISTS rn_zsj;
 DROP TABLE IF EXISTS rn_vo;
 
 CREATE TABLE hlavicka (
-    typ_zaznamu text,
-    typ_davky text,
-    typ_souboru text,
+    id int(11) NOT NULL AUTO_INCREMENT,
+    verze_vfr varchar(255),
+    typ_zaznamu varchar(255),
+    typ_davky varchar(255),
+    typ_souboru varchar(255),
     datum date,
     transakce_od_id int,
     transakce_od_zapsano datetime,
@@ -38,8 +40,11 @@ CREATE TABLE hlavicka (
     predchozi_soubor text,
     plny_soubor text,
     metadata text,
+    platnost_dat_k_usui datetime,
+    platnost_dat_k_iskn datetime,
     import_timestamp timestamp DEFAULT now(),
-    deleted boolean DEFAULT false
+    deleted boolean DEFAULT false,
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE rn_stat (
@@ -51,6 +56,7 @@ CREATE TABLE rn_stat (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
+    datum_vzniku date,
     item_timestamp timestamp DEFAULT now(),
     deleted boolean DEFAULT false
 );
@@ -65,6 +71,7 @@ CREATE TABLE rn_region_soudrznosti (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
+    datum_vzniku date,
     item_timestamp timestamp DEFAULT now(),
     deleted boolean DEFAULT false
 );
@@ -79,6 +86,7 @@ CREATE TABLE rn_vusc (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
+    datum_vzniku date,
     item_timestamp timestamp DEFAULT now(),
     deleted boolean DEFAULT false
 );
@@ -92,6 +100,7 @@ CREATE TABLE rn_kraj_1960 (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
+    datum_vzniku date,
     item_timestamp timestamp DEFAULT now(),
     deleted boolean DEFAULT false
 );
@@ -107,6 +116,7 @@ CREATE TABLE rn_okres (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
+    datum_vzniku date,
     item_timestamp timestamp DEFAULT now(),
     deleted boolean DEFAULT false
 );
@@ -121,6 +131,7 @@ CREATE TABLE rn_orp (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
+    datum_vzniku date,
     item_timestamp timestamp DEFAULT now(),
     deleted boolean DEFAULT false
 );
@@ -135,6 +146,7 @@ CREATE TABLE rn_pou (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
+    datum_vzniku date,
     item_timestamp timestamp DEFAULT now(),
     deleted boolean DEFAULT false
 );
@@ -163,6 +175,7 @@ CREATE TABLE rn_obec (
     id_trans_ruian bigint,
     plati_od date,
     nz_id_globalni bigint,
+    datum_vzniku date,
     item_timestamp timestamp DEFAULT now(),
     deleted boolean DEFAULT false
 );
@@ -182,6 +195,7 @@ CREATE TABLE rn_cast_obce (
     zmena_grafiky boolean,
     plati_od date,
     nz_id_globalni bigint,
+    datum_vzniku date,
     item_timestamp timestamp DEFAULT now(),
     deleted boolean DEFAULT false
 );
@@ -195,6 +209,7 @@ CREATE TABLE rn_mop (
     plati_od date,
     nz_id_globalni bigint,
     zmena_grafiky boolean,
+    datum_vzniku date,
     item_timestamp timestamp DEFAULT now(),
     deleted boolean DEFAULT false
 );
@@ -234,6 +249,7 @@ CREATE TABLE rn_momc (
     id_trans_ruian bigint,
     plati_od date,
     nz_id_globalni bigint,
+    datum_vzniku date,
     item_timestamp timestamp DEFAULT now(),
     deleted boolean DEFAULT false
 );
@@ -384,6 +400,7 @@ CREATE TABLE rn_katastralni_uzemi (
     plati_od date,
     nz_id_globalni bigint,
     rizeni_id bigint,
+    datum_vzniku date,
     item_timestamp timestamp DEFAULT now(),
     deleted boolean DEFAULT false
 );
@@ -405,19 +422,20 @@ CREATE TABLE rn_zsj (
     zmena_grafiky boolean,
     nz_id_globalni bigint,
     id_trans_ruian bigint,
+    datum_vzniku date,
     item_timestamp timestamp DEFAULT now(),
     deleted boolean DEFAULT false
 );
 
 CREATE TABLE rn_vo (
-    kod int PRIMARY KEY,   -- Kód VO
-    cislo int,             -- Číslo VO unikátní v rámci obce nebo MOMC
-    nespravny boolean,     -- Příznak nesprávnosti
-    obec_kod int,          -- Nadřazená obec k VO
-    momc_kod int,          -- Nadřazený MOMC k VO
-    poznamka text,         -- Poznámka k VO
-    plati_od date,         -- Začátek platnosti
-    plati_do date,         -- Konec platnosti
+    kod int PRIMARY KEY, -- Kód VO
+    cislo int, -- Číslo VO unikátní v rámci obce nebo MOMC
+    nespravny boolean, -- Příznak nesprávnosti
+    obec_kod int, -- Nadřazená obec k VO
+    momc_kod int, -- Nadřazený MOMC k VO
+    poznamka text, -- Poznámka k VO
+    plati_od date, -- Začátek platnosti
+    plati_do date, -- Konec platnosti
     id_trans_ruian bigint, -- ID transakce v RÚIAN
     nz_id_globalni bigint, -- ID návrhu změny v ISÚI
     item_timestamp timestamp DEFAULT now(),

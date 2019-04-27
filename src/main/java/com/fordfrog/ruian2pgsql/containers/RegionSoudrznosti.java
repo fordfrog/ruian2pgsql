@@ -42,6 +42,7 @@ public class RegionSoudrznosti implements ItemWithDefinicniBod,
     private Boolean zmenaGrafiky;
     private String definicniBod;
     private String hranice;
+    private Date datumVzniku;
 
     public Integer getKod() {
         return kod;
@@ -135,5 +136,13 @@ public class RegionSoudrznosti implements ItemWithDefinicniBod,
     @Override
     public void setHranice(final String hranice) {
         this.hranice = hranice;
+    }
+
+    public Date getDatumVzniku() {
+        return datumVzniku;
+    }
+
+    public void setDatumVzniku(final Date datumVzniku) {
+        this.datumVzniku = datumVzniku;
     }
 }
