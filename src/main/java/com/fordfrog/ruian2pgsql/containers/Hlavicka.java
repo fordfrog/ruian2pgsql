@@ -30,6 +30,7 @@ import java.util.Date;
  */
 public class Hlavicka {
 
+    private String verzeVfr;
     private String typZaznamu;
     private String typDavky;
     private String typSouboru;
@@ -41,6 +42,16 @@ public class Hlavicka {
     private String predchoziSoubor;
     private String plnySoubor;
     private String metadata;
+    private Date platnostDatKIsui;
+    private Date platnostDatKIskn;
+
+    public String getVerzeVfr() {
+        return verzeVfr;
+    }
+
+    public void setVerzeVfr(final String verzeVfr) {
+        this.verzeVfr = verzeVfr;
+    }
 
     public String getTypZaznamu() {
         return typZaznamu;
@@ -134,5 +145,20 @@ public class Hlavicka {
 
     public void setMetadata(final String metadata) {
         this.metadata = metadata;
+    }
+
+    public Date getPlatnostDatKIsui() {
+        return platnostDatKIsui;
+    }
+    public void setPlatnostDatKIsui(final Date platnostDatKIsui) {
+        this.platnostDatKIsui = platnostDatKIsui;
+    }
+
+    public Date getPlatnostDatKIskn() {
+        return platnostDatKIskn;
+    }
+
+    public void setPlatnostDatKIskn(final Date platnostDatKIskn) {
+        this.platnostDatKIskn = platnostDatKIskn;
     }
 }

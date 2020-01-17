@@ -32,17 +32,12 @@ import java.sql.SQLException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-/**
- * Convertor of Hlavicka element.
- *
- * @author fordfrog
- */
-public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
+public class SpecialniHlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
 
     /**
      * Namespace of Hlavicka element and its sub-elements.
      */
-    private static final String NAMESPACE = Namespaces.VYMENNY_FORMAT_TYPY;
+    private static final String NAMESPACE = Namespaces.SPECIALNI_VYMENNY_FORMAT_TYPY;
     /**
      * SQL statement for testing whether item exists. We always return that the
      * item does not exist because we want all header information in the
@@ -60,21 +55,21 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     /**
-     * Creates new instance of HlavickaConvertor.
+     * Creates new instance of SpecialniHlavickaConvertor.
      *
      * @param con database connection
      *
      * @throws SQLException Thrown if problem occurred while communicating with
      *                      database.
      */
-    public HlavickaConvertor(final Connection con) throws SQLException {
+    public SpecialniHlavickaConvertor(final Connection con) throws SQLException {
         super(Hlavicka.class, NAMESPACE, "Hlavicka", con, SQL_EXISTS,
                 SQL_INSERT, null, SQL_INSERT, null);
     }
 
     @Override
     protected void fill(final PreparedStatement pstm, final Hlavicka item,
-            final boolean update) throws SQLException {
+                        final boolean update) throws SQLException {
         final PreparedStatementEx pstmEx = new PreparedStatementEx(pstm);
         pstm.setString(1, item.getVerzeVfr());
         pstm.setString(2, item.getTypZaznamu());
@@ -101,7 +96,7 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
 
     @Override
     protected void processElement(final XMLStreamReader reader,
-            final Hlavicka item) throws XMLStreamException {
+                                  final Hlavicka item) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
@@ -161,7 +156,7 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
      *                            stream.
      */
     private void processTransakceOd(final XMLStreamReader reader,
-            final Hlavicka item) throws XMLStreamException {
+                                    final Hlavicka item) throws XMLStreamException {
         while (reader.hasNext()) {
             final int event = reader.next();
 
@@ -189,7 +184,7 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
      *                            stream.
      */
     private void processTransakceOdElement(final XMLStreamReader reader,
-            final Hlavicka header) throws XMLStreamException {
+                                           final Hlavicka header) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case Namespaces.COMMON_TYPY:
                 switch (reader.getLocalName()) {
@@ -220,7 +215,7 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
      *                            stream.
      */
     private void processTransakceDo(final XMLStreamReader reader,
-            final Hlavicka header) throws XMLStreamException {
+                                    final Hlavicka header) throws XMLStreamException {
         while (reader.hasNext()) {
             final int event = reader.next();
 
@@ -247,7 +242,7 @@ public class HlavickaConvertor extends AbstractSaveConvertor<Hlavicka> {
      *                            stream.
      */
     private void processTransakceDoElement(final XMLStreamReader reader,
-            final Hlavicka header) throws XMLStreamException {
+                                           final Hlavicka header) throws XMLStreamException {
         switch (reader.getNamespaceURI()) {
             case Namespaces.COMMON_TYPY:
                 switch (reader.getLocalName()) {

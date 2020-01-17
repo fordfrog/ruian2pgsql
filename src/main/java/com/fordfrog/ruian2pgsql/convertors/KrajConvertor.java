@@ -54,15 +54,15 @@ public class KrajConvertor extends AbstractSaveConvertor<Kraj> {
      */
     private static final String SQL_INSERT = "INSERT INTO rn_kraj_1960 "
             + "(nazev, nespravny, stat_kod, id_trans_ruian, plati_od, "
-            + "nz_id_globalni, zmena_grafiky, definicni_bod, hranice, kod) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, %FUNCTION%(?), %FUNCTION%(?), ?)";
+            + "nz_id_globalni, zmena_grafiky, definicni_bod, hranice, datum_vzniku, kod) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, %FUNCTION%(?), %FUNCTION%(?), ?, ?)";
     /**
      * SQL statement for update of existing item.
      */
     private static final String SQL_UPDATE = "UPDATE rn_kraj_1960 "
             + "SET nazev = ?, nespravny = ?, stat_kod = ?, id_trans_ruian = ?, "
             + "plati_od = ?, nz_id_globalni = ?, zmena_grafiky = ?, "
-            + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?), "
+            + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?), datum_vzniku = ?, "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian <= ?";
     /**
@@ -70,14 +70,14 @@ public class KrajConvertor extends AbstractSaveConvertor<Kraj> {
      */
     private static final String SQL_INSERT_NO_GIS = "INSERT INTO rn_kraj_1960 "
             + "(nazev, nespravny, stat_kod, id_trans_ruian, plati_od, "
-            + "nz_id_globalni, zmena_grafiky, kod) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            + "nz_id_globalni, zmena_grafiky, datum_vzniku, kod) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     /**
      * SQL statement for update of existing item.
      */
     private static final String SQL_UPDATE_NO_GIS = "UPDATE rn_kraj_1960 "
             + "SET nazev = ?, nespravny = ?, stat_kod = ?, id_trans_ruian = ?, "
-            + "plati_od = ?, nz_id_globalni = ?, zmena_grafiky = ?, "
+            + "plati_od = ?, nz_id_globalni = ?, zmena_grafiky = ?, datum_vzniku = ?, "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian <= ?";
 
@@ -114,6 +114,7 @@ public class KrajConvertor extends AbstractSaveConvertor<Kraj> {
             pstm.setString(index++, item.getHranice());
         }
 
+        pstmEx.setDate(index++, item.getDatumVzniku());
         pstm.setInt(index++, item.getKod());
 
         if (update) {
@@ -133,6 +134,10 @@ public class KrajConvertor extends AbstractSaveConvertor<Kraj> {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
+                    case "DatumVzniku":
+                        item.setDatumVzniku(
+                                Utils.parseTimestamp(reader.getElementText()));
+                        break;
                     case "Geometrie":
                         Utils.processGeometrie(
                                 reader, getConnection(), item, NAMESPACE);

@@ -58,9 +58,9 @@ public class MomcConvertor extends AbstractSaveConvertor<Momc> {
             + "mluv_char_pad_5, mluv_char_pad_6, mluv_char_pad_7, "
             + "zmena_grafiky, vlajka_text, vlajka_obrazek, znak_text, "
             + "znak_obrazek, id_trans_ruian, plati_od, nz_id_globalni, "
-            + "definicni_bod, hranice, kod) "
+            + "definicni_bod, hranice, datum_vzniku, kod) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-            + "?, %FUNCTION%(?), %FUNCTION%(?), ?)";
+            + "?, %FUNCTION%(?), %FUNCTION%(?), ?, ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -71,7 +71,7 @@ public class MomcConvertor extends AbstractSaveConvertor<Momc> {
             + "mluv_char_pad_7 = ?, zmena_grafiky = ?, vlajka_text = ?, "
             + "vlajka_obrazek = ?, znak_text = ?, znak_obrazek = ?, "
             + "id_trans_ruian = ?, plati_od = ?, nz_id_globalni = ?, "
-            + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?), "
+            + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?), datum_vzniku = ?, "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian <= ?";
     /**
@@ -82,9 +82,9 @@ public class MomcConvertor extends AbstractSaveConvertor<Momc> {
             + "mluv_char_pad_2, mluv_char_pad_3, mluv_char_pad_4, "
             + "mluv_char_pad_5, mluv_char_pad_6, mluv_char_pad_7, "
             + "zmena_grafiky, vlajka_text, vlajka_obrazek, znak_text, "
-            + "znak_obrazek, id_trans_ruian, plati_od, nz_id_globalni, kod) "
+            + "znak_obrazek, id_trans_ruian, plati_od, nz_id_globalni, datum_vzniku, kod) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-            + "?, ?)";
+            + "?, ?, ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -94,7 +94,7 @@ public class MomcConvertor extends AbstractSaveConvertor<Momc> {
             + "mluv_char_pad_4 = ?, mluv_char_pad_5 = ?, mluv_char_pad_6 = ?, "
             + "mluv_char_pad_7 = ?, zmena_grafiky = ?, vlajka_text = ?, "
             + "vlajka_obrazek = ?, znak_text = ?, znak_obrazek = ?, "
-            + "id_trans_ruian = ?, plati_od = ?, nz_id_globalni = ?, "
+            + "id_trans_ruian = ?, plati_od = ?, nz_id_globalni = ?, datum_vzniku = ?, "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian <= ?";
 
@@ -143,6 +143,7 @@ public class MomcConvertor extends AbstractSaveConvertor<Momc> {
             pstm.setString(index++, item.getHranice());
         }
 
+        pstmEx.setDate(index++, item.getDatumVzniku());
         pstm.setInt(index++, item.getKod());
 
         if (update) {
@@ -162,6 +163,10 @@ public class MomcConvertor extends AbstractSaveConvertor<Momc> {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
+                    case "DatumVzniku":
+                        item.setDatumVzniku(
+                                Utils.parseTimestamp(reader.getElementText()));
+                        break;
                     case "Geometrie":
                         Utils.processGeometrie(
                                 reader, getConnection(), item, NAMESPACE);

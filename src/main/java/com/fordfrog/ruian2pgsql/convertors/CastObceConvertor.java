@@ -56,9 +56,9 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
             + "(nazev, nespravny, obec_kod, mluv_char_pad_2, mluv_char_pad_3, "
             + "mluv_char_pad_4, mluv_char_pad_5, mluv_char_pad_6, "
             + "mluv_char_pad_7, id_trans_ruian, zmena_grafiky, plati_od, "
-            + "nz_id_globalni, definicni_bod, hranice, kod) "
+            + "nz_id_globalni, definicni_bod, hranice, datum_vzniku, kod) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, %FUNCTION%(?), "
-            + "%FUNCTION%(?), ?)";
+            + "%FUNCTION%(?), ?, ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -68,7 +68,7 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
             + "mluv_char_pad_5 = ?, mluv_char_pad_6 = ?, mluv_char_pad_7 = ?, "
             + "id_trans_ruian = ?, zmena_grafiky = ?, plati_od = ?, "
             + "nz_id_globalni = ?, definicni_bod = %FUNCTION%(?), "
-            + "hranice = %FUNCTION%(?), "
+            + "hranice = %FUNCTION%(?), datum_vzniku = ?, "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian <= ?";
     /**
@@ -78,8 +78,8 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
             + "(nazev, nespravny, obec_kod, mluv_char_pad_2, mluv_char_pad_3, "
             + "mluv_char_pad_4, mluv_char_pad_5, mluv_char_pad_6, "
             + "mluv_char_pad_7, id_trans_ruian, zmena_grafiky, plati_od, "
-            + "nz_id_globalni, kod) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "nz_id_globalni, datum_vzniku, kod) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -88,7 +88,7 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
             + "mluv_char_pad_2 = ?, mluv_char_pad_3 = ?, mluv_char_pad_4 = ?, "
             + "mluv_char_pad_5 = ?, mluv_char_pad_6 = ?, mluv_char_pad_7 = ?, "
             + "id_trans_ruian = ?, zmena_grafiky = ?, plati_od = ?, "
-            + "nz_id_globalni = ?, item_timestamp = timezone('utc', now()), "
+            + "nz_id_globalni = ?, datum_vzniku = ?, item_timestamp = timezone('utc', now()), "
             + "deleted = false "
             + "WHERE kod = ? AND id_trans_ruian <= ?";
 
@@ -130,6 +130,7 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
             pstm.setString(index++, item.getDefinicniBod());
             pstm.setString(index++, item.getHranice());
         }
+        pstmEx.setDate(index++, item.getDatumVzniku());
 
         pstm.setInt(index++, item.getKod());
 
@@ -150,6 +151,10 @@ public class CastObceConvertor extends AbstractSaveConvertor<CastObce> {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
+                    case "DatumVzniku":
+                        item.setDatumVzniku(
+                                Utils.parseTimestamp(reader.getElementText()));
+                        break;
                     case "Geometrie":
                         Utils.processGeometrie(
                                 reader, getConnection(), item, NAMESPACE);

@@ -57,9 +57,9 @@ public class KatastralniUzemiConvertor
             + "(nazev, nespravny, obec_kod, ma_dkm, mluv_char_pad_2, "
             + "mluv_char_pad_3, mluv_char_pad_4, mluv_char_pad_5, "
             + "mluv_char_pad_6, mluv_char_pad_7, id_trans_ruian, plati_od, "
-            + "nz_id_globalni, rizeni_id, definicni_bod, hranice, kod) "
+            + "nz_id_globalni, rizeni_id, definicni_bod, hranice, datum_vzniku, kod) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-            + "%FUNCTION%(?), %FUNCTION%(?), ?)";
+            + "%FUNCTION%(?), %FUNCTION%(?), ?, ?)";
     /**
      * SQL statement for updating of existing item.
      */
@@ -69,7 +69,7 @@ public class KatastralniUzemiConvertor
             + "mluv_char_pad_5 = ?, mluv_char_pad_6 = ?, mluv_char_pad_7 = ?, "
             + "id_trans_ruian = ?, plati_od = ?, nz_id_globalni = ?, "
             + "rizeni_id = ?, definicni_bod = %FUNCTION%(?), "
-            + "hranice = %FUNCTION%(?), "
+            + "hranice = %FUNCTION%(?), datum_vzniku = ?, "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian <= ?";
     /**
@@ -80,8 +80,8 @@ public class KatastralniUzemiConvertor
             + "(nazev, nespravny, obec_kod, ma_dkm, mluv_char_pad_2, "
             + "mluv_char_pad_3, mluv_char_pad_4, mluv_char_pad_5, "
             + "mluv_char_pad_6, mluv_char_pad_7, id_trans_ruian, plati_od, "
-            + "nz_id_globalni, rizeni_id, kod) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "nz_id_globalni, rizeni_id, datum_vzniku, kod) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     /**
      * SQL statement for updating of existing item.
      */
@@ -91,7 +91,7 @@ public class KatastralniUzemiConvertor
             + "mluv_char_pad_2 = ?, mluv_char_pad_3 = ?, mluv_char_pad_4 = ?, "
             + "mluv_char_pad_5 = ?, mluv_char_pad_6 = ?, mluv_char_pad_7 = ?, "
             + "id_trans_ruian = ?, plati_od = ?, nz_id_globalni = ?, "
-            + "rizeni_id = ?, item_timestamp = timezone('utc', now()), "
+            + "rizeni_id = ?, datum_vzniku = ?, item_timestamp = timezone('utc', now()), "
             + "deleted = false "
             + "WHERE kod = ? AND id_trans_ruian <= ?";
 
@@ -136,6 +136,7 @@ public class KatastralniUzemiConvertor
             pstm.setString(index++, item.getHranice());
         }
 
+        pstmEx.setDate(index++, item.getDatumVzniku());
         pstm.setInt(index++, item.getKod());
 
         if (update) {
@@ -155,6 +156,10 @@ public class KatastralniUzemiConvertor
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
+                    case "DatumVzniku":
+                        item.setDatumVzniku(
+                                Utils.parseTimestamp(reader.getElementText()));
+                        break;
                     case "ExistujeDigitalniMapa":
                         item.setMaDkm("true".equals(reader.getElementText()));
                         break;

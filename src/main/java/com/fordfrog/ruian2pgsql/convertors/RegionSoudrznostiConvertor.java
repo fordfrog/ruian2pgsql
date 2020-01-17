@@ -57,8 +57,8 @@ public class RegionSoudrznostiConvertor
             "INSERT INTO rn_region_soudrznosti "
             + "(nazev, nespravny, stat_kod, id_trans_ruian, nuts_lau, "
             + "plati_od, nz_id_globalni, zmena_grafiky, definicni_bod, "
-            + "hranice, kod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, %FUNCTION%(?), "
-            + "%FUNCTION%(?), ?)";
+            + "hranice, datum_vzniku, kod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, %FUNCTION%(?), "
+            + "%FUNCTION%(?), ?, ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -66,7 +66,7 @@ public class RegionSoudrznostiConvertor
             + "SET nazev = ?, nespravny = ?, stat_kod = ?, id_trans_ruian = ?, "
             + "nuts_lau = ?, plati_od = ?, nz_id_globalni = ?, "
             + "zmena_grafiky = ?, definicni_bod = %FUNCTION%(?), "
-            + "hranice = %FUNCTION%(?), "
+            + "hranice = %FUNCTION%(?), datum_vzniku = ?, "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian <= ?";
     /**
@@ -75,8 +75,8 @@ public class RegionSoudrznostiConvertor
     private static final String SQL_INSERT_NO_GIS =
             "INSERT INTO rn_region_soudrznosti "
             + "(nazev, nespravny, stat_kod, id_trans_ruian, nuts_lau, "
-            + "plati_od, nz_id_globalni, zmena_grafiky, kod) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "plati_od, nz_id_globalni, zmena_grafiky, datum_vzniku, kod) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -84,7 +84,7 @@ public class RegionSoudrznostiConvertor
             "UPDATE rn_region_soudrznosti "
             + "SET nazev = ?, nespravny = ?, stat_kod = ?, id_trans_ruian = ?, "
             + "nuts_lau = ?, plati_od = ?, nz_id_globalni = ?, "
-            + "zmena_grafiky = ?, item_timestamp = timezone('utc', now()), "
+            + "zmena_grafiky = ?, datum_vzniku = ?, item_timestamp = timezone('utc', now()), "
             + "deleted = false "
             + "WHERE kod = ? AND id_trans_ruian <= ?";
 
@@ -123,6 +123,7 @@ public class RegionSoudrznostiConvertor
             pstm.setString(index++, item.getHranice());
         }
 
+        pstmEx.setDate(index++, item.getDatumVzniku());
         pstm.setInt(index++, item.getKod());
 
         if (update) {
@@ -142,6 +143,10 @@ public class RegionSoudrznostiConvertor
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
+                    case "DatumVzniku":
+                        item.setDatumVzniku(
+                                Utils.parseTimestamp(reader.getElementText()));
+                        break;
                     case "Geometrie":
                         Utils.processGeometrie(
                                 reader, getConnection(), item, NAMESPACE);
