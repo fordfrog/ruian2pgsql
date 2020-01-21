@@ -91,6 +91,10 @@ List of planned features is at [wiki](https://github.com/fordfrog/ruian2pgsql/wi
 
 ruian2pgsql is distributed under MIT license.
 
+## Where to get RÚIAN data?
+
+[ČÚZK - Veřejný dálkový přístup](https://vdp.cuzk.cz/vdp/ruian/vymennyformat/vyhledej)
+
 ## Changelog
 
 ## Version 1.6.1
