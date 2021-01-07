@@ -43,20 +43,91 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
      * Namespace of the element.
      */
     private static final String NAMESPACE = Namespaces.VYMENNY_FORMAT_TYPY;
+
+    private static final String SQL_STANDARD_ITEM_UPDATE_TEMPLATE =
+            "UPDATE %s SET deleted = true, "
+            + "item_timestamp = timezone('utc', now()), id_trans_ruian = ? "
+            + "WHERE kod = ? AND id_trans_ruian <= ?";
+    /**
+     * SQL statement for marking Stat as deleted.
+     */
+    private static final String SQL_UPDATE_STAT =
+            String.format(SQL_STANDARD_ITEM_UPDATE_TEMPLATE, "rn_stat");
+    /**
+     * SQL statement for marking RegionSoudrznosti as deleted.
+     */
+    private static final String SQL_UPDATE_REGION_SOUDRZNOSTI =
+            String.format(SQL_STANDARD_ITEM_UPDATE_TEMPLATE, "rn_region_soudrznosti");
+    /**
+     * SQL statement for marking Kraj as deleted.
+     */
+    private static final String SQL_UPDATE_KRAJ =
+            String.format(SQL_STANDARD_ITEM_UPDATE_TEMPLATE, "rn_kraj_1960");
+    /**
+     * SQL statement for marking Vusc as deleted.
+     */
+    private static final String SQL_UPDATE_VUSC =
+            String.format(SQL_STANDARD_ITEM_UPDATE_TEMPLATE, "rn_vusc");
+    /**
+     * SQL statement for marking Okres as deleted.
+     */
+    private static final String SQL_UPDATE_OKRES =
+            String.format(SQL_STANDARD_ITEM_UPDATE_TEMPLATE, "rn_okres");
+    /**
+     * SQL statement for marking Orp as deleted.
+     */
+    private static final String SQL_UPDATE_ORP =
+            String.format(SQL_STANDARD_ITEM_UPDATE_TEMPLATE, "rn_orp");
+    /**
+     * SQL statement for marking Pou as deleted.
+     */
+    private static final String SQL_UPDATE_POU =
+            String.format(SQL_STANDARD_ITEM_UPDATE_TEMPLATE, "rn_pou");
+    /**
+     * SQL statement for marking Obec as deleted.
+     */
+    private static final String SQL_UPDATE_OBEC =
+            String.format(SQL_STANDARD_ITEM_UPDATE_TEMPLATE, "rn_obec");
+    /**
+     * SQL statement for marking SpravniObvod as deleted.
+     */
+    private static final String SQL_UPDATE_SPRAVNI_OBVOD =
+            String.format(SQL_STANDARD_ITEM_UPDATE_TEMPLATE, "rn_spravni_obvod");
+    /**
+     * SQL statement for marking Mop as deleted.
+     */
+    private static final String SQL_UPDATE_MOP =
+            String.format(SQL_STANDARD_ITEM_UPDATE_TEMPLATE, "rn_mop");
+    /**
+     * SQL statement for marking Momc as deleted.
+     */
+    private static final String SQL_UPDATE_MOMC =
+            String.format(SQL_STANDARD_ITEM_UPDATE_TEMPLATE, "rn_momc");
+    /**
+     * SQL statement for marking KatastralniUzemi as deleted.
+     */
+    private static final String SQL_UPDATE_KATASTRALNI_UZEMI =
+            String.format(SQL_STANDARD_ITEM_UPDATE_TEMPLATE, "rn_katastralni_uzemi");
+    /**
+     * SQL statement for marking Zsj as deleted.
+     */
+    private static final String SQL_UPDATE_ZSJ =
+            String.format(SQL_STANDARD_ITEM_UPDATE_TEMPLATE, "rn_zsj");
+    /**
+     * SQL statement for marking VO as deleted.
+     */
+    private static final String SQL_UPDATE_VO =
+            String.format(SQL_STANDARD_ITEM_UPDATE_TEMPLATE, "rn_vo");
     /**
      * SQL statement for marking AdresniMisto as deleted.
      */
     private static final String SQL_UPDATE_ADRESNI_MISTO =
-            "UPDATE rn_adresni_misto SET deleted = true, "
-            + "item_timestamp = timezone('utc', now()), id_trans_ruian = ? "
-            + "WHERE kod = ? AND id_trans_ruian <= ?";
+            String.format(SQL_STANDARD_ITEM_UPDATE_TEMPLATE, "rn_adresni_misto");
     /**
      * SQL statement for marking CastObce as deleted.
      */
     private static final String SQL_UPDATE_CAST_OBCE =
-            "UPDATE rn_cast_obce SET deleted = true, "
-            + "item_timestamp = timezone('utc', now()), id_trans_ruian = ? "
-            + "WHERE kod = ? AND id_trans_ruian <= ?";
+            String.format(SQL_STANDARD_ITEM_UPDATE_TEMPLATE, "rn_cast_obce");
     /**
      * SQL statement for marking BonitDilyParcel as deleted.
      */
@@ -78,15 +149,12 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
      * SQL statement for marking StavebniObjekt as deleted.
      */
     private static final String SQL_UPDATE_STAVEBNI_OBJEKT =
-            "UPDATE rn_stavebni_objekt SET deleted = true, "
-            + "item_timestamp = timezone('utc', now()), id_trans_ruian = ? "
-            + "WHERE kod = ? AND id_trans_ruian <= ?";
+            String.format(SQL_STANDARD_ITEM_UPDATE_TEMPLATE, "rn_stavebni_objekt");
     /**
      * SQL statement for marking Ulice as deleted.
      */
-    private static final String SQL_UPDATE_ULICE = "UPDATE rn_ulice "
-            + "SET deleted = true, item_timestamp = timezone('utc', now()), "
-            + "id_trans_ruian = ? WHERE kod = ? AND id_trans_ruian <= ?";
+    private static final String SQL_UPDATE_ULICE =
+            String.format(SQL_STANDARD_ITEM_UPDATE_TEMPLATE, "rn_ulice");
     /**
      * SQL statement for marking ZpusobOchranyObjektu as deleted.
      */
@@ -99,6 +167,63 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
     private static final String SQL_UPDATE_ZPUSOB_OCHRANY_POZEMKU =
             "UPDATE rn_zpusob_ochrany_pozemku SET deleted = true "
             + "WHERE parcela_id = ?";
+
+    /**
+     * Prepared statement for marking Stat as deleted.
+     */
+    private final PreparedStatement pstmUpdateStat;
+    /**
+     * Prepared statement for marking RegionSoudrznosti as deleted.
+     */
+    private final PreparedStatement pstmUpdateRegionSoudrznosti;
+    /**
+     * Prepared statement for marking Kraj as deleted.
+     */
+    private final PreparedStatement pstmUpdateKraj;
+    /**
+     * Prepared statement for marking Vusc as deleted.
+     */
+    private final PreparedStatement pstmUpdateVusc;
+    /**
+     * Prepared statement for marking Okres as deleted.
+     */
+    private final PreparedStatement pstmUpdateOkres;
+    /**
+     * Prepared statement for marking Orp as deleted.
+     */
+    private final PreparedStatement pstmUpdateOrp;
+    /**
+     * Prepared statement for marking Pou as deleted.
+     */
+    private final PreparedStatement pstmUpdatePou;
+    /**
+     * Prepared statement for marking Obec as deleted.
+     */
+    private final PreparedStatement pstmUpdateObec;
+    /**
+     * Prepared statement for marking SpravniObvod as deleted.
+     */
+    private final PreparedStatement pstmUpdateSpravniObvod;
+    /**
+     * Prepared statement for marking Mop as deleted.
+     */
+    private final PreparedStatement pstmUpdateMop;
+    /**
+     * Prepared statement for marking Momc as deleted.
+     */
+    private final PreparedStatement pstmUpdateMomc;
+    /**
+     * Prepared statement for marking KatastralniUzemi as deleted.
+     */
+    private final PreparedStatement pstmUpdateKatastralniUzemi;
+    /**
+     * Prepared statement for marking Zsj as deleted.
+     */
+    private final PreparedStatement pstmUpdateZsj;
+    /**
+     * Prepared statement for marking VO as deleted.
+     */
+    private final PreparedStatement pstmUpdateVo;
     /**
      * Prepared statement for marking AdresniMisto as deleted.
      */
@@ -131,9 +256,7 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
      * Prepared statement for marking ZpusobOchranyObjektu as deleted.
      */
     private final PreparedStatement pstmUpdateZpusobOchranyObjektu;
-    /**
-     * Prepared statement for marking ZpusobOchranyPozemku as deleted.
-     */
+
     private final PreparedStatement pstmUpdateZpusobOchranyPozemku;
 
     /**
@@ -148,6 +271,23 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
         super(ZaniklyPrvek.class, NAMESPACE, "ZaniklyPrvek", con, null, null,
                 null, null, null);
 
+        pstmUpdateStat = con.prepareStatement(fixSql(SQL_UPDATE_STAT));
+        pstmUpdateRegionSoudrznosti =
+                con.prepareStatement(fixSql(SQL_UPDATE_REGION_SOUDRZNOSTI));
+        pstmUpdateKraj = con.prepareStatement(fixSql(SQL_UPDATE_KRAJ));
+        pstmUpdateVusc = con.prepareStatement(fixSql(SQL_UPDATE_VUSC));
+        pstmUpdateOkres = con.prepareStatement(fixSql(SQL_UPDATE_OKRES));
+        pstmUpdateOrp = con.prepareStatement(fixSql(SQL_UPDATE_ORP));
+        pstmUpdatePou = con.prepareStatement(fixSql(SQL_UPDATE_POU));
+        pstmUpdateObec = con.prepareStatement(fixSql(SQL_UPDATE_OBEC));
+        pstmUpdateSpravniObvod =
+                con.prepareStatement(fixSql(SQL_UPDATE_SPRAVNI_OBVOD));
+        pstmUpdateMop = con.prepareStatement(fixSql(SQL_UPDATE_MOP));
+        pstmUpdateMomc = con.prepareStatement(fixSql(SQL_UPDATE_MOMC));
+        pstmUpdateKatastralniUzemi =
+                con.prepareStatement(fixSql(SQL_UPDATE_KATASTRALNI_UZEMI));
+        pstmUpdateZsj = con.prepareStatement(fixSql(SQL_UPDATE_ZSJ));
+        pstmUpdateVo = con.prepareStatement(fixSql(SQL_UPDATE_VO));
         pstmUpdateAdresniMisto =
                 con.prepareStatement(fixSql(SQL_UPDATE_ADRESNI_MISTO));
         pstmUpdateBonitDilyParcel =
@@ -215,11 +355,53 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
     @Override
     protected void saveData(final ZaniklyPrvek item) throws SQLException {
         switch (item.getTypPrvkuKod()) {
+            case "ST": // Stat
+                deleteItem(pstmUpdateStat, item);
+                break;
+            case "RS": // RegionSoudrznosti
+                deleteItem(pstmUpdateRegionSoudrznosti, item);
+                break;
+            case "KR": // Kraj
+                deleteItem(pstmUpdateKraj, item);
+                break;
+            case "VC": // Vusc
+                deleteItem(pstmUpdateVusc, item);
+                break;
+            case "OK": // Okres
+                deleteItem(pstmUpdateOkres, item);
+                break;
+            case "OP": // Orp
+                deleteItem(pstmUpdateOrp, item);
+                break;
+            case "PU": // Pou
+                deleteItem(pstmUpdatePou, item);
+                break;
+            case "OB": // Obec
+                deleteItem(pstmUpdateObec, item);
+                break;
+            case "SP": // SpravniObvod
+                deleteItem(pstmUpdateSpravniObvod, item);
+                break;
+            case "MP": // Mop
+                deleteItem(pstmUpdateMop, item);
+                break;
+            case "MC": // Momc
+                deleteItem(pstmUpdateMomc, item);
+                break;
+            case "KU": //KatastralniUzemi
+                deleteItem(pstmUpdateKatastralniUzemi, item);
+                break;
+            case "ZJ": // Zsj
+                deleteItem(pstmUpdateZsj, item);
+                break;
+            case "VO": // Vo
+                deleteItem(pstmUpdateVo, item);
+                break;
             case "AD": // AdresniMisto
-                deleteAdresniMisto(item);
+                deleteItem(pstmUpdateAdresniMisto, item);
                 break;
             case "CO": // CastObce
-                deleteCastObce(item);
+                deleteItem(pstmUpdateCastObce, item);
                 break;
             case "SO": // StavebniObjekt
                 deleteStavebniObjekt(item);
@@ -228,54 +410,32 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
                 deleteParcela(item);
                 break;
             case "UL": // Ulice
-                deleteUlice(item);
+                deleteItem(pstmUpdateUlice, item);
                 break;
             default:
                 Log.write("Ignoring unsupported TypPrvkuKod '"
                         + item.getTypPrvkuKod() + " 'of ZaniklyPrvek");
         }
     }
-
     /**
-     * Deletes AdresniMisto item.
+     * Deletes item with standard (3 parameters) prepared statement.
      *
+     * @param pstm Prepared statement used to mark item as deleted
      * @param item item
      *
      * @throws SQLException Thrown if problem occurred while communicating with
      *                      database.
      */
-    private void deleteAdresniMisto(final ZaniklyPrvek item)
+    private void deleteItem(final PreparedStatement pstm, final ZaniklyPrvek item)
             throws SQLException {
         if (Config.isDryRun()) {
             return;
         }
-
-        pstmUpdateAdresniMisto.clearParameters();
-        pstmUpdateAdresniMisto.setLong(1, item.getIdTransakce());
-        pstmUpdateAdresniMisto.setInt(2, item.getPrvekId().intValue());
-        pstmUpdateAdresniMisto.setLong(3, item.getIdTransakce());
-        pstmUpdateAdresniMisto.execute();
-    }
-
-    /**
-     * Deletes CastObce item.
-     *
-     * @param item item
-     *
-     * @throws SQLException Thrown if problem occurred while communicating with
-     *                      database.
-     */
-    private void deleteCastObce(final ZaniklyPrvek item)
-            throws SQLException {
-        if (Config.isDryRun()) {
-            return;
-        }
-
-        pstmUpdateCastObce.clearParameters();
-        pstmUpdateCastObce.setLong(1, item.getIdTransakce());
-        pstmUpdateCastObce.setInt(2, item.getPrvekId().intValue());
-        pstmUpdateCastObce.setLong(3, item.getIdTransakce());
-        pstmUpdateCastObce.execute();
+        pstm.clearParameters();
+        pstm.setLong(1, item.getIdTransakce());
+        pstm.setInt(2, item.getPrvekId().intValue());
+        pstm.setLong(3, item.getIdTransakce());
+        pstm.execute();
     }
 
     /**
@@ -333,25 +493,5 @@ public class ZaniklyPrvekConvertor extends AbstractSaveConvertor<ZaniklyPrvek> {
         pstmUpdateBonitDilyParcel.clearParameters();
         pstmUpdateBonitDilyParcel.setLong(1, item.getPrvekId());
         pstmUpdateBonitDilyParcel.execute();
-    }
-
-    /**
-     * Deletes Ulice item.
-     *
-     * @param item item
-     *
-     * @throws SQLException Thrown if problem occurred while communicating with
-     *                      database.
-     */
-    private void deleteUlice(final ZaniklyPrvek item) throws SQLException {
-        if (Config.isDryRun()) {
-            return;
-        }
-
-        pstmUpdateUlice.clearParameters();
-        pstmUpdateUlice.setLong(1, item.getIdTransakce());
-        pstmUpdateUlice.setInt(2, item.getPrvekId().intValue());
-        pstmUpdateUlice.setLong(3, item.getIdTransakce());
-        pstmUpdateUlice.execute();
     }
 }

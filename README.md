@@ -96,6 +96,11 @@ ruian2pgsql is distributed under MIT license.
 [ČÚZK - Veřejný dálkový přístup](https://vdp.cuzk.cz/vdp/ruian/vymennyformat/vyhledej)
 
 ## Changelog
+## Version 1.7.0
+* Added support for VFR ver. 3.1 (David Pavlíček)
+* Added support for deleting items of all imported tables (David Pavlíček) 
+* Added PostgreSQL database schema upgrade scripts for upgrade to version 1.7.0.
+  (David Pavlíček)
 
 ## Version 1.6.1
 

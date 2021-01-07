@@ -94,6 +94,12 @@ Seznam plánovaných funkcí je na [wiki](https://github.com/fordfrog/ruian2pgsq
 ruian2pgsql je distribuovaný pod MIT licencí.
 
 ## Changelog
+## Version 1.7.0
+
+* Přidána podpora pro VFR ver. 3.1 (David Pavlíček)
+* Přidána podpora pro mazání prvků ze všech importovaných tabulek (David Pavlíček) 
+* Přidán skript pro aktualizaci schématu PostgreSQL databáze na verzi 1.6.0
+  (David Pavlíček)
 
 ## Verze 1.6.1
 
