@@ -55,8 +55,8 @@ public class OrpConvertor extends AbstractSaveConvertor<Orp> {
     private static final String SQL_INSERT = "INSERT INTO rn_orp "
             + "(nazev, nespravny, vusc_kod, spravni_obec_kod, id_trans_ruian, "
             + "plati_od, nz_id_globalni, zmena_grafiky, definicni_bod, "
-            + "hranice, datum_vzniku, kod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, %FUNCTION%(?), "
-            + "%FUNCTION%(?), ?, ?)";
+            + "hranice, datum_vzniku, okres_kod, kod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, %FUNCTION%(?), "
+            + "%FUNCTION%(?), ?, ?, ?)";
     /**
      * SQL statement for update of existing item.
      */
@@ -64,7 +64,7 @@ public class OrpConvertor extends AbstractSaveConvertor<Orp> {
             + "SET nazev = ?, nespravny = ?, vusc_kod = ?, "
             + "spravni_obec_kod = ?, id_trans_ruian = ?, plati_od = ?, "
             + "nz_id_globalni = ?, zmena_grafiky = ?, "
-            + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?), datum_vzniku = ?, "
+            + "definicni_bod = %FUNCTION%(?), hranice = %FUNCTION%(?), datum_vzniku = ?, okres_kod = ?, "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian <= ?";
     /**
@@ -72,15 +72,15 @@ public class OrpConvertor extends AbstractSaveConvertor<Orp> {
      */
     private static final String SQL_INSERT_NO_GIS = "INSERT INTO rn_orp "
             + "(nazev, nespravny, vusc_kod, spravni_obec_kod, id_trans_ruian, "
-            + "plati_od, nz_id_globalni, zmena_grafiky, datum_vzniku, kod) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "plati_od, nz_id_globalni, zmena_grafiky, datum_vzniku, okres_kod, kod) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     /**
      * SQL statement for update of existing item.
      */
     private static final String SQL_UPDATE_NO_GIS = "UPDATE rn_orp "
             + "SET nazev = ?, nespravny = ?, vusc_kod = ?, "
             + "spravni_obec_kod = ?, id_trans_ruian = ?, plati_od = ?, "
-            + "nz_id_globalni = ?, zmena_grafiky = ?, datum_vzniku = ?, "
+            + "nz_id_globalni = ?, zmena_grafiky = ?, datum_vzniku = ?, okres_kod = ?, "
             + "item_timestamp = timezone('utc', now()), deleted = false "
             + "WHERE kod = ? AND id_trans_ruian <= ?";
 
@@ -105,7 +105,7 @@ public class OrpConvertor extends AbstractSaveConvertor<Orp> {
         int index = 1;
         pstm.setString(index++, item.getNazev());
         pstmEx.setBoolean(index++, item.getNespravny());
-        pstm.setInt(index++, item.getVuscKod());
+        pstmEx.setInt(index++, item.getVuscKod());
         pstm.setInt(index++, item.getSpravniObecKod());
         pstm.setLong(index++, item.getIdTransRuian());
         pstmEx.setDate(index++, item.getPlatiOd());
@@ -118,6 +118,7 @@ public class OrpConvertor extends AbstractSaveConvertor<Orp> {
         }
 
         pstmEx.setDate(index++, item.getDatumVzniku());
+        pstm.setInt(index++, item.getOkresKod());
         pstm.setInt(index++, item.getKod());
 
         if (update) {
@@ -137,6 +138,9 @@ public class OrpConvertor extends AbstractSaveConvertor<Orp> {
         switch (reader.getNamespaceURI()) {
             case NAMESPACE:
                 switch (reader.getLocalName()) {
+                    case "Okres":
+                        item.setOkresKod(Utils.getOkresKod(reader, NAMESPACE));
+                        break;
                     case "DatumVzniku":
                         item.setDatumVzniku(
                                 Utils.parseTimestamp(reader.getElementText()));

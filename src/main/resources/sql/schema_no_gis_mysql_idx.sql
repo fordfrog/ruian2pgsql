@@ -16,6 +16,7 @@ CREATE INDEX rn_okres_kraj_1960_kod_idx ON rn_okres (kraj_1960_kod);
 CREATE INDEX rn_okres_vusc_kod_idx ON rn_okres (vusc_kod);
 CREATE INDEX rn_orp_spravni_obec_kod_idx ON rn_orp (spravni_obec_kod);
 CREATE INDEX rn_orp_vusc_kod_idx ON rn_orp (vusc_kod);
+CREATE INDEX rn_orp_okres_kod_idx ON rn_orp (okres_kod);
 CREATE INDEX rn_parcela_druh_cislovani_kod_idx ON rn_parcela (druh_cislovani_kod);
 CREATE INDEX rn_parcela_druh_pozemku_kod_idx ON rn_parcela (druh_pozemku_kod);
 CREATE INDEX rn_parcela_katuz_kod_idx ON rn_parcela (katuz_kod);

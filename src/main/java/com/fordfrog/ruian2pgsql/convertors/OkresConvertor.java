@@ -107,7 +107,7 @@ public class OkresConvertor extends AbstractSaveConvertor<Okres> {
         pstm.setString(index++, item.getNazev());
         pstmEx.setBoolean(index++, item.getNespravny());
         pstm.setInt(index++, item.getVuscKod());
-        pstm.setInt(index++, item.getKraj1960Kod());
+        pstmEx.setInt(index++, item.getKraj1960Kod());
         pstm.setLong(index++, item.getIdTransRuian());
         pstm.setString(index++, item.getNutsLau());
         pstmEx.setDate(index++, item.getPlatiOd());

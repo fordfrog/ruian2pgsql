@@ -126,6 +126,7 @@ CREATE TABLE rn_orp (
     nazev text,
     nespravny boolean,
     vusc_kod int,
+    okres_kod int,
     spravni_obec_kod int,
     id_trans_ruian bigint,
     plati_od date,
