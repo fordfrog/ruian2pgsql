@@ -94,6 +94,9 @@ Seznam plánovaných funkcí je na [wiki](https://github.com/fordfrog/ruian2pgsq
 ruian2pgsql je distribuovaný pod MIT licencí.
 
 ## Changelog
+## Version 1.7.1
+* Sloupeček okres_kod v tabulce rn_obec a rn_orp může být nyní nastaven na NULL. 
+
 ## Version 1.7.0
 
 * Přidána podpora pro VFR ver. 3.1 (David Pavlíček)

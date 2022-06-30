@@ -96,6 +96,9 @@ ruian2pgsql is distributed under MIT license.
 [ČÚZK - Veřejný dálkový přístup](https://vdp.cuzk.cz/vdp/ruian/vymennyformat/vyhledej)
 
 ## Changelog
+## Version 1.7.1
+* Column okres_kod in table rn_obec and rn_orp can now be set to NULL. 
+
 ## Version 1.7.0
 * Added support for VFR ver. 3.1 (David Pavlíček)
 * Added support for deleting items of all imported tables (David Pavlíček) 

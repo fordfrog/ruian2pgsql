@@ -118,7 +118,7 @@ public class OrpConvertor extends AbstractSaveConvertor<Orp> {
         }
 
         pstmEx.setDate(index++, item.getDatumVzniku());
-        pstm.setInt(index++, item.getOkresKod());
+        pstmEx.setInt(index++, item.getOkresKod());
         pstm.setInt(index++, item.getKod());
 
         if (update) {
