@@ -126,7 +126,7 @@ public class ObecConvertor extends AbstractSaveConvertor<Obec> {
         int index = 1;
         pstm.setString(index++, item.getNazev());
         pstmEx.setBoolean(index++, item.getNespravny());
-        pstm.setInt(index++, item.getOkresKod());
+        pstmEx.setInt(index++, item.getOkresKod());
         pstm.setInt(index++, item.getPouKod());
         pstm.setString(index++, item.getNutsLau());
         pstm.setString(index++, item.getMluvCharPad2());
